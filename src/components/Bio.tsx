@@ -33,8 +33,8 @@ export function Bio({
             <Image
               src="/Khaled_Garbaya_Colour.jpg"
               alt="logo"
-              width={255}
-              height={255}
+              width={400}
+              height={400}
               className="aspect-square object-cover rounded-2xl shadow-lg -rotate-3"
             />
             <ul className="flex items-center gap-4 mt-5">

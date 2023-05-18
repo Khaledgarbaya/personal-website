@@ -20,7 +20,17 @@ export const canvasClient = new CanvasClient({
   apiHost,
   projectId,
 });
+export const getCompositionByNodePath = async (
+  nodePath: string,
+  preview: boolean
+) => {
+  const response = await canvasClient.getCompositionByNodePath({
+    projectMapNodePath: nodePath,
+    state: getState(preview),
+  });
 
+  return response.composition;
+};
 export const projectMapClient = new ProjectMapClient({
   apiKey,
   apiHost,

@@ -7,7 +7,6 @@ type CarPropsType = {
   domain: string;
 };
 export function CourseCard({ title, link, picture }: CarPropsType) {
-  console.log("CourseCard", { title, link, picture });
   return (
     <a
       href={link}

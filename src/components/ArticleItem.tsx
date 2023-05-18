@@ -15,7 +15,6 @@ export function ArticleItem({
   publishdate,
   description,
 }: ArticleItemProps) {
-  console.log("ArticleItemProps", { arguments });
   if (description.length > 200) {
     description = description.substring(0, 200) + "...";
   }
