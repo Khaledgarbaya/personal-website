@@ -7,10 +7,18 @@ import "@/components/CoursesCollection";
 import "@/components/ArticleList";
 import "@/components/ArticleItem";
 import "@/components/InlineSignupForm";
-export function Layout({ children }: { children: React.ReactNode }) {
+import "@/components/Bio";
+
+export function Layout({
+  children,
+  navLinks,
+}: {
+  children: React.ReactNode;
+  navLinks: { title: string; url: string }[];
+}) {
   return (
     <>
-      <Header />
+      <Header navLinks={navLinks} />
       {children}
       <Footer />
     </>
