@@ -8,6 +8,7 @@ import "@/components/ArticleList";
 import "@/components/ArticleItem";
 import "@/components/InlineSignupForm";
 import "@/components/Bio";
+import "@/components/ArticleDetail";
 
 export function Layout({
   children,

@@ -4,10 +4,7 @@ import { Layout } from "@/components/Layout";
 import Head from "next/head";
 import { UniformComposition, UniformSlot } from "@uniformdev/canvas-react";
 import { RootComponentInstance } from "@uniformdev/canvas";
-import {
-  getCompositionByNodePath,
-  getCompositionsForNavigation,
-} from "@/lib/uniform/canvasClient";
+import { getCompositionsForNavigation } from "@/lib/uniform/canvasClient";
 
 export const getServerSideProps = withUniformGetServerSideProps({
   modifySlug: (slug) => {
