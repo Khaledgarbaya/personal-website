@@ -1,4 +1,4 @@
-import { withUniformGetServerSideProps } from "@uniformdev/canvas-next/slug";
+import { unstable_withUniformGetServerSideProps } from "@uniformdev/canvas-next/route";
 
 import { Layout } from "@/components/Layout";
 import Head from "next/head";
@@ -13,10 +13,7 @@ import { getCompositionsForNavigation } from "@/lib/uniform/canvasClient";
 // import { ProjectMapClient } from "@uniformdev/project-map";
 // import { GetStaticPropsContext } from "next";
 
-export const getServerSideProps = withUniformGetServerSideProps({
-  modifySlug: (slug) => {
-    return slug;
-  },
+export const getServerSideProps = unstable_withUniformGetServerSideProps({
   callback: async (context) => {
     const { preview = false } = context || {};
     const navLinks = await getCompositionsForNavigation(preview);
