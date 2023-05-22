@@ -10,9 +10,8 @@ import {
   RootComponentInstance,
 } from "@uniformdev/canvas";
 import { getCompositionsForNavigation } from "@/lib/uniform/canvasClient";
-import { ProjectMapClient } from "@uniformdev/project-map";
-import { GetStaticPropsContext } from "next";
-import { constrainedMemory } from "process";
+// import { ProjectMapClient } from "@uniformdev/project-map";
+// import { GetStaticPropsContext } from "next";
 
 export const getServerSideProps = withUniformGetServerSideProps({
   modifySlug: (slug) => {
