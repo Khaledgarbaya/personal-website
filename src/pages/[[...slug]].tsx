@@ -46,7 +46,7 @@ export default function Home(props: {
         <meta property="og:description" content={description} />
         <meta
           property="og:url"
-          content={`https://khaledgarbaya.net/${router.pathname}`}
+          content={`https://khaledgarbaya.net${router.asPath}`}
         />
 
         <meta name="description" content={description} />
