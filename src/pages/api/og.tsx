@@ -37,6 +37,8 @@ export default async function handler(request: NextRequest) {
                 <img
                   width="256"
                   alt="Khaled Garbaya"
+                  /* 
+                // @ts-ignore */
                   src={imageData}
                   style={{
                     borderRadius: 128,
