@@ -38,6 +38,7 @@ export default function Home(props: {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
+        <meta property="og:title" content={title}></meta>
         <meta
           property="og:image"
           content={`https://khaledgarbaya.net/api/og?title${title}`}
