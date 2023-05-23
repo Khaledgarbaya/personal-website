@@ -39,7 +39,8 @@ export function ArticleDetail({ title, content, publishDate }: BioPropsType) {
           const RE = /{([\d,-]+)}/;
           const metadata = node.data.meta?.replace(/\s/g, "");
           const strlineNumbers = RE?.test(metadata)
-            ? RE?.exec(metadata)[1]
+            ? // @ts-ignore
+              RE?.exec(metadata)[1]
             : "0";
           const highlightLines = rangeParser(strlineNumbers);
           const highlight = highlightLines;
