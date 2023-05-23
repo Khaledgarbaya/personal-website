@@ -30,7 +30,7 @@ export function ArticleDetail({ title, content, publishDate }: BioPropsType) {
   const syntaxTheme = oneDark;
 
   const MarkdownComponents: object = {
-    code({ node, inline, className, ...props }) {
+    code({ node, inline, className, ...props }: any) {
       const hasLang = /language-(\w+)/.exec(className || "");
       const hasMeta = node?.data?.meta;
 
@@ -43,9 +43,7 @@ export function ArticleDetail({ title, content, publishDate }: BioPropsType) {
             : "0";
           const highlightLines = rangeParser(strlineNumbers);
           const highlight = highlightLines;
-          const data: string = highlight.includes(applyHighlights)
-            ? "highlight"
-            : null;
+          const data = highlight.includes(applyHighlights) ? "highlight" : null;
           return { data };
         } else {
           return {};
