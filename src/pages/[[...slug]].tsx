@@ -33,7 +33,7 @@ export default function Home(props: {
 
         <meta
           property="twitter:image"
-          content={`https://khaledgarbaya.net/api/og?title${title}`}
+          content={`https://khaledgarbaya.net/api/og?title=${title}`}
         />
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content={title} />
@@ -41,7 +41,7 @@ export default function Home(props: {
         <meta property="og:title" content={title}></meta>
         <meta
           property="og:image"
-          content={`https://khaledgarbaya.net/api/og?title${title}`}
+          content={`https://khaledgarbaya.net/api/og?title=${title}`}
         />
         <meta property="og:description" content={description} />
         <meta
