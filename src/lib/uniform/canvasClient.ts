@@ -46,7 +46,10 @@ export async function getCompositionsForNavigation(preview: boolean) {
   return response
     .nodes!.filter(
       (node) =>
-        node.path && node.type !== "placeholder" && !node.path.includes(":")
+        node.path &&
+        node.type !== "placeholder" &&
+        !node.path.includes(":") &&
+        !node.path.includes("wp-admin")
     )
     .map((node) => {
       return {
