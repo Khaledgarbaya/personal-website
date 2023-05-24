@@ -1,7 +1,6 @@
 import { registerUniformComponent } from "@uniformdev/canvas-react";
 import Link from "next/link";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { remark } from "remark";
 
 type ArticleItemProps = {
   slug: string;

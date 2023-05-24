@@ -9,6 +9,7 @@ import "@/components/ArticleItem";
 import "@/components/InlineSignupForm";
 import "@/components/Bio";
 import "@/components/ArticleDetail";
+import "@/components/NeverGonnaLetYouDown";
 
 export function Layout({
   children,
