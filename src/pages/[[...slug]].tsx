@@ -1,5 +1,4 @@
 import {
-  unstable_withUniformGetServerSideProps,
   withUniformGetStaticPaths,
   unstable_withUniformGetStaticProps,
 } from "@uniformdev/canvas-next/route";
@@ -37,16 +36,8 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
   },
 });
 export const getStaticPaths = withUniformGetStaticPaths();
-// export const getServerSideProps = unstable_withUniformGetServerSideProps({
-//   callback: async (context) => {
-//     const { preview = false } = context || {};
-//     const navLinks = await getCompositionsForNavigation(preview);
-//     return {
-//       props: { navLinks, preview },
-//     };
-//   },
-// });
-export default function Home(props: {
+
+export default function Main(props: {
   data: RootComponentInstance;
   navLinks: { title: string; url: string }[];
 }) {
