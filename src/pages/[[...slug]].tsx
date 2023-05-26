@@ -1,4 +1,8 @@
-import { unstable_withUniformGetServerSideProps } from "@uniformdev/canvas-next/route";
+import {
+  unstable_withUniformGetServerSideProps,
+  withUniformGetStaticPaths,
+  unstable_withUniformGetStaticProps,
+} from "@uniformdev/canvas-next/route";
 import { useRouter } from "next/router";
 
 import { Layout } from "@/components/Layout";
@@ -6,16 +10,42 @@ import Head from "next/head";
 import { UniformComposition, UniformSlot } from "@uniformdev/canvas-react";
 import { RootComponentInstance } from "@uniformdev/canvas";
 import { getCompositionsForNavigation } from "@/lib/uniform/canvasClient";
-
-export const getServerSideProps = unstable_withUniformGetServerSideProps({
-  callback: async (context) => {
+import getConfig from "next/config";
+const {
+  serverRuntimeConfig: { projectMapId },
+} = getConfig();
+export const getStaticProps = unstable_withUniformGetStaticProps({
+  silent: process.env.NODE_ENV === "production",
+  modifyPath(path, context) {
+    const { preview = false } = context || {};
+    let slug = context?.params?.slug ?? "/";
+    if (Array.isArray(slug)) {
+      slug = `/${slug.join("/")}`;
+    }
+    return preview ? `/api/${projectMapId}${path}` : `${slug}`;
+  },
+  handleComposition: async (composition, context) => {
     const { preview = false } = context || {};
     const navLinks = await getCompositionsForNavigation(preview);
     return {
-      props: { navLinks, preview },
+      props: {
+        navLinks,
+        preview,
+        data: composition.compositionApiResponse.composition,
+      },
     };
   },
 });
+export const getStaticPaths = withUniformGetStaticPaths();
+// export const getServerSideProps = unstable_withUniformGetServerSideProps({
+//   callback: async (context) => {
+//     const { preview = false } = context || {};
+//     const navLinks = await getCompositionsForNavigation(preview);
+//     return {
+//       props: { navLinks, preview },
+//     };
+//   },
+// });
 export default function Home(props: {
   data: RootComponentInstance;
   navLinks: { title: string; url: string }[];
