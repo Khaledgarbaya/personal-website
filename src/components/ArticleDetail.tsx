@@ -93,13 +93,9 @@ export function ArticleDetail({
               alt={authorName}
             />
             <div>
-              <a
-                href="#"
-                rel="author"
-                className="text-xl font-bold text-gray-900"
-              >
+              <span rel="author" className="text-xl font-bold text-gray-900">
                 {authorName}
-              </a>
+              </span>
               <p className="text-base font-light text-gray-500 mt-0 mb-0">
                 {authorBio}
               </p>
