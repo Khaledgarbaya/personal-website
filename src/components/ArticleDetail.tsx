@@ -12,6 +12,7 @@ import scss from "react-syntax-highlighter/dist/cjs/languages/prism/scss";
 import bash from "react-syntax-highlighter/dist/cjs/languages/prism/bash";
 import markdown from "react-syntax-highlighter/dist/cjs/languages/prism/markdown";
 import json from "react-syntax-highlighter/dist/cjs/languages/prism/json";
+import Image from "next/image";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("typescript", typescript);
@@ -22,11 +23,21 @@ SyntaxHighlighter.registerLanguage("json", json);
 
 type BioPropsType = {
   title: string;
+  authorName: string;
+  authorAvatarUrl: string;
+  authorBio: string;
   content: string;
   publishDate: string;
 };
 
-export function ArticleDetail({ title, content, publishDate }: BioPropsType) {
+export function ArticleDetail({
+  title,
+  content,
+  publishDate,
+  authorAvatarUrl,
+  authorName,
+  authorBio,
+}: BioPropsType) {
   const syntaxTheme = oneDark;
 
   const MarkdownComponents: object = {
@@ -70,30 +81,49 @@ export function ArticleDetail({ title, content, publishDate }: BioPropsType) {
     },
   };
   return (
-    <div className="mx-auto max-w-2xl lg:max-w-5xl">
-      <article>
-        <header className="flex flex-col">
-          <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
-            {title}
-          </h1>
-          <time
-            dateTime="2022-09-05"
-            className="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500"
-          >
-            <span className="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
-            <span className="ml-3">published at {publishDate}</span>
-          </time>
-        </header>
-        <div className="prose prose-xl mt-3 prose-pre:bg-transparent">
-          <ReactMarkdown
-            components={MarkdownComponents}
-            rehypePlugins={[rehypeRaw]}
-          >
-            {content}
-          </ReactMarkdown>
-        </div>
-      </article>
-    </div>
+    <article className="mx-auto w-full max-w-3xl">
+      <header className="mb-4 lg:mb-6">
+        <address className="flex items-center mb-6 not-italic">
+          <div className="inline-flex items-center mr-3 text-sm text-gray-900">
+            <Image
+              className="mr-4 w-16 h-16 rounded-full"
+              width={64}
+              height={64}
+              src={`https:${authorAvatarUrl}`}
+              alt={authorName}
+            />
+            <div>
+              <a
+                href="#"
+                rel="author"
+                className="text-xl font-bold text-gray-900"
+              >
+                {authorName}
+              </a>
+              <p className="text-base font-light text-gray-500 mt-0 mb-0">
+                {authorBio}
+              </p>
+              <p className="text-base font-light text-gray-500 mt-0 mb-0">
+                <time dateTime={publishDate} title={publishDate}>
+                  {publishDate}
+                </time>
+              </p>
+            </div>
+          </div>
+        </address>
+        <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl">
+          {title}
+        </h1>
+      </header>
+      <div className="prose prose-xl mt-3 prose-pre:bg-transparent">
+        <ReactMarkdown
+          components={MarkdownComponents}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+    </article>
   );
 }
 registerUniformComponent({
