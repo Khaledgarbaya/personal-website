@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=<https://uniform.app/schemas/json-schema/component-definition/v1.json>
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
+id: bio
+name: Bio
+icon: file-document
+parameters:
+  - id: twitterUrl
+    name: Twitter Url
+    type: link
+    helpText: ''
+    typeConfig: null
+  - id: youtubeUrl
+    name: youtube URL
+    type: link
+    helpText: ''
+    typeConfig: null
+  - id: twitchUrl
+    name: Twitch Url
+    type: link
+    helpText: ''
+    typeConfig: null
+  - id: githubUrl
+    name: Github Url
+    type: link
+    helpText: ''
+    typeConfig: null
+  - id: emailUrl
+    name: email Url
+    type: link
+    helpText: ''
+    typeConfig:
+      linkTypes:
+        tel: false
+        url: false
+        projectMapNode: false
+  - id: instagramUrl
+    name: Instagram Url
+    type: link
+    helpText: ''
+    typeConfig: null
+  - id: title
+    name: Title
+    type: text
+    helpText: ''
+    typeConfig: null
+  - id: bio
+    name: Bio
+    type: text
+    helpText: ''
+    typeConfig: null
+useTeamPermissions: true
+slots: []
+canBeComposition: false
+created: '2023-05-18T13:12:35.509591+00:00'
+updated: '2023-05-18T13:27:12.578378+00:00'

@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=<https://uniform.app/schemas/json-schema/component-definition/v1.json>
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
+id: inlineSignupForm
+name: Inline Signup Form
+icon: mail-open
+parameters:
+  - id: cta
+    name: CTA
+    type: text
+    helpText: ''
+    typeConfig: null
+  - id: placeholder
+    name: Placeholder
+    type: text
+    helpText: ''
+    typeConfig: null
+  - id: actionUrl
+    name: Action Url
+    type: text
+    helpText: ''
+    typeConfig: null
+useTeamPermissions: true
+slots: []
+canBeComposition: false
+created: '2023-05-12T15:13:30.263731+00:00'
+updated: '2023-05-12T15:28:10.972862+00:00'

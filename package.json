@@ -6,7 +6,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "uniform:fetch-map": "uniform project-map definition list",
+    "uniform:download-manifest": "uniform context manifest download --output ./uniform-manifest.json",
+    "uniform:context:publish": "uniform context manifest publish",
+    "uniform:pull:signals": "uniform context signal pull ./content/signals",
+    "uniform:pull:tests": "uniform context test pull ./content/tests",
+    "uniform:pull:components": "uniform canvas component pull ./content/components",
+    "uniform:pull:compositions": "uniform canvas composition pull ./content/compositions",
+    "uniform:pull:project-map-definitions": "uniform project-map definition pull ./content/maps",
+    "uniform:pull:project-map-nodes": "uniform project-map node pull ./content/nodes",
+    "uniform:pull": "run-s uniform:pull:signals uniform:pull:tests uniform:pull:components uniform:pull:compositions uniform:pull:project-map-definitions uniform:pull:project-map-nodes",
+    "uniform:push:signals": "uniform context signal push ./content/signals",
+    "uniform:push:tests": "uniform context test push ./content/tests",
+    "uniform:push:components": "uniform canvas component push ./content/components",
+    "uniform:push:compositions": "uniform canvas composition push ./content/compositions",
+    "uniform:push:project-map-definitions": "uniform project-map definition push ./content/maps",
+    "uniform:push:project-map-nodes": "uniform project-map node push ./content/nodes",
+    "uniform:publish": "uniform canvas composition push ./content/compositions --state published",
+    "uniform:push": "run-s uniform:push:signals uniform:push:tests uniform:push:components uniform:push:compositions uniform:push:project-map-definitions uniform:push:project-map-nodes uniform:context:publish"
   },
   "dependencies": {
     "@types/node": "20.2.5",
@@ -36,6 +54,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "@types/react-mailchimp-subscribe": "^2.1.1",
-    "@types/react-syntax-highlighter": "^15.5.6"
+    "@types/react-syntax-highlighter": "^15.5.6",
+    "@uniformdev/cli": "^19.15.0"
   }
 }

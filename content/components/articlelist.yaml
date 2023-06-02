@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=<https://uniform.app/schemas/json-schema/component-definition/v1.json>
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
+id: articlelist
+name: ArticleList
+icon: layout-list
+parameters:
+  - id: title
+    name: Title
+    type: text
+    helpText: ''
+    typeConfig: null
+useTeamPermissions: true
+slots:
+  - id: articles
+    name: articles
+    allowedComponents: []
+    allowAllComponents: false
+    inheritAllowedComponents: true
+    patternsInAllowedComponents: false
+canBeComposition: false
+created: '2023-05-12T14:40:50.142841+00:00'
+updated: '2023-05-12T15:15:03.970873+00:00'

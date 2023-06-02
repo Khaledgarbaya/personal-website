@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=<https://uniform.app/schemas/json-schema/component-definition/v1.json>
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
+id: coursesCollection
+name: Courses Collection
+icon: menu-grid-r
+parameters:
+  - id: title
+    name: Title
+    type: text
+    helpText: ''
+    typeConfig: null
+useTeamPermissions: true
+slots:
+  - id: courses
+    name: courses
+    allowedComponents: []
+    allowAllComponents: false
+    inheritAllowedComponents: true
+    patternsInAllowedComponents: false
+canBeComposition: false
+created: '2023-05-12T12:27:11.49186+00:00'
+updated: '2023-05-12T12:30:15.731346+00:00'
