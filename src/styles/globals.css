@@ -4,33 +4,9 @@
 
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css?family=Libre+Baskerville|Open+Sans:400,600,700&display=swap");
-
-.font-heading {
-  font-family: "Libre Baskerville", serif;
+h1 {
+  @apply font-extrabold leading-tight;
 }
-
-.font-body {
-  font-family: "Open Sans", sans-serif;
-}
-
-body {
-  @apply font-body;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-heading;
-}
-
-h2 {
-  @apply my-4 text-2xl;
-}
-
 a {
   @apply font-bold text-gray-800 border-b-2 border-dashed;
 }

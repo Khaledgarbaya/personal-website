@@ -31,11 +31,6 @@ const Navigation: React.FC<NavigationProps> = ({
           {e.title}
         </Link>
       ))}
-      {links.length <= 1 ? (
-        <span className="note">
-          (add another node in project map to see new link here)
-        </span>
-      ) : null}
     </nav>
   );
 };
