@@ -23,12 +23,16 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
     }
     return preview ? `/api/${projectMapId}${path}` : `${slug}`;
   },
-  handleComposition: async (composition, context) => {
+  handleComposition: async (routeResponse, context) => {
     const { preview = false } = context || {};
+    console.log("routeResponse", routeResponse.compositionApiResponse);
     if (
-      Object.getOwnPropertyNames(
-        composition?.compositionApiResponse?.composition?.parameters
-      ).length === 0
+      routeResponse.compositionApiResponse.errors?.some(
+        (e) => e.type === "data"
+      ) ||
+      routeResponse.compositionApiResponse.warnings?.some(
+        (e) => e.type === "binding"
+      )
     ) {
       return {
         notFound: true,
@@ -39,7 +43,7 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
       props: {
         navLinks,
         preview,
-        data: composition.compositionApiResponse.composition,
+        data: routeResponse.compositionApiResponse.composition,
       },
     };
   },
