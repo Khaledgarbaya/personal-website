@@ -20,11 +20,11 @@ export default function Custom404() {
               404 Not Found
             </h1>
             <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl">
-              Something's missing.
+              Something&rsquo;s missing.
             </p>
             <p className="mb-4 text-lg font-light">
-              Sorry, we can't find that page. You'll find lots to explore on the
-              home page.{" "}
+              Sorry, we can&rsquo;t find that page. You&rsquo;ll find lots to
+              explore on the home page.{" "}
             </p>
             <Link href="/" className="inline-flex">
               Back to Homepage

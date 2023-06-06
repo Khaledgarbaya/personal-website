@@ -25,6 +25,15 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
   },
   handleComposition: async (composition, context) => {
     const { preview = false } = context || {};
+    if (
+      Object.getOwnPropertyNames(
+        composition?.compositionApiResponse?.composition?.parameters
+      ).length === 0
+    ) {
+      return {
+        notFound: true,
+      };
+    }
     const navLinks = await getCompositionsForNavigation(preview);
     return {
       props: {

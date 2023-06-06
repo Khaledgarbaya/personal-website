@@ -20,11 +20,11 @@ export default function Custom500() {
               Unexpected Error
             </h1>
             <p className="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl">
-              Something's Wrong.
+              Something&rsquo;s Wrong.
             </p>
             <p className="mb-4 text-lg font-light">
-              Sorry, we something is clearly broken. You'll find lots to explore
-              on the home page.{" "}
+              Sorry, we something is clearly broken. You&rsquo;ll find lots to
+              explore on the home page.{" "}
             </p>
             <Link href="/" className="inline-flex">
               Back to Homepage
