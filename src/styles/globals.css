@@ -4,8 +4,12 @@
 
 @tailwind utilities;
 
-h1 {
-  @apply font-extrabold leading-tight;
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap");
+
+h1,
+h2,
+h3 {
+  @apply font-sans leading-tight;
 }
 a {
   @apply font-bold text-gray-800 border-b-2 border-dashed;

@@ -32,7 +32,7 @@ module.exports = {
         "Noto Color Emoji",
       ],
       sans: [
-        "Inter",
+        "Oswald",
         "ui-sans-serif",
         "system-ui",
         "-apple-system",

@@ -25,7 +25,6 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
   },
   handleComposition: async (routeResponse, context) => {
     const { preview = false } = context || {};
-    console.log("routeResponse", routeResponse.compositionApiResponse);
     if (
       routeResponse.compositionApiResponse.errors?.some(
         (e) => e.type === "data"
