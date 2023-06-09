@@ -25,6 +25,9 @@ export const getStaticProps = unstable_withUniformGetStaticProps({
   },
   handleComposition: async (routeResponse, context) => {
     const { preview = false } = context || {};
+    // return 404 if there are data errors or binding warnings
+    // biding warnings happen a dynamic input does not exist causing the binding data
+    // to be null or empty
     if (
       routeResponse.compositionApiResponse.errors?.some(
         (e) => e.type === "data"
