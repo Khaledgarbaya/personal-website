@@ -6,26 +6,25 @@ export default function ArticlePreview({
   title,
   description,
   published,
+  tags,
 }: any) {
+  const tagList = tags || [];
   return (
     <article className="py-6">
       <div className="flex items-center justify-between mb-3 text-gray-500">
         <div className="space-x-2">
-          <Badge>
-            <Link to="/blog/tag/webdev/" prefetch="intent">
-              #webdev
-            </Link>
-          </Badge>
-          <Badge>
-            <Link to="/blog/tag/remix-run/" prefetch="intent">
-              #Remix-run
-            </Link>
-          </Badge>
+          {tagList.map((tag: string) => (
+            <Badge key={tag}>
+              <Link to={`/blog/tags/${tag}`} prefetch="intent">
+                {`#${tag}`}
+              </Link>
+            </Badge>
+          ))}
         </div>
         <span className="text-sm">
           Published{" "}
           <time className="block text-sm text-cyan-700" dateTime={published}>
-            {published.replace(/-/g, "/")}
+            {published.replace(/-/g, "/").replace(/T.+/, "")}
           </time>
         </span>
       </div>

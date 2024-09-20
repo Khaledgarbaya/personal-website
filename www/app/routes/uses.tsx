@@ -7,7 +7,7 @@ export default function Til() {
     <div className="font-sans p-4 w-full">
       <MainNav />
       <div className="flex-none h-52"></div>
-      <PageHero title="Today I Learned" description="I write about things I learn every day. It could be about software engineering, leadership, productivity, or anything else." />
+      <PageHero title="Software and gadgets I use and recommend" description="Everything I use and love and want to recommend." />
       <Footer />
     </div>
   );

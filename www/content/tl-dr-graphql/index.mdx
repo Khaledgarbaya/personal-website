@@ -1,0 +1,257 @@
+---
+title: Tl;Dr GraphQL
+description: GraphQL is a query language for Your API, and a server-side runtime for executing your queries. It is not tied to any specific database engine it is up to you to resolve the query. To create a GraphQL service you define types and their fields, then provide functions for each field on each type.
+published: 2019-05-12
+featured: false
+tags: graphql, api, query
+---
+![](//images.ctfassets.net/3bc97k4uk5q7/1v5cJZ8FEDBgMSZMBcxUBy/b40bd7f639fa9a5b86441738815d16ae/1_49DDRZhUWvVnH-QNHuSUSw.png)
+
+## What is GraphQL?
+
+GraphQL is a query language for Your API, and a server-side runtime for executing your queries. It is not tied to any specific database engine it is up to you to resolve the query. To create a GraphQL service you define types and their fields, then provide functions for each field on each type.
+
+## GraphQL query language
+
+A GraphQL query looks like this: 
+
+```graphql
+[query][query name]{
+     typeName {
+        fieldName
+    }
+}
+```
+
+Everything inside the square brackets, `[` and `]`  is optional.
+
+Example query:
+
+ ```graphql
+query getUserName{
+     person {
+        name 
+    }
+}
+```
+
+The return result will be something like this
+
+```json
+{
+  data: {
+    person: {
+       name: 'Jhon Snow' 
+    }
+}
+```
+
+## Fields
+
+GraphQL is about asking your service for specific fields from specific objects. For example: getting the name field from a user. The nice thing about GraphQL is the data you get is shaped exactly as the query.
+
+change this to table side by side
+
+```graphql
+{
+     person {
+        name 
+    }
+}
+```
+
+```json
+{
+  data: {
+    person: {
+       name: 'Jhon Snow' 
+    }
+}
+```
+
+A field can also refer an Object or a collection of Objects, for example let say every person in the database can have a pet. The query will look like this:
+change this to table side by side
+
+```graphql
+{
+     person {
+        name 
+        pet {
+          name
+       }
+    }
+}
+```
+```json
+{
+  data: {
+    person: {
+       name: 'Jhon Snow',
+       path: {
+          name: 'Doge'
+       }
+    }
+}
+```
+
+## Arguments
+
+In GraphQL every field and nested object can get its own set of arguments, this is very powerful, and sets GraphQL from REST apart.
+
+So let's evolve our previous query a bit 
+
+```graphql
+{
+  person(id:'kdlhh123hf3tzf') {
+    name
+    height (unit: METER)
+    pet{
+      name
+      age(format: DOG_YEARS)
+    }
+  }
+}
+```
+```json
+{
+  data: {
+    person: {
+       name: 'Jhon Snow',
+       # 183 cm
+       height: 183
+       pet: {
+          name: 'Doge',
+          age: 7
+       }
+    }
+}
+```
+
+Let me explain the previous query.
+I told my service to get the user with the id `kdlhh123hf3tzf` with the fields name and the height in meter. Using arguments you can specify things like the format of the field.
+
+## Aliases
+
+Let's take this example query
+
+```graphql
+query getUsers {
+  users(role: admin) {
+    id
+    firstName
+    lastName
+    phone
+    username
+  }
+  users(role: accountant) {
+    id
+    firstName
+    lastName
+      phone
+    username
+  }
+}
+```
+
+Graphql will give us an error 
+
+```javascript
+{
+  "errors": [
+    {
+      "message": "Fields \"users\" conflict because they have differing arguments. Use different aliases on the fields to fetch both if this was intentional.",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        },
+        {
+          "line": 9,
+          "column": 3
+        }
+      ]
+    }
+  ]
+}
+```
+
+That's because we can't use the same node name twice similar to json. To solve that we can use GraphQL Aliases.
+
+```graphql
+query getUsers {
+  admins: users(role: admin) {
+    id
+    firstName
+    lastName
+    phone
+    username
+  }
+  accountants: users(role: accountant) {
+    id
+    firstName
+    lastName
+    phone
+    username
+  }
+}
+```
+
+the result of this query will be
+
+```json
+{
+  data: {
+    admins: [
+      {
+        id
+        firstName: 'Will'
+        lastName: 'Smith'
+        phone: '+0912323132'
+        username: 'willy'
+      }
+    ],
+    accountants: [
+      {
+        id
+        firstName: 'Hannah'
+        lastName: 'Smith'
+        phone: '+0912323132'
+        username: 'hannah'
+      }
+    ],
+    
+  }
+}
+```
+
+## Fragments
+
+A graphql auery can get very verbose and Mainly because you need to provide every field you want to pull from your graphql endpoint.
+Using Graphql Fragment you can reuse pieces of query logic accross multiple queries.
+We can improve our previous query using fragment like this
+
+```graphql
+fragment UserInfo on User {
+   id
+   firstName
+   lastName
+   phone
+   username
+}
+
+query getUsers {
+  admins: users(role: admin) {
+    ...UserInfo
+  }
+  accountants: users(role: accountant) {
+    ...UserInfo
+  }
+}
+```
+
+What happened here is that we groupped the common fields on the User Object in a Fragment and we used it everytime we query for a user instead of writing the field names over and over again.
+
+## Where to go from here
+
+- Introduction to GraphQL [graphql.org](https://graphql.org/learn/)
+- WTF is GraphQL [egghead.io](https://egghead.io/lessons/graphql-wtf-is-graphql?af=eq272d)

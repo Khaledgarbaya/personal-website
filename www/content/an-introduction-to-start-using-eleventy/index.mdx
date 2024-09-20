@@ -1,0 +1,188 @@
+---
+title: An introduction to start using Eleventy
+description: Eleventy, or 11ty, is a powerful yet straightforward static site generator. It does not require any config to get started.
+published: 2021-02-07
+featured: false
+tags: eleventy, static-site-generator, jamstack
+---
+
+**Update:** I released a Course on 11ty and the jamstack. [You can get it now by clicking here](https://realworldjamstack.dev/ "realworldjamstack").
+
+---
+
+Eleventy, or 11ty, is a powerful yet straightforward static site generator. It does not require any config to get started.
+This what it will take you to get an 11ty project running:
+
+```sh
+npm install -g @11ty/eleventy
+echo '# Page header' > README.md
+eleventy
+```
+
+## Bootstrap an eleventy project
+
+<div style={{ position: "relative" }}>
+  <div style={{ height: "0px", paddingBottom: "56.25%" }}>
+    <iframe
+      src="https://app.egghead.io/lessons/11ty-bootstrap-an-eleventy-project/embed?preload=false&af=eq272d"
+      allowfullscreen
+      style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "0px",
+        left: "0px",
+        border: "none",
+        borderRadius: "4px",
+      }}
+    ></iframe>
+  </div>
+</div>
+
+We'll start from an empty directory, initialize it as an npm package by calling `npm init -y`. Install @11ty/eleventy, `npm i -D @11ty/eleventy`, package and create the website entry point.
+Eleventy can compile multiple file formats, HTML, markdown, liquid, and njk.
+
+## Eleventy Layouts
+
+<div style={{ position: "relative" }}>
+  <div style={{ height: "0px", paddingBottom: "56.25%" }}>
+    <iframe
+      src="https://app.egghead.io/lessons/11ty-use-eleventy-layouts/embed?preload=false&af=eq272d"
+      allowfullscreen
+      style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "0px",
+        left: "0px",
+        border: "none",
+        borderRadius: "4px",
+      }}
+    ></iframe>
+  </div>
+</div>
+
+Eleventy Layouts are special templates that you can use to wrap other content. For more information, check the layouts docs.
+
+Layouts will live in an \_includes folder at the root of your project. For example, if you want to share a standard structure through all your blog posts page first, you need to create a file inside the \_includes folder and give it a name; let's call it `mylayout.njk`.
+
+Add the wrapping HTML code.
+
+```html
+---
+title: My Website
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <!-- any page content that uses this layout goes here-->
+    {{ content | safe}}
+  </body>
+</html>
+```
+
+To use a layout, you need to specify the frontmatter `layout` property inside the desired file. In this case, it will `post.md` at the root level of the project.
+
+```md
+---
+layout: mainlayout.njk
+title: My First Post
+tags: post
+---
+
+## My First Post
+```
+
+Layouts in eleventy can use other layouts. You can also use a different template engine across layouts. This feature is convenient if we want to wrap some pages with extra markup but not all the pages.
+
+<div style={{ position: "relative" }}>
+  <div style={{ height: "0px", paddingBottom: "56.25%" }}>
+    <iframe
+      src="https://app.egghead.io/lessons/11ty-use-layout-chaining-in-eleventy/embed?preload=false&af=eq272d"
+      allowfullscreen
+      style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "0px",
+        left: "0px",
+        border: "none",
+        borderRadius: "4px",
+      }}
+    ></iframe>
+  </div>
+</div>
+
+## Create pages from data in Eleventy
+
+<div style={{ position: "relative" }}>
+  <div style={{ height: "0px", paddingBottom: "56.25%" }}>
+    <iframe
+      src="https://app.egghead.io/lessons/11ty-create-pages-from-data-in-eleventy/embed?preload=false&af=eq272d"
+      allowfullscreen
+      style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "0px",
+        left: "0px",
+        border: "none",
+        borderRadius: "4px",
+      }}
+    ></iframe>
+  </div>
+</div>
+
+Eleventy supports a few data sources, JSON, and js files.
+Let's take the example of creating pages from a list of pokemon in a JSON file.
+
+First, create a `_data` folder at the root of your project, then create a `pokemons.json` file inside the newly created folder.
+
+```json
+[
+  {
+    "name": "Pikachu",
+    "power": "Static"
+  },
+  {
+    "name": "Charizard",
+    "power": "fire"
+  }
+]
+```
+
+Now create a file `pokemon-page.njk` at the root of your project.
+To make use of the data, you can use the frontmatter property `pagination`. Pagination has some sub-props:
+
+- data this can the name of the file inside the \_data directory; in your case, it should be `pokemons`
+- size where you can specify the size of the page it is usually 1
+- alias, which will be the name of a current item in the list.
+
+Every page will need a unique slug to construct the final URL. You can achieve that by using the permalink property. You can use the pokemon.name and pass it through the `slug` eleventy filter.
+
+```html
+---
+pagination:
+  data: pokemons
+  size: 1
+  alias: pokemon
+permalink: "pokemons/{{ pokemon.name | slug}}/"
+tags: pokemonPage
+title: { { pokemon.name } }
+---
+
+<p>Name: {{ pokemon.name }}</p>
+<p>Power: {{ pokemon.power }}</p>
+```
+
+## Where to go from here
+
+- Make sure to check the [11ty documentation](https://www.11ty.dev/)
+- [Eghead.io 11ty playlist](https://app.egghead.io/playlists/getting-started-with-eleventy-53c2?af=eq272d)
+- [realworldjamstack course](https://realworldjamstack.dev/ "realworldjamstack")

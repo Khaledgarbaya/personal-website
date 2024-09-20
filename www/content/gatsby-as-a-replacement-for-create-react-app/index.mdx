@@ -1,0 +1,112 @@
+---
+title: Gatsby As a Replacement for Create-react-app
+description: Gatsbyjs and create-react-app are similar in that can help you set up application and removes much of the configuration headache. However, Gatsby offers more like backed in performance optimizations and static rendering without the need for a server and a thriving ecosystem of plugins.
+published: 2020-01-01
+featured: true
+tags: gatsby, react, create-react-app
+---
+
+![react-to-gatsby](//images.ctfassets.net/3bc97k4uk5q7/3rigB437ZRKags2jDaFCwj/94b75ef5febe9afdf02d475a39e441f8/react-to-gatsby.png)
+
+
+Gatsbyjs and create-react-app are similar in that can help you set up application and removes much of the configuration headache. However, Gatsby offers more like backed in performance optimizations and static rendering without the need for a server and a thriving ecosystem of plugins.
+ 
+You might ask me "Isn't Gatsby a static site generator?".
+
+The Answer is Yes But it offers more than that. It gives you HTML to start with then, rehydrates it into a fully-fledged React app
+
+## CRA VS Gatsby
+
+They are similar, they work perfectly with React, they help you setup an application and they remove the configuration headache.
+
+## However...Gatsby Offers More
+ 
+### Zero config performance optimazations
+
+GatsbyJS provides code and data splitting out-of-the-box. It loads your critical HTML and CSS, then prefetches resources for other pages. That way, clicking around feels so fast. Additionally, it offers things like:
+
+gatsby-link uses an intersection observer to preload linked pages when they appear in the viewport, making them feel like they load instantly
+gatsby-image creates optimized versions of your images in Different sizes, loading a smaller, optimized version of an image and replacing it with a higher resolution version when loading has finished. It also uses an intersection observer to cheaply lazy load images.
+ 
+Server side rendering without a server
+At build time, GatsbyJS takes all your react component with all the needed data and generates static HTML, JavaScript, and CSS files. Once the website is fully loaded it rehydrates it into a fully fledge React PWA
+ 
+
+### A Unified GraphQL Data Layer
+
+GatsbyJS unifies all data sources into one layer using GraphQL
+ 
+### A rich plugin ecosystem
+
+With GatsbyJS's flexible plugin system, it lets you bring your data source. From anywhere like CMS, database, or filesystem and makes it queriable through GraphQL.
+
+ 
+### A few Gotcha
+
+The window Object
+If one of your react components relies on the window object it will cause a problem when you are building the Gatsby app because the ssr step runs on a node environment. Luckily you can workaround that using the following check
+
+```js
+  const isBrowser = typeof window !== "undefined"
+```
+
+```js
+exports.onCreateWebpackConfig = ({ stage, loaders, actions }) => {
+  if (stage === "build-html") {
+    actions.setWebpackConfig({
+      module: {
+        rules: [
+          {
+            test: /bad-module/,
+            use: loaders.null(),
+          },
+        ],
+      },
+    })
+  }
+}
+```
+ 
+### You can use Gatsby without Graphql
+
+Although Gatsby marries React and Graphql nicely you don't have to use GraphQL if you don't want to.
+
+Here is an example
+
+```js
+exports.createPages = async ({ actions: { createPage } }) => {
+  // `getPokemonData` is a function that fetches our data
+  const allPokemon = await getPokemonData(["pikachu", "charizard", "squirtle"])
+  // Create a page that lists all Pokémon.
+  createPage({
+    path: `/`,
+    component: require.resolve("./src/templates/all-pokemon.js"),
+    context: { allPokemon },
+  })
+  // Create a page for each Pokémon.
+  allPokemon.forEach(pokemon => {
+    createPage({
+      path: `/pokemon/${pokemon.name}/`,
+      component: require.resolve("./src/templates/pokemon.js"),
+      context: { pokemon },
+    })
+  })
+}
+```
+
+## Where to go from here
+
+I did a talk about the topic at Gatsby days London
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kqtlCL6Btqw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+You can find the slides also here
+
+<script async class="speakerdeck-embed" data-slide="1" data-id="9b45465e29ca46bb84abac38cd798b05" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+I am about to launch my course "[migrate a create-react-app project to Gatsby](https://learnjamstack.com/migrate-a-reactjs-project-to-gatsby "migrate-a-reactjs-project-to-gatsby")" which will go a lot deeper in the topic and provide a step by step Guide on how you can take your existing CRA project and turn it into a Gatsby App. You can check it out [here](https://learnjamstack.com/migrate-a-reactjs-project-to-gatsby).
+
+
+Cheers,
+
+Khaled

@@ -1,0 +1,203 @@
+---
+title: How to create a node js command line tool with yargs middleware
+description: When I started building cli tools I noticed that there is a lot of similarity between a server-side program and a command line tool. Think of the command that a user types as the route or url. For example  `cli-tool project new` in a server environment will be the following url `example.com/project/new`. 
+published: 2018-08-19
+featured: false
+tags: nodejs, cli, yargs, middleware
+---
+
+![macro-1452986 1920](//images.ctfassets.net/3bc97k4uk5q7/1Oden9drYwQ2SkImweSUec/772d43a58924514a1fa1164bbcb57ce3/macro-1452986_1920.jpg?w=850)
+
+Using [Express.js](https://expressjs.com/) a lot, I was always a big fan of the middleware approach when handling routes.
+
+When I started building cli tools I noticed that there is a lot of similarity between a server-side program and a command line tool. 
+
+Think of the command that a user types as the route or url. For example  `cli-tool project new` in a server environment will be the following url `example.com/project/new`.
+
+A `Request` object in the cli world can be the `stdin` and the `Response` as the `stdout`.
+
+A while ago I introduced the middleware concept to [yargs,](https://github.com/yargs/yargs) the main framework I was using to build clis.
+
+You can check the [pull request](https://github.com/yargs/yargs/pull/881) if you want to checkout the code.
+> __Update:__ I created an [egghead.io lesson](https://egghead.io/lessons/node-js-reduce-boilerplate-with-yargs-middleware-in-a-node-js-command-line-tool "Reduce boilerplate with yargs middleware in a node js command line tool") about using yargs middleware, feel free to check it out
+## What is a middleware?
+
+A middleware is a function that has access to the incoming data in our case will be the `argv`. It is usually executed before a yargs command.
+
+Middleware functions can perform the following tasks:
+
+* Execute any code.
+* Make changes to the `argv`.
+* End the request-response cycle.
+
+```
+                        --------------         --------------        ---------
+stdin ----> argv ----> | Middleware 1 | ----> | Middleware 2 | ---> | Command |
+                        --------------         --------------        ---------
+```
+## What is yargs?
+
+![yargs-logo](//images.ctfassets.net/3bc97k4uk5q7/1Hfm8NHHUAMucykccM6e6s/94661dff604c33cdf1437cc27828f8a6/yargs-logo.png?w=850)
+
+> Yargs helps you build interactive command line tools, by parsing arguments and generating an elegant user interface.
+
+It's an amazing library that remove all the pain of parsing the command line args also it provides more features like: 
+
+- commands and (grouped) options.
+- A dynamically generated help menu based on your arguments.
+- bash-completion shortcuts for commands and options.
+
+and [more](https://github.com/yargs/yargs/blob/master/docs/api.md)...
+
+## A simple Node.js command line tool with yargs
+
+![bash-161382 1280](//images.ctfassets.net/3bc97k4uk5q7/2RTr7jXAiQIUemKiagQeoW/6ebc3034dcd6cb5881cf333bdc4aa053/bash-161382_1280.png?w=850)
+
+Let's create a simple command line program that authenticate the user saves the state to a file called `.credentials` to be used in the next commands. 
+
+```js
+const argv = require('yargs')
+const fs = require ('fs')
+
+argv
+  .usage('Usage: $0 <command> [options]')
+  .command('login', 'Authenticate user', (yargs) => {
+        // login command options
+        return yargs.option('username')
+                    .option('password')
+      },
+      ({username, password}) => {
+        // super secure login, don't try this at home
+        if (username === 'admin' && password === 'password') {
+          console.log('Successfully loggedin')
+          fs.writeFileSync('~/.credentials', JSON.stringify({isLoggedIn: true, token:'very-very-very-secret'}))
+        } else {
+          console.log('Please provide a valid username and password')
+        }
+      }
+   )
+  .command('secret', 'Authenticate user', (yargs) => {
+    return yargs.option('token')
+  },
+    ({token}) => {
+      if( !token ) {
+          const data = JSON.parse(fs.readFile('~/.credentials'))
+          token = data.token
+      }
+      if (token === 'very-very-very-secret') {
+        console.log('the secret word is `Eierschalensollbruchstellenverursacher`') // <-- that's a real german word btw.
+      }
+    }
+  )
+  .command('change-secret', 'Authenticate user', (yargs) => {
+    return yargs.option('token')
+  },
+    ({token, secret}) => {
+      if( !token ) {
+          const data = JSON.parse(fs.readFile('~/.credentials'))
+          token = data.token
+      }
+      if (token === 'very-very-very-secret') {
+        console.log(`the new secret word is ${secret}`)
+      }
+    }
+  )
+  .argv;
+```
+
+The very first problem in the code is that you have a lot of duplicate code whenever you want to check if the user authenticated.
+
+One more problem can popup is when more then one person is working on this. Adding another "secret" command feature will require someone to care about authentication, which is not ideal. What about an authentication function that gets called before every command and attach the token to your args.
+
+## Adding yargs middleware
+
+![building-674828 1280](//images.ctfassets.net/3bc97k4uk5q7/6gOsorEKoowUwKoeeOYQQO/669f8d78ed8f9f113ca02c6c7d1123c7/building-674828_1280.jpg?w=850)
+
+
+```js
+const argv = require('yargs')
+const fs = require ('fs')
+cosnt normalizeCredentials = (argv) => {
+  if( !argv.token ) {
+          const data = JSON.parse(fs.readFile('~/.credentials'))
+          token = data.token
+      }
+  return {token} // this will be added to the args
+}
+const isAuthenticated = (argv) => {
+  if (token !== 'very-very-very-secret') {
+    throw new Error ('please login using the command mytool login command')
+  }
+  return {}
+}
+argv
+  .usage('Usage: $0 <command> [options]')
+  .command('login', 'Authenticate user', (yargs) => {
+        // login command options
+        return yargs.option('username')
+                    .option('password')
+      },
+      ({username, password}) => {
+        // super secure login, don't try this at home
+        if (username === 'admin' && password === 'password') {
+          console.log('Successfully loggedin')
+          fs.writeFileSync('~/.credentials', JSON.stringify({isLoggedIn: true, token:'very-very-very-secret'}))
+        } else {
+          console.log('Please provide a valid username and password')
+        }
+      }
+   )
+  .command('secret', 'Authenticate user', (yargs) => {
+    return yargs.option('token')
+  },
+    (argv) => {  
+        console.log('the secret word is `Eierschalensollbruchstellenverursacher`') // <-- that's a real german word btw.
+    }
+  )
+  .command('change-secret', 'Authenticate user', (yargs) => {
+    return yargs.option('token')
+  },
+    (argv) => {
+        console.log(`the new secret word is ${secret}`)
+    }
+  )
+  .middleware(normalizeCredentials, isAuthenticated)
+  .argv;
+```
+
+With these two small changes we now have cleaner commands code. This willl help you a lot when maintaining the code especially when you change the authentication code for example.
+Middlewares can be global, thanks to [aorinevo](https://github.com/yargs/yargs/pull/1119) or can be specific to a command which was the part I worked on.
+
+## Command-level Middlware
+
+You can also have command-level middlewares. If you want your middlware to be called before a specific command. You can add an array of middlware as the last argument of the `.command()` function.
+
+Example:
+
+```js
+const normalizeCredentials = (argv) => {
+  if (!argv.username || !argv.password) {
+    const credentials = JSON.parse(fs.readSync('~/.credentials'))
+    return credentials
+  }
+  return {}
+}
+
+var argv = require('yargs')
+  .usage('Usage: $0 <command> [options]')
+  .command('login', 'Authenticate user', (yargs) =>{
+        return yargs.option('username')
+                    .option('password')
+      } ,(argv) => {
+        authenticateUser(argv.username, argv.password)
+      }, 
+      [normalizeCredentials]
+     )
+  .argv;
+```
+
+## Can I use yargs middleware now?
+__Update:__ this is now available in the latest stable version of yargs.
+
+To be able to use yargs you need to have the `@next` version installed.
+You can install it using `npm i yargs@next`.

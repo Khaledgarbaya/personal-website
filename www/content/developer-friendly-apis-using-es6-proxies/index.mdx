@@ -1,0 +1,196 @@
+---
+title: Developer friendly APIs using ES6 Proxies
+description: Proxiy Object gives you the ability to intercept access to an object properties and change its behaviour.
+published: 2018-02-23
+featured: true
+tags: javascript, es6, proxies
+---
+
+![book-1659717 1920](//images.ctfassets.net/3bc97k4uk5q7/SDyuqsnJkIiYU86AmIkuw/a571a5c56eb71558bec1baf91d46febc/book-1659717_1920.jpg)
+
+I play around a lot with javascript's new features and I try always to find a real use case for them.
+Recently I was a big fan with Javascript Proxies and what facinates me is the ability to intercept access to an object properties and change its behaviour.
+
+## What is a Javascript Proxy?
+
+> __Update:__ I created an [egghead.io lesson](https://egghead.io/lessons/javascript-intercept-property-access-with-javascript-proxy?af=eq272d "Intercept property access with Javascript Proxy") about intercepting property access with Javascript Proxy, feel free to check it out.
+
+A Javascript Proxy is a very interesting es6 feature, that allows you to determine behaviours whenever a property is accessed in a target object
+
+## How does it work?
+```javascript
+var p = new Proxy(target, handler)
+```
+__handler:__ An object whose properties are functions which define the behavior of the javascript proxy when an operation is performed on it.
+
+__target:__ can be any sorts of objects, or another javascript proxy
+
+You define `traps` for each operation you want to intercept and define the behaviour. You can have traps for:
+
+- `get`
+- `set`
+- `getPrototypeOf`
+- `setPrototypeOf`
+- `isExtensible`
+- `preventExtensions`
+- `getOwnPropertyDescriptor`
+- `defineProperty`
+- `has`
+- `deleteProperty`
+- `ownKeys`
+- `apply`
+- `construct`
+
+A trap is basically a function ¯\_(ツ)_/¯. 
+
+It is optional, if you don’t define them the operation gets forwarded to the target aka `No-op forwarding proxy`
+
+## What can I do with it?
+
+What if you intercept your users access to an object and make sure they are doing the right thing, make your library a little bit more mistake friendly or give better direction on how your library should be used. Also, what if you want to change the structure of your data and you don't want to break other services that consumes that. In this blog post I'll try to cover two scenarios where you can use the javascript Proxies, data migration and build a mistake friendly library.
+
+## Data migration
+
+Data structures are hard to get right from the first time so throughout the lifecycle of your application you might want to change the data structure like removing uncessary properties and or group few properties together and the list goes on an on..., I myself been through that a lot of times. Depends how your app is structured you might have a service as a data provider and multiple services that act like data consumers. Once the app grows a lot changing data structure may be scary and error prone or maybe you don't have the capacity to refactor all of your services. Proxies will make sure that your data consumers will always get what they are asking for until you have time to refactor them and once all your code is ready for the change you can pull out the Proxy object.
+
+## Let's build our 'One Thousand and One Nights' javascript app
+
+We start first with our data service, the one that provides data to other services, we'll name it `ScheherazadeDB` that exposes users data in a "super secure way". As first iteration the user data structure will look like this.
+
+```javascript
+const user = {
+  username: 'alibaba',
+  password: 'open sesame',
+  address: 'Far far away'
+  firsName: 'Ali',
+  lastName: 'Baba',
+  age: '44'
+}
+```
+
+Now in our app we have `ScheherazadeDB` consumers especially `Shahryar`, and to make our situation even harder this will run every night for the next one thousand and one nights until dawn consuming all the data and if the data provider, `ScheherazadeDB`, fail to deliver the expected data the consumer will decide that the app does not worth it anymore and will kill the app and all its processes.
+
+The first few nights went really good until someone in the team decided that the user data structure is too flat and we should do some grouping, like having the firstName, lastName and age in side of `personalInfos` group. How can we make the change without breaking running consumers?
+
+Javascript Proxy Object to the rescue.
+Let's start with the new data structure that we need.
+
+```javascript
+const user = {
+  username: 'alibaba',
+  password: 'open sesame',
+  address: 'Far far away'
+  personalInfos: {
+    firsName: 'Ali',
+    lastName: 'Baba',
+    age: '44'
+  }
+}
+```
+
+The problem here is that none of the consumers knows about the new structure and they will try to get or set properties that does not exist anymore like firstName and our app will die, let's fix this before our evil consumer start running again.
+Using the javascript Proxy Object we can redirect get and set to the right property so if a consumer is requesting `user.firstName` we can return `user.personalInfos.firstName`.
+
+Our javascript proxy Object will look like this
+
+```javascript
+function proxyUser (user) {
+  const handler = {
+      get: (target, prop) => {
+        // if the key is groupped we redirect it to there
+        if (prop in target.personalInfos) {
+          return target.personalInfos[prop]
+        }
+        // default access
+        return target[prop]
+      },
+      set: (target, prop, value) => {
+        // we do the same for set
+        // but here we need to return because we don't want to set
+        // the value twice in the group and in the object
+        if (prop in target.personalInfos) {
+          target.personalInfos[prop] = value
+          // on a set trap we need to return true to mark the set as successful
+          return true
+        }
+        target[prop] = value
+        return true
+      }
+    }
+  const proxy = new Proxy(user, handler)
+  return proxy
+}
+
+  
+```
+the only thing we need to do now is to change our `cheherazadeDB` service to give back the proxyUser instead of the original user object.
+
+```javascript
+export async function getUser (id) {
+  const user = await selectSingleUser({where: {$id: id}})
+  // --- previously ---
+  //return user
+  //--- now ---
+  const proxiedUser = proxyUser(user)
+  return proxiedUser
+}
+```
+
+Great, now that our services are running fine we need to warn the developer that some fields are deprecated and they should use the new properties. Let's change our `proxyUser` function to reflect that.
+
+```javascript
+function proxyUser (user) {
+  const handler = {
+      get: (target, prop) => {
+        // if the key is groupped we redirect it to there
+        if (prop in target.personalInfos) {
+          // NEW: Add deprecation warning
+          console.warn(`Accessing ${prop} directly will be deprecated in the next version please use myObject.personalInfos.${key} instead`)
+          return target.personalInfos[prop]
+        }
+        // default access
+        return target[prop]
+      },
+      set: (target, prop, value) => {
+        // we do the same for set
+        // but here we need to return because we don't want to set
+        // the value twice in the group and in the object
+        if (prop in target.personalInfos) {
+          // NEW: Add deprecation warning
+          console.warn(`Accessing ${prop} directly will be deprecated in the next version please use myObject.personalInfos.${key} = value instead`)
+          target.personalInfos[prop] = value
+          // on a set trap we need to return true to mark the set as successful
+          return true
+        }
+        target[prop] = value
+        return true
+      }
+    }
+  const proxy = new Proxy(user, handler)
+  return proxy
+```
+Now whenever a service tries to use the data will receive that warning for example 
+
+```javascript
+  //....
+  const user = await getUser('<id>')
+  console.log(user.firstName) 
+  //...
+```
+we'll get this output in the console.
+![console-wwarning](//images.contentful.com/3bc97k4uk5q7/5nlgO5eOKkMKKy0QC266oi/c66c5ac3e1028952f2db18d2e943e14e/console-wwarning.png)
+
+> And so the service consumer kept `ScheherazadeDB` alive day by day, as he eagerly anticipated the finishing of the previous night's story. At the end of 1,001 nights, and 1,000 stories, Scheherazade told the king that she had no more tales to tell him. During these 1,001 nights, the king had fallen in love with Scheherazade. He spared her life, and made her his queen.
+
+## Can I use it now?
+
+Yes since most of the major browsers supports it already.
+
+![Proxy object browser support](//images.contentful.com/3bc97k4uk5q7/65RsHTojIseQYaiAmi6oa8/cdf5858c7c03395aa0d158c729fc997d/Proxy_object_browser_support.png)
+
+Same for Nodejs, since v6.9 javascript Proxy object is fully supported
+
+![Proxy object nodejs support](//images.contentful.com/3bc97k4uk5q7/4lbxNUYrDOASkACAKkoQAe/5be0f42ca7b57f3dbdec0cebe761f361/Proxy_object_nodejs_support.png)
+## What else can we do?
+With the javascript proxy object possibility are endless, you can resitrict the write access to some properties, logging access and so on.
+There is a really nice in depth [article](https://ponyfoo.com/articles/es6-proxies-in-depth) by ponyfoo you should check it out. Also I had a presentation about Proxies you can find it [here](https://www.youtube.com/watch?v=QXmqpsviMc4)
