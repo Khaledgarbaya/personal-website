@@ -1,0 +1,126 @@
+---
+title: 4 ways to use Axios interceptors
+description: Axios interceptors are a powerful way to manage HTTP requests in your application. In this blog post, you will learn how to use them to handle errors, add headers, and more. 
+published: 2021-01-31
+featured: false
+tags: javascript, axios, http, interceptors
+---
+
+![rg45 wires - credit ElasticComputeFarm ](//images.ctfassets.net/3bc97k4uk5q7/5nVOM5g4KVnas4Yu7u7EXn/df1acdbad3d40a417d8077bacf2adf12/g70a7545352e758468fe6b01ed47e86fa7c4496a46650169e660886d2d5b3fb492502eda7e5920ac6297b4c5458499a4f_1280.jpg?w=740)
+
+## What is Axios?
+
+Axios is a promise-based HTTP client for the browser and node.js. It comes with many useful defaults like automatically detecting JSON responses and returning an object instead of plain text, throwing an error if the response status code is greater than 400.
+
+## What is an axios interceptor?
+
+An Axios  [interceptor](https://github.com/axios/axios#interceptors)  is a function that the library calls every time it sends or receives the request. You can intercept requests or responses before they are handled by “then” or “catch”.
+
+Example:
+
+```js
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
+    return response;
+  }, function (error) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
+    return Promise.reject(error);
+  });
+```
+
+You can also remove the interceptor from Axios.
+
+```js
+const myInterceptor = axios.interceptors.request.use(function ({/*...*/});
+axios.interceptors.request.eject(myInterceptor);
+```
+
+## Inject auth token header in every request using interceptors
+
+There is a big chance when building an app that you will use an API that requires some credentials like api_token or a user Auth token. Usually, you will have to append the required headers with every HTTP request you make. Using Axios interceptors, you can set this up once, and anywhere you call your Axios instance, you are sure that the token is there.
+
+```js
+axios.interceptors.request.use(req => {
+  // `req` is the Axios request config, so you can modify
+  // the `headers`.
+  req.headers.authorization = ‘Bearer mytoken’;
+  return req;
+});
+
+// Automatically sets the authorization header because
+// of the request interceptor
+const res = await axios.get(‘https://api.example.com’);
+```
+
+## Log every request and response using interceptors.
+
+Logging requests can be beneficial, especially when you have a large app and you don’t know where all your requests are triggered. Using an Axios interceptor, you can log every request and response quickly.
+
+```js
+const axios = require(‘axios’);
+
+axios.interceptors.request.use(req => {
+  console.log(`${JSON.stringify(req, null, 2)}`);
+  // you must return the request object after you are done
+  return req;
+});
+
+axios.interceptors.response.use(res => {
+  console.log(res.data.json);
+  // you must return the response object after you are done
+  return res;
+});
+
+await axios.post(‘https://example.com/‘);
+```
+
+## Error handling using Axios interceptors
+
+You can use An Axios interceptor to capture all errors and enhance them before reaching your end user. If you use multiple APIs with different error object shapes, you can use an interceptor to transform them into a standard structure.
+
+```js
+const axios = require(‘axios’);
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    throw new Error(err.response.data.message);
+  }
+)
+const err = await axios.get(‘http://example.com/notfound’).
+  catch(err => err);
+// “Could not find page /notfound”
+err.message;
+```
+
+## Add rate limiting to requests using interceptors.
+
+Backend resources are limited and can cost a lot of money. As a client, you help reduce the load on your server by rate-limiting your HTTP calls.
+Here’s how you can do it using an Axios interceptor.
+
+```js
+const axios = require(‘axios’);
+const debounce = require('lodash.debounce');
+axios.interceptors.request.use(
+  res => {
+return new Promise((resolve) => {
+// only fire a request every 2 sec
+       debounce(
+          () => resolve(config),2000);
+       });
+    });
+  }
+)
+```
+

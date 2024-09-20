@@ -1,20 +1,21 @@
-export default function MainHero() {
+export type PageHeroProps = {
+  title: string;
+  description: string;
+};
+export default function PageHero({ title, description }: PageHeroProps) {
   return (
     <div>
-      <div className="md:flex md:items-center md:justify-between mx-auto max-w-2xl lg:max-w-6xl">
+      <div className="mx-auto max-w-2xl lg:max-w-5xl">
         <div className="pb-6">
           <img
             src="/logo.svg"
             alt="Khaled Garbaya"
-            className="animate-pulse w-96 h-96 rounded-full"
+            className="animate-pulse w-16 h-16"
           />
         </div>
         <div className="max-w-2xl">
-          <h1 className="text-6xl leading-tight font-bold">Khaled Garbaya</h1>
-          <p className="mt-6 text-lg">
-            Engineering Leader, Developer, and educator. I write about web
-            development, leadership, and productivity.
-          </p>
+          <h1 className="text-6xl leading-tight font-bold">{title}</h1>
+          <p className="mt-6 text-lg">{description}</p>
           <div className="mt-6 flex gap-6">
             <a
               className="group -m-1 p-1"

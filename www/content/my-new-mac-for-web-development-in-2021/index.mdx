@@ -1,0 +1,88 @@
+---
+title: My new mac setup for web development in 2021
+description: I recently got a new mac and decided to set it up from scratch. In this blog post you get a detailed list of all the tools I installed to help me with my day to day web development tasks.
+published: 2021-01-19
+featured: false
+tags: mac, web-development, tools
+---
+![A messy Desk](//images.ctfassets.net/3bc97k4uk5q7/nOTp7eXjVz1h9urs8a7Ry/55ee2947b003a608c1463d948642993f/messy-desk.png)
+
+I recently got a new mac and decided to set it up from scratch. In this blog post, you get a detailed list of all the tools I installed to help me with my day to day web development tasks.
+
+## Don't you have a dotfile?
+
+I do have two dotfiles repo, but they kind of fall behind and are outdated.
+Also, I was not 100% satisfied with my setup, so I decide to start with a clean slate.
+
+## Setting up the foundation
+
+First thing, you will need a password manager. With a new computer, you will need to log in to many services, like Github, email, etc., so it is better to set up your password manager first. I use [1Password](https://1password.com/downloads/mac/ "1Password") as my primary password manager.
+
+Second, to make your life easier, get a package manager for your mac; I am talking about [brew](https://brew.sh/ "install brew"). It will allow you to install 90% of your tools through the terminal.
+
+## The Terminal setup
+
+Now iTerm2, a terminal emulator, this a personal choice, and feel free to install anything else you want or use the default mac terminal, which I did btw for over two years.
+
+```sh
+brew install --cask iterm2
+```
+
+Continuing with iterm2, I love the night owl theme for both my [terminal](https://github.com/nickcernis/iterm2-night-owl "night owl theme for iterm") and my code editor.
+
+![iterm-nightownl](//images.ctfassets.net/3bc97k4uk5q7/4i7Kxl6b5P8IUmDFSJeMsF/7c4e04b41fbb85ef7a5d13200972fdb0/Screen_Shot_2020-12-29_at_21.55.14.png)
+
+Another setting you might want to change is to set the appearance to minimal.
+
+![iterm-settings-minimal](//images.ctfassets.net/3bc97k4uk5q7/42RVchJ2nm27ZfyufC5uax/965fa03b8a2bdda07ff5120dc1970175/Screen_Shot_2020-12-29_at_21.58.38.png)
+
+Even more terminal goodness, let's install [zsh](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH) [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) this will help you take your terminal to the next level with things like history and autocomplete. So no more "what was that command again".
+
+## Setting up the Node environment
+
+For Node js, I use a node version manager, `nvm.` This allows me to install different versions of nodejs and switch between them from the terminal. to install nvm, you can use `brew`
+
+```sh
+brew install nvm
+mkdir ~/.nvm
+nvm install stable
+```
+
+For the node package manager, npm already comes bundled with nodejs, but sometimes I might need yarn so let's install it using brew.
+
+```sh
+brew install yarn
+```
+
+## Setup git and source control
+
+I use Github to host all my repositories if you follow this [tutorial](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) to set up an ssh key.
+
+Another important thing is to tell git who you are instead of getting random author details on your commit like khaled@MBP.
+
+```sh
+git config —global user.name "FIRST_NAME LAST_NAME."
+git config —global user.email "you@domain.com."
+```
+
+You might want to install [Github hub](https://github.com/github/hub). Github hub will add some excellent features on top of git, like creating a repository from your terminal and starting a pull request directly from the terminal.
+
+## Code editors and workflow
+
+For coding, I use mostly nvim and tmux because I love seeing everything in one window, something like this:
+![terminal](//images.ctfassets.net/3bc97k4uk5q7/6WHnvv5AaXaiQrNNGE0IXJ/74b00c40b683e778385170820ef8600b/Screenshot_2021-01-18_at_21.41.20.png)
+
+And I know I know vscode has an integrated terminal. With tmux, you can do more like zooming in on panel quickly do a task and zoom back and switch between multiple projects quickly using sessions inside the same terminal window.
+
+You can find all my nvim, tmux and coc configs [here](https://gist.github.com/Khaledgarbaya/420d680115988e3fb12313fff7afbb85) there should be enough comments to explain things.
+
+## Extras
+
+If you have an external monitor that is not supported officially by Apple, you can't control your monitor's brightness, contrast, or volume. Luckily there is a utility that you can install to fix that.
+
+```sh
+brew install --cask monitorcontrol
+```
+
+I also use [Alfred](https://www.alfredapp.com/), a productivity App for mac. You can keepo your Alfred settings in sync between multiple computer using Dropbox, [here's how to do it](https://www.alfredapp.com/blog/productivity/keep-in-sync-using-dropbox-with-alfred/)
+
