@@ -47,17 +47,23 @@ function extractToc({ callback = console.log, depthLimit = 2 }) {
     visit(tree, "element", (node) => {
       //check only h1, h2, h3
       if (!["h1", "h2", "h3"].includes(node.tagName)) return;
-      console.log("node", node);
       const value = toString(node);
       headers.push({ text: value, depth: node.depth ?? 0, id: slug(value) });
     });
-    console.log("headers", headers);
     callback(headers.filter(({ depth }) => depth <= depthLimit));
   };
 }
 
-export async function getPosts(): Promise<PostMeta[]> {
-  const cachedPosts = cache.get("all_posts");
+type PostsQuery = {
+  limit?: number;
+  cacheKey?: string;
+  tags?: string | string[];
+};
+
+export async function getPosts(query?: PostsQuery): Promise<PostMeta[]> {
+  const cacheKey = query?.cacheKey ?? "all_posts";
+  const limit = query?.limit ?? 5;
+  const cachedPosts = cache.get(cacheKey);
   if (cachedPosts) {
     return cachedPosts;
   }
@@ -93,8 +99,8 @@ export async function getPosts(): Promise<PostMeta[]> {
       .sort((a, b) => b?.published.getTime() - a?.published.getTime())
   );
 
-  cache.set("all_posts", posts);
-  return posts;
+  cache.set(cacheKey, posts.slice(0, limit));
+  return posts.slice(0, limit);
 }
 
 export async function getPostsByTags(tags: string | string[]) {

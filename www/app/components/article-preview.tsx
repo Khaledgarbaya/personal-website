@@ -29,7 +29,9 @@ export default function ArticlePreview({
         </span>
       </div>
       <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:underline">
-        <Link to={`/blog/${slug}`}>{title ?? ""}</Link>
+        <Link to={`/blog/${slug}`} unstable_viewTransition>
+          {title ?? ""}
+        </Link>
       </h2>
       <p className="mb-5 text-gray-500 dark:text-gray-400">
         {description ?? ""}

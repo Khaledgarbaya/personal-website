@@ -1,8 +1,10 @@
-import { json, LoaderFunction } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { getPost, type TableOfContents } from "~/utils/posts.server";
 import { useMemo, useEffect, useState } from "react";
 import { getMDXComponent } from "mdx-bundler/client";
+import { generateMeta } from "@forge42/seo-tools/remix/metadata";
+import { article } from "@forge42/seo-tools/structured-data/article";
 
 type LoaderData = {
   code: string;
@@ -19,16 +21,40 @@ export const loader: LoaderFunction = async ({ params }) => {
   const slug = params.slug;
   if (!slug) throw new Response("Not Found", { status: 404 });
 
-  const post = await getPost(slug);
+  const post = (await getPost(slug)) as LoaderData;
   if (!post) throw new Response("Not Found", { status: 404 });
 
-  return json<LoaderData>(post, {
-    headers: {
-      "Cache-Control": "public, max-age=60, s-maxage=60",
-    },
-  });
+  return json(
+    { ...post, slug },
+    {
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=60",
+      },
+    }
+  );
 };
 
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const meta = generateMeta(
+    {
+      title: data.frontmatter.title,
+      description: data.frontmatter.description,
+      url: `https://khaledgarbaya.net/blog/${data.slug}`,
+      image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:${data.frontmatter.title},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`,
+    },
+    [
+      {
+        "script:ld+json": article({
+          "@type": "Article",
+          headline: data.frontmatter.description,
+          image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:${data.frontmatter.title},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`,
+          datePublished: data.frontmatter.published,
+        }),
+      },
+    ]
+  );
+  return meta;
+};
 function TableOfContents({ toc }: { toc: TableOfContents }) {
   const [activeId, setActiveId] = useState<string>("");
 
@@ -77,7 +103,9 @@ function TableOfContents({ toc }: { toc: TableOfContents }) {
             className={`transition-colors ${
               item.depth === 1 ? "font-semibold" : "pl-4"
             } ${
-              activeId === item.id ? "text-blue-500" : "hover:text-blue-500"
+              activeId === item.id
+                ? "text-blue-500 border-l-2 border-primary"
+                : "hover:text-blue-500"
             }`}
           >
             <a href={`#${item.id}`} onClick={(e) => handleClick(e, item.id)}>
@@ -114,6 +142,7 @@ export default function Post() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex-none h-52"></div>
       <div className="lg:flex lg:space-x-8">
         <article className="lg:w-3/4">
           <header className="mb-8">

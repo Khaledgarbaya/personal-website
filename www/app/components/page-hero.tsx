@@ -6,13 +6,6 @@ export default function PageHero({ title, description }: PageHeroProps) {
   return (
     <div>
       <div className="mx-auto max-w-2xl lg:max-w-5xl">
-        <div className="pb-6">
-          <img
-            src="/logo.svg"
-            alt="Khaled Garbaya"
-            className="animate-pulse w-16 h-16"
-          />
-        </div>
         <div className="max-w-2xl">
           <h1 className="text-6xl leading-tight font-bold">{title}</h1>
           <p className="mt-6 text-lg">{description}</p>
