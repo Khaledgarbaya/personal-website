@@ -1,15 +1,18 @@
 export default function MainHero() {
   return (
     <div>
-      <div className="md:flex md:items-center md:justify-between mx-auto max-w-2xl lg:max-w-6xl">
+      <div className="p-6 flex flex-col md:flex-row items-center justify-between mx-auto max-w-2xl lg:max-w-7xl">
         <div className="pb-6">
           <img
             src="/logo.svg"
             alt="Khaled Garbaya"
+            style={{
+              viewTransitionName: "logo",
+            }}
             className="animate-pulse w-96 h-96 rounded-full"
           />
         </div>
-        <div className="max-w-2xl">
+        <div className="max-w-2xl mx-auto">
           <h1 className="text-6xl leading-tight font-bold">Khaled Garbaya</h1>
           <p className="mt-6 text-lg">
             Engineering Leader, Developer, and educator. I write about web

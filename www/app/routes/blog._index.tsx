@@ -1,12 +1,19 @@
-import { json } from "@remix-run/node";
+import { HeadersFunction, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import PageHero from "~/components/page-hero";
 import RecentPosts from "~/components/recent-posts";
 import { getPosts } from "~/utils/posts.server";
 
 export const loader = async () => {
-  const posts = await getPosts();
-  return json({ posts });
+  const posts = await getPosts({ limit: 100, cacheKey: "blog" });
+  return json(
+    { posts },
+    { headers: { "Cache-Control": "public, max-age=60" } }
+  );
+};
+
+export const headers: HeadersFunction = ({ loaderHeaders }) => {
+  return { "Cache-Control": loaderHeaders.get("Cache-Control") ?? "" };
 };
 
 export default function Index() {
