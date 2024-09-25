@@ -1,0 +1,23 @@
+---
+title: Show More Lines in a Node.js Error Stack Trace
+description: Learn how to show more lines in a Node.js error stack trace by setting the `Error.stackTraceLimit` property. This can be useful for debugging and understanding the context of an error.
+published: 2024-09-25
+featured: false
+tags: nodejs, debugging
+---
+
+When an error occurs in a Node.js application, you may see a stack trace that shows the sequence of function calls that led to the error. By default, Node.js limits the number of lines in the stack trace to 10. This can be useful for quickly identifying the source of an error, but it may not provide enough context to understand the full flow of the program.
+
+To show more lines in a Node.js error stack trace, you can increase the `Error.stackTraceLimit` property. This property controls the number of stack frames captured in the stack trace. By default, it is set to 10, but you can set it to a higher value to capture more frames.
+
+Here's an example of how to increase the `Error.stackTraceLimit` property:
+
+```javascript
+Error.stackTraceLimit = 20;
+```
+
+By setting `Error.stackTraceLimit` to a higher value, you can capture more stack frames in the error stack trace. This can be useful for debugging complex applications or understanding the full context of an error.
+
+It's important to note that increasing the `Error.stackTraceLimit` property can have performance implications, as capturing more stack frames requires more memory and processing time. You should use this feature judiciously and only when necessary for debugging purposes.
+
+

@@ -1,0 +1,46 @@
+---
+title: Javascript proxies
+description: Javascript proxies are a powerful feature that allows you to intercept and customize operations on objects. In this post, we will explore what proxies are and how to use them. 
+published: 2024-09-25
+featured: false
+tags: javascript, proxies
+---
+
+## What are proxies?
+
+Proxies are a powerful feature that allows you to intercept and customize operations on objects. They are a way to create a custom behavior for fundamental operations (e.g., property lookup, assignment, enumeration, function invocation, etc.) on objects.
+
+Proxies are created using the `Proxy` constructor, which takes two arguments: the target object and a handler object. The target object is the object that the proxy wraps, and the handler object is an object that defines the custom behavior for the proxy.
+
+Here is an example of creating a simple proxy that logs property access:
+
+```javascript
+const target = {
+  name: 'Alice',
+  age: 30
+};
+
+const handler = {
+  get: function(target, prop, receiver) {
+    console.log(`Getting property ${prop}`);
+    return Reflect.get(...arguments);
+  }
+};
+
+const proxy = new Proxy(target, handler);
+
+console.log(proxy.name); // Logs: Getting property name
+console.log(proxy.age); // Logs: Getting property age
+```
+
+In this example, the `handler` object defines a `get` trap that logs the property being accessed. When we access the `name` and `age` properties of the `proxy` object, the `get` trap is triggered, and the property access is logged.
+
+## Why use proxies?
+
+Proxies are useful for a variety of use cases, such as:
+
+- Logging and debugging: Proxies can be used to log property access, assignment, and function invocation for debugging purposes.
+- Validation and type checking: Proxies can enforce constraints on object properties, such as ensuring that a property is of a specific type or that it meets certain criteria.
+- Security: Proxies can be used to restrict access to certain properties or prevent certain operations on objects.
+- Data binding: Proxies can be used to create reactive data structures that automatically update when their properties change.
+

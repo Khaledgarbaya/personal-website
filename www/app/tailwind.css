@@ -67,7 +67,14 @@
   body {
     @apply bg-background text-foreground;
   }
-
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Signika Variable", sans-serif;
+  }
   h1 {
     @apply text-4xl font-bold tracking-tight lg:text-5xl;
   }

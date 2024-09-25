@@ -1,0 +1,25 @@
+---
+title: "Tailwindcss: How to make a Gird with card of the same height"
+description: How to make a grid with cards of the same height using Tailwindcss. In this post, we will explore how to create a responsive grid layout with cards that have the same height using Tailwindcss. 
+published: 2024-09-25
+featured: false
+tags: tailwindcss, css
+---
+
+When building a grid layout with cards, you may want the cards to have the same height to create a consistent and visually appealing design. In this post, we will explore how to create a responsive grid layout with cards that have the same height using Tailwindcss.
+
+## Creating a grid layout with cards
+
+```html
+<div class="grid auto-rows-fr grid-cols-3 gap-2">
+  <div class="rounded bg-slate-100 p-3">This has some content.</div>
+  <div class="rounded bg-slate-100 p-3">
+    This has more content so that its significantly larger than the other
+    items. Yet all items, even the one in the new line will grow to the
+    size of the highest container.
+  </div>
+  <div class="rounded bg-slate-100 p-3">More content.</div>
+  <div class="rounded bg-slate-100 p-3">First item in new line.</div>
+</div>
+```
+The important part here is `auto-rows-fr` which will make sure that all the items in the grid will have the same height.

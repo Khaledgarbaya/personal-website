@@ -1,50 +1,27 @@
 import { promises as fs } from "fs";
-import path from "path";
-import { bundleMDX } from "mdx-bundler";
 import { LRUCache } from "lru-cache";
+import { bundleMDX } from "mdx-bundler";
+import path from "path";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { toString } from "mdast-util-to-string";
 import { visit } from "unist-util-visit";
+import { TableOfContentItem, TableOfContents } from "./posts.server";
 import { slug } from "github-slugger";
+import { toString } from "mdast-util-to-string";
 
-export type PostMeta = {
-  slug: string;
-  title: string;
-  description: string;
-  published: Date;
-  featured: boolean;
-  tags: string[];
-};
-export type TableOfContentItem = {
-  depth: number;
-  text: string;
-  id: string;
-};
-export type TableOfContents = TableOfContentItem[];
-const contentPath = path.join(process.cwd(), "content", "posts");
 const cache = new LRUCache<string, any>({ max: 500, ttl: 60000 }); // 60 seconds TTL
+const contentPath = path.join(process.cwd(), "content", "til");
 
 function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined;
 }
-const rehypePrettyCodeOptions = {
-  theme: "one-dark-pro",
-  keepBackground: true,
-  onVisitHighlightedLine(node: any) {
-    node.properties.className.push("highlighted");
-  },
-  onVisitHighlightedWord(node: any) {
-    node.properties.className = ["word"];
-  },
-};
 
 // Custom rehype plugin to extract table of contents
 function extractToc({ callback = console.log, depthLimit = 2 }) {
   return (tree: any) => {
     const headers: TableOfContentItem[] = [];
-    visit(tree, "element", (node) => {
+    visit(tree, "element", (node: any) => {
       //check only h1, h2, h3
       if (!["h1", "h2", "h3"].includes(node.tagName)) return;
       const value = toString(node);
@@ -54,23 +31,15 @@ function extractToc({ callback = console.log, depthLimit = 2 }) {
   };
 }
 
-type PostsQuery = {
-  limit?: number;
-  cacheKey?: string;
-  tags?: string | string[];
-};
-
-export async function getPosts(query?: PostsQuery): Promise<PostMeta[]> {
-  const cacheKey = query?.cacheKey ?? "all_posts";
-  const limit = query?.limit ?? 5;
-  const cachedPosts = cache.get(cacheKey);
-  if (cachedPosts) {
-    return cachedPosts;
+export async function getTilPosts() {
+  const cachedTilPosts = cache.get("til_posts");
+  if (cachedTilPosts) {
+    return cachedTilPosts;
   }
-
   const dir = await fs.readdir(contentPath);
+
   const posts = await Promise.all(
-    dir.map(async (slug) => {
+    dir.map(async (slug: string) => {
       const postDir = path.join(contentPath, slug);
       const stat = await fs.stat(postDir);
       if (!stat.isDirectory()) return null;
@@ -99,20 +68,13 @@ export async function getPosts(query?: PostsQuery): Promise<PostMeta[]> {
       .sort((a, b) => b?.published.getTime() - a?.published.getTime())
   );
 
-  cache.set(cacheKey, posts.slice(0, limit));
-  return posts.slice(0, limit);
+  cache.set("til_posts", posts);
+  return posts;
 }
 
-export async function getPostsByTags(tags: string | string[]) {
-  const allPosts = await getPosts();
-  const tagsArray = Array.isArray(tags) ? tags : [tags];
-  return allPosts.filter((post) =>
-    post.tags.some((tag) => tagsArray.includes(tag))
-  );
-}
 function addClassesToHeadings() {
   return (tree: any) => {
-    visit(tree, "element", (node) => {
+    visit(tree, "element", (node: any) => {
       if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(node.tagName)) {
         node.properties.className = (node.properties.className || []).concat(
           "flex items-center relative group"
@@ -121,8 +83,20 @@ function addClassesToHeadings() {
     });
   };
 }
-export async function getPost(slug: string) {
-  const cachedPost = cache.get(`post_${slug}`);
+
+const rehypePrettyCodeOptions = {
+  theme: "one-dark-pro",
+  keepBackground: true,
+  onVisitHighlightedLine(node: any) {
+    node.properties.className.push("highlighted");
+  },
+  onVisitHighlightedWord(node: any) {
+    node.properties.className = ["word"];
+  },
+};
+
+export async function getTilPost(slug: string) {
+  const cachedPost = cache.get(`til_${slug}`);
   if (cachedPost) {
     return cachedPost;
   }
@@ -137,7 +111,6 @@ export async function getPost(slug: string) {
     const source = await fs.readFile(filePath, "utf8");
 
     let toc: TableOfContents = [];
-
     const { code, frontmatter } = await bundleMDX({
       source,
       mdxOptions(options) {
@@ -189,10 +162,9 @@ export async function getPost(slug: string) {
 
     // Access the toc from the last rehype plugin (extractToc)
     const post = { code, frontmatter, toc };
-    cache.set(`post_${slug}`, post);
+    cache.set(`til_${slug}`, post);
     return post;
   } catch (error) {
-    console.error(error);
     return null;
   }
 }
