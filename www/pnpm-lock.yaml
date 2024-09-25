@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource-variable/signika':
+    specifier: ^5.1.0
+    version: 5.1.0
+  '@fontsource/alike':
+    specifier: ^5.1.0
+    version: 5.1.0
   '@forge42/seo-tools':
     specifier: ^1.3.0
     version: 1.3.0(typescript@5.5.4)
@@ -1013,6 +1019,14 @@ packages:
 
   /@floating-ui/utils@0.2.7:
     resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
+
+  /@fontsource-variable/signika@5.1.0:
+    resolution: {integrity: sha512-of2rsZpz5uf2l2KyXuG/iUah7/MawARO1ZslYhwtAxk2h1s66sHi6+i1xiuMtcczcWjo0FpUtCHOL/ri25T3dw==}
+    dev: false
+
+  /@fontsource/alike@5.1.0:
+    resolution: {integrity: sha512-KWkBWUgjNU6SnYY9dpobtiy3iVsOt45H9bfGbzA0V2/YoAlj8Imn+KcMxok5dVpxpSIPfdB6F9xzojSYQTVIsA==}
+    dev: false
 
   /@forge42/seo-tools@1.3.0(typescript@5.5.4):
     resolution: {integrity: sha512-yxpkeyYyZhFzTpuq9rtcx6FRVZD0NTcVDS2ptrVG7nobnHQnANlLJXkY343GOocHGTygdK35Hyu/iU1nxsEGuA==}

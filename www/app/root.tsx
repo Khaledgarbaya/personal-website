@@ -18,6 +18,7 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { themeSessionResolver } from "./sessions.server";
 import stylesheet from "~/tailwind.css?url";
 import { cssBundleHref } from "@remix-run/css-bundle";
+import "@fontsource-variable/signika/wght.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
