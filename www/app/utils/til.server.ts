@@ -9,6 +9,8 @@ import { visit } from "unist-util-visit";
 import { TableOfContentItem, TableOfContents } from "./posts.server";
 import { slug } from "github-slugger";
 import { toString } from "mdast-util-to-string";
+import remarkEmbedder, { type TransformerInfo } from "@remark-embedder/core";
+import oembedTransformer from "@remark-embedder/transformer-oembed";
 
 const cache = new LRUCache<string, any>({ max: 500, ttl: 60000 }); // 60 seconds TTL
 const contentPath = path.join(process.cwd(), "content", "til");
@@ -94,6 +96,35 @@ const rehypePrettyCodeOptions = {
     node.properties.className = ["word"];
   },
 };
+type GottenHTML = string | null;
+function handleEmbedderError({ url }: { url: string }) {
+  return `<p>Error embedding <a href="${url}">${url}</a></p>.`;
+}
+function handleEmbedderHtml(html: GottenHTML, info: TransformerInfo) {
+  if (!html) return null;
+
+  const url = new URL(info.url);
+  // matches youtu.be and youtube.com
+  if (/youtu\.?be/.test(url.hostname)) {
+    // this allows us to set youtube embeds to 100% width and the
+    // height will be relative to that width with a good aspect ratio
+    return makeEmbed(html, "youtube");
+  }
+  if (url.hostname.includes("codesandbox.io")) {
+    return makeEmbed(html, "codesandbox", "80%");
+  }
+  return html;
+}
+
+function makeEmbed(html: string, type: string, heightRatio = "56.25%") {
+  return `
+  <div class="embed" data-embed-type="${type}">
+    <div style="padding-bottom: ${heightRatio}">
+      ${html}
+    </div>
+  </div>
+`;
+}
 
 export async function getTilPost(slug: string) {
   const cachedPost = cache.get(`til_${slug}`);
@@ -114,6 +145,17 @@ export async function getTilPost(slug: string) {
     const { code, frontmatter } = await bundleMDX({
       source,
       mdxOptions(options) {
+        options.remarkPlugins = [
+          ...(options.remarkPlugins ?? []),
+          [
+            remarkEmbedder,
+            {
+              handleError: handleEmbedderError,
+              handleHTML: handleEmbedderHtml,
+              transformers: [oembedTransformer],
+            },
+          ],
+        ];
         options.rehypePlugins = [
           ...(options.rehypePlugins ?? []),
           rehypeSlug,
@@ -151,6 +193,12 @@ export async function getTilPost(slug: string) {
           ],
           addClassesToHeadings,
           [rehypePrettyCode, rehypePrettyCodeOptions],
+          [
+            remarkEmbedder,
+            {
+              transformers: [oembedTransformer],
+            },
+          ],
           [
             extractToc,
             { depthLimit: 3, callback: (t: TableOfContents) => (toc = t) },

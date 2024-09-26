@@ -38,7 +38,7 @@ const rehypePrettyCodeOptions = {
   onVisitHighlightedWord(node: any) {
     node.properties.className = ["word"];
   },
-};
+}
 
 // Custom rehype plugin to extract table of contents
 function extractToc({ callback = console.log, depthLimit = 2 }) {

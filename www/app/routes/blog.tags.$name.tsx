@@ -1,4 +1,8 @@
-import { HeadersFunction, json, type LoaderFunctionArgs } from "@remix-run/node";
+import {
+  HeadersFunction,
+  json,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import RecentPosts from "~/components/recent-posts";
 import { getPostsByTags } from "~/utils/posts.server";
@@ -8,7 +12,10 @@ export async function loader({ params }: LoaderFunctionArgs) {
     return json({ posts: [], tag: "" }, { status: 404 });
   }
   const posts = await getPostsByTags(params.name);
-  return json({ posts, tag: params.name }, {headers: { "Cache-Control": "public, max-age=60" }});
+  return json(
+    { posts, tag: params.name },
+    { headers: { "Cache-Control": "public, max-age=60" } }
+  );
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
