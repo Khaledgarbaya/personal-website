@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: "jit",
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -17,6 +18,44 @@ module.exports = {
       },
     },
     extend: {
+      typography: (theme: any) => {
+        const breakout = {
+          marginLeft: 0,
+          marginRight: 0,
+          gridColumn: "2 / span 10",
+        };
+        return {
+          DEFAULT: {
+            css: [
+              {
+                ".embed": {
+                  position: "relative",
+                  marginLeft: "-10vw",
+                  marginRight: "-10vw",
+                  [`@media (min-width: ${theme("screens.lg")})`]: {
+                    ...breakout,
+                  },
+                },
+                ".embed > div": {
+                  height: "0px",
+                },
+                ".embed > div > iframe": {
+                  height: "100% !important",
+                  width: "100% !important",
+                  top: "0",
+                  left: "0",
+                  position: "absolute",
+                  border: "none",
+                  borderRadius: "0 !important",
+                  [`@media (min-width: ${theme("screens.lg")})`]: {
+                    borderRadius: "0.5rem !important",
+                  },
+                },
+              },
+            ],
+          },
+        };
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,5 +112,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography'),require("tailwindcss-animate")],
+  plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
 };

@@ -1,5 +1,4 @@
 import { HeadersFunction } from "@remix-run/node";
-import { Form } from "@remix-run/react";
 import Footer from "~/components/footer";
 import MainNav from "~/components/main-nav";
 import NewsletterForm from "~/components/newsletter-form";

@@ -1,4 +1,3 @@
-
 import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { type TableOfContents } from "~/utils/posts.server";
