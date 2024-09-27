@@ -5,6 +5,15 @@ import { useMemo, useEffect, useState } from "react";
 import { getMDXComponent } from "mdx-bundler/client";
 import { generateMeta } from "@forge42/seo-tools/remix/metadata";
 import { article } from "@forge42/seo-tools/structured-data/article";
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+  XIcon,
+} from "react-share";
 
 type LoaderData = {
   code: string;
@@ -161,6 +170,7 @@ export default function Post() {
                 </span>
               ))}
             </div>
+            {/*author*/}
           </header>
           <div className="prose prose-lg dark:prose-invert max-w-none">
             <Component />
@@ -169,6 +179,23 @@ export default function Post() {
         <aside className="lg:w-1/4 mb-8 lg:mb-0">
           <div className="sticky top-8">
             <TableOfContents toc={toc} />
+            <div className="mt-8 py-4 flex gap-4 border-t border-t-border">
+              <FacebookShareButton
+                url={`https://khaledgarbaya.net/blog/${params.slug}`}
+              >
+                <FacebookIcon size={38} round={true} />
+              </FacebookShareButton>
+              <TwitterShareButton
+                url={`https://khaledgarbaya.net/blog/${params.slug}`}
+              >
+                <XIcon size={38} round={true} />
+              </TwitterShareButton>
+              <LinkedinShareButton
+                url={`https://khaledgarbaya.net/blog/${params.slug}`}
+              >
+                <LinkedinIcon size={38} round={true} />
+              </LinkedinShareButton>
+            </div>
           </div>
         </aside>
       </div>

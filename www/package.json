@@ -33,6 +33,7 @@
     "mdx-bundler": "^10.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-share": "^5.1.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remix-themes": "^1.5.0",
