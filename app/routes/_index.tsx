@@ -62,42 +62,26 @@ export default function Index() {
             <NewsletterForm />
             <div className="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
               <h2 className="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                <span className="ml-3">Latest Courses</span>
+                <span className="ml-3">Latest Videos</span>
               </h2>
               <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                Get notified when I publish something new, and unsubscribe at
-                any time.
+                Latest videos from my youtube channel
               </p>
-              <div className="mt-6 flex">
+              <div className="mt-6 flex items-center justify-center">
                 <div className="flex-none w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-md"></div>
-                <div className="flex-auto ml-4">
+                <div className="flex-auto ml-4 not-prose">
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                    Course Title
+                    <Link
+                      className="inline-flex items-center font-medium text-blue-600 hover:underline dark:text-blue-500"
+                      to="https://www.youtube.com/watch?v=TW0Ic0n_PZ8"
+                    >
+                      Numbered Bookmarks in VS Code
+                    </Link>
                   </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    Course description
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 flex">
-                <div className="flex-none w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-md"></div>
-                <div className="flex-auto ml-4">
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                    Course Title
-                  </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    Course description
-                  </p>
-                </div>
-              </div>
-              <div className="mt-6 flex">
-                <div className="flex-none w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-md"></div>
-                <div className="flex-auto ml-4">
-                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                    Course Title
-                  </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    Course description
+                  <p className="text-sm !mt-0 text-zinc-600 dark:text-zinc-400">
+                    Numbered bookmarks will allow us to select a block of code,
+                    bookmark it and easily navigate back to it using the
+                    bookmark number.
                   </p>
                 </div>
               </div>
