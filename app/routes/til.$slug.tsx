@@ -38,10 +38,10 @@ export const loader: LoaderFunction = async ({ params }) => {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const meta = generateMeta(
     {
-      title: data.frontmatter.title,
+      title: `TIL - ${data.frontmatter.title}`,
       description: data.frontmatter.description,
       url: `https://khaledgarbaya.net/til/${data.slug}`,
-      image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:${data.frontmatter.title},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`,
+      image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:TIL - ${data.frontmatter.title},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`,
     },
     [
       {

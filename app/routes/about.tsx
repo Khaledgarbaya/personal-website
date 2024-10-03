@@ -1,4 +1,5 @@
-import { HeadersFunction } from "@remix-run/node";
+import { generateMeta } from "@forge42/seo-tools/remix/metadata";
+import { HeadersFunction, MetaFunction } from "@remix-run/node";
 import Footer from "~/components/footer";
 import MainNav from "~/components/main-nav";
 import PageHero from "~/components/page-hero";
@@ -11,6 +12,16 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
   return { "Cache-Control": loaderHeaders.get("Cache-Control") ?? "" };
 };
 
+export const meta: MetaFunction = ({}) => {
+  const meta = generateMeta({
+    title: "Khaled Garbaya - About",
+    description:
+      "Engineering Leader, Developer, and educator. I write about web development, leadership, and productivity.",
+    url: `https://khaledgarbaya.net`,
+    image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:Learn more about me,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
+  });
+  return meta;
+};
 export default function About() {
   return (
     <div className="font-sans p-4 w-full">

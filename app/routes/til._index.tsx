@@ -1,5 +1,6 @@
+import { generateMeta } from "@forge42/seo-tools/remix/metadata";
 import { HeadersFunction, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { MetaFunction, useLoaderData } from "@remix-run/react";
 import Footer from "~/components/footer";
 import PageHero from "~/components/page-hero";
 import TilCollection from "~/components/til-collection";
@@ -15,6 +16,17 @@ export const loader = async () => {
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
   return { "Cache-Control": loaderHeaders.get("Cache-Control") ?? "" };
+};
+
+export const meta: MetaFunction = ({}) => {
+  const meta = generateMeta({
+    title: "Khaled Garkbaya - TIL",
+    description:
+      "Things I learn every day. It could be about software engineering, leadership, productivity, or anything else.",
+    url: `https://khaledgarbaya.net`,
+    image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:Things I learn every day,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
+  });
+  return meta;
 };
 
 export default function Til() {
