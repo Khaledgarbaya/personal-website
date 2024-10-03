@@ -5,7 +5,7 @@ import MainNav from "~/components/main-nav";
 
 export const meta: MetaFunction = ({}) => {
   const meta = generateMeta({
-    title: "Khaled Garkbaya - Blog",
+    title: "Khaled Garbaya - Blog",
     description:
       "Blog posts about web development, software engineering and leadership.",
     url: `https://khaledgarbaya.net`,

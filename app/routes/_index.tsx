@@ -12,7 +12,7 @@ import { getPosts } from "~/utils/posts.server";
 
 export const meta: MetaFunction<typeof loader> = ({}) => {
   const meta = generateMeta({
-    title: "Khaled Garkbaya",
+    title: "Khaled Garbaya",
     description:
       "Engineering Leader, Developer and educator. I write about web development, software engineering and leadership.",
     url: `https://khaledgarbaya.net`,
