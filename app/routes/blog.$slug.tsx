@@ -10,7 +10,7 @@ import {
   FacebookShareButton,
   LinkedinIcon,
   LinkedinShareButton,
-  TwitterIcon,
+
   TwitterShareButton,
   XIcon,
 } from "react-share";

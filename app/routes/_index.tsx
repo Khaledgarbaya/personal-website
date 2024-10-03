@@ -1,3 +1,4 @@
+import { generateMeta } from "@forge42/seo-tools/remix/metadata";
 import type { HeadersFunction, MetaFunction } from "@remix-run/node";
 import { json, Link, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
@@ -9,14 +10,16 @@ import RecentPosts from "~/components/recent-posts";
 import { buttonVariants } from "~/components/ui/button";
 import { getPosts } from "~/utils/posts.server";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Khaled Garbaya" },
-    {
-      name: "description",
-      content: "An engineering Leader, Developer, and educator",
-    },
-  ];
+export const meta: MetaFunction<typeof loader> = ({}) => {
+  const meta = generateMeta({
+    title: "Khaled Garkbaya",
+    description:
+      "Engineering Leader, Developer and educator. I write about web development, software engineering and leadership.",
+    url: `https://khaledgarbaya.net`,
+    image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:I write about web development leadership and productivity,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
+  });
+  return meta;
+
 };
 
 export const loader = async () => {
