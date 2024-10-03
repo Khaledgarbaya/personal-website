@@ -19,6 +19,7 @@ export const meta: MetaFunction<typeof loader> = ({}) => {
     image: `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:I write about web development leadership and productivity,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
   });
   return meta;
+
 };
 
 export const loader = async () => {

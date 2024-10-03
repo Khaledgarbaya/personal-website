@@ -1,6 +1,7 @@
 import { generateMeta } from "@forge42/seo-tools/remix/metadata";
 import { HeadersFunction, json } from "@remix-run/node";
 import { MetaFunction, useLoaderData } from "@remix-run/react";
+
 import Footer from "~/components/footer";
 import PageHero from "~/components/page-hero";
 import TilCollection from "~/components/til-collection";

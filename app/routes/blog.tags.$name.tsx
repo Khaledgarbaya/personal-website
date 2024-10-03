@@ -1,4 +1,5 @@
 import { generateMeta } from "@forge42/seo-tools/remix/metadata";
+
 import {
   HeadersFunction,
   json,
@@ -6,6 +7,7 @@ import {
 } from "@remix-run/node";
 import { MetaFunction, useLoaderData } from "@remix-run/react";
 import PageHero from "~/components/page-hero";
+import { useLoaderData } from "@remix-run/react";
 import RecentPosts from "~/components/recent-posts";
 import { getPostsByTags } from "~/utils/posts.server";
 
@@ -29,6 +31,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   });
   return meta;
 };
+
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
   return { "Cache-Control": loaderHeaders.get("Cache-Control") ?? "" };
 };

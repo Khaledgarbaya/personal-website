@@ -1,5 +1,6 @@
 import { generateMeta } from "@forge42/seo-tools/remix/metadata";
 import { HeadersFunction, MetaFunction } from "@remix-run/node";
+
 import Footer from "~/components/footer";
 import MainNav from "~/components/main-nav";
 import NewsletterForm from "~/components/newsletter-form";
@@ -23,6 +24,7 @@ export const meta: MetaFunction = ({}) => {
   });
   return meta;
 };
+
 export default function Newsletter() {
   return (
     <div className="font-sans p-4 w-full">
