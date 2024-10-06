@@ -5,10 +5,12 @@ import { getTilPosts } from "~/utils/til.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const domain = new URL(request.url).origin;
   const posts = await getTilPosts();
-  const postRoutes = posts.map((post) => ({
-    url: `/til/${post.slug}`,
-    lastmod: post.published.toISOString(),
-  }));
+  const postRoutes = posts.map(
+    (post: { slug: any; published: { toISOString: () => any } }) => ({
+      url: `/til/${post.slug}`,
+      lastmod: post.published.toISOString(),
+    })
+  );
 
   const sitemaps = await generateSitemap({
     domain,

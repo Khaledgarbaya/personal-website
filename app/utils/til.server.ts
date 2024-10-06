@@ -216,3 +216,11 @@ export async function getTilPost(slug: string) {
     return null;
   }
 }
+
+export async function getTilPostsByTags(tags: string | string[]) {
+  const allPosts = await getTilPosts();
+  const tagsArray = Array.isArray(tags) ? tags : [tags];
+  return allPosts.filter((post: { tags: string[] }) =>
+    post.tags.some((tag: string) => tagsArray.includes(tag))
+  );
+}
