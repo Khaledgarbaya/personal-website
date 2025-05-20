@@ -19,6 +19,7 @@ import { themeSessionResolver } from "./sessions.server";
 import stylesheet from "~/tailwind.css?url";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import "@fontsource-variable/signika/wght.css";
+import { PHProvider } from "./provider";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -42,7 +43,9 @@ export default function AppWithProviders() {
       specifiedTheme={data.theme ?? Theme.DARK}
       themeAction="/action/set-theme"
     >
-      <App />
+      <PHProvider>
+        <App />
+      </PHProvider>
     </ThemeProvider>
   );
 }

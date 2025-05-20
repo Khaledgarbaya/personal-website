@@ -14,13 +14,21 @@ export default defineConfig({
         "@remark-embedder/transformer-oembed",
       ],
     }),
-    remix(),
+    remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true,
+      },
+    }),
     tsconfigPaths(),
   ],
   optimizeDeps: {
     exclude: ["@mdx-js/react"],
   },
   ssr: {
-    noExternal: ["@mdx-js/react"],
+    noExternal: ["@mdx-js/react", "posthog-js", "posthog-js/react"],
   },
 });
