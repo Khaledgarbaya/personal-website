@@ -30,7 +30,7 @@ export default function TilItem({
           </span>
         </div>
         <h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:underline">
-          <Link to={`/til/${slug}`} unstable_viewTransition>
+          <Link to={`/til/${slug}`} viewTransition>
             {title ?? ""}
           </Link>
         </h2>

@@ -14,7 +14,7 @@ export default function MainNav() {
       <div className="mx-auto max-w-2xl lg:max-w-6xl flex items-center justify-between">
         <div className="flex items-center">
           {location.pathname !== "/" && (
-            <Link to="/" className="nav-link" unstable_viewTransition>
+            <Link to="/" className="nav-link" viewTransition>
               <img
                 src="/logo.svg"
                 alt="Logo"
@@ -49,7 +49,7 @@ export default function MainNav() {
               <Link
                 className="nav-link"
                 to="/blog"
-                unstable_viewTransition
+                viewTransition
                 onClick={toggleMenu}
               >
                 Blog
@@ -59,7 +59,7 @@ export default function MainNav() {
               <Link
                 className="nav-link"
                 to="/til"
-                unstable_viewTransition
+                viewTransition
                 onClick={toggleMenu}
               >
                 TIL
@@ -69,7 +69,7 @@ export default function MainNav() {
               <Link
                 className="nav-link"
                 to="/about"
-                unstable_viewTransition
+                viewTransition
                 onClick={toggleMenu}
               >
                 About
@@ -79,7 +79,7 @@ export default function MainNav() {
               <Link
                 className="nav-link"
                 to="/uses"
-                unstable_viewTransition
+                viewTransition
                 onClick={toggleMenu}
               >
                 Uses
@@ -89,7 +89,7 @@ export default function MainNav() {
               <Link
                 className="nav-link"
                 to="/newsletter"
-                unstable_viewTransition
+                viewTransition
                 onClick={toggleMenu}
               >
                 Newsletter
