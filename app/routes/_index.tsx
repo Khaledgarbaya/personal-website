@@ -49,7 +49,7 @@ export default function Index() {
                 <RecentPosts posts={posts} />
                 <Link
                   to="/blog"
-                  unstable_viewtransition
+                  viewTransition
                   className={clsx(
                     buttonVariants({ size: "lg", variant: "outline" }),
                     "mt-8 w-full"

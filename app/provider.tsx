@@ -7,7 +7,7 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    posthog.init("<ph_project_api_key>", {
+    posthog.init("phc_NSa5WBz25jF82E0VgXhUaWI6LBMTKHaKeljcOIMMhiL", {
       api_host: "https://us.i.posthog.com",
       capture_pageview: "history_change",
     });
