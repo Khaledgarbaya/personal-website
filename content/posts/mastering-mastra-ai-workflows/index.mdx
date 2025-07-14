@@ -45,25 +45,21 @@ npm install @mastra/core
 Let's start with a simple workflow that takes a number as input, doubles it in the first step, and then increments the result in the second step:
 
 ```typescript
-import { Step, Workflow, Mastra } from "@mastra/core";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
+import { Mastra } from "@mastra/core";
 import { z } from "zod";
 
-// Create a workflow
-const myWorkflow = new Workflow({
-  name: "my-workflow",
-  triggerSchema: z.object({
+// Step 1: Double the input value
+const doubleStep = createStep({
+  id: "doubleStep",
+  inputSchema: z.object({
     inputValue: z.number(),
   }),
-});
-
-// Step 1: Double the input value
-const doubleStep = new Step({
-  id: "doubleStep",
   outputSchema: z.object({
     doubledValue: z.number(),
   }),
   execute: async ({ context }) => {
-    const inputValue = context.triggerData.inputValue;
+    const inputValue = context.inputData.inputValue;
     return {
       doubledValue: inputValue * 2,
     };
@@ -71,28 +67,35 @@ const doubleStep = new Step({
 });
 
 // Step 2: Increment the doubled value
-const incrementStep = new Step({
+const incrementStep = createStep({
   id: "incrementStep",
+  inputSchema: z.object({
+    doubledValue: z.number(),
+  }),
   outputSchema: z.object({
     finalValue: z.number(),
   }),
   execute: async ({ context }) => {
-    // Get the result from the previous step
-    const doubleResult = context.getStepResult<{ doubledValue: number }>("doubleStep");
-    
-    if (!doubleResult) {
-      throw new Error("Double step did not provide a result");
-    }
-    
+    const doubledValue = context.inputData.doubledValue;
     return {
-      finalValue: doubleResult.doubledValue + 1,
+      finalValue: doubledValue + 1,
     };
   },
 });
 
-// Chain the steps and commit the workflow
-myWorkflow.step(doubleStep).then(incrementStep);
-myWorkflow.commit();
+// Create a workflow
+const myWorkflow = createWorkflow({
+  id: "my-workflow",
+  inputSchema: z.object({
+    inputValue: z.number(),
+  }),
+  outputSchema: z.object({
+    finalValue: z.number(),
+  }),
+})
+  .then(doubleStep)
+  .then(incrementStep)
+  .commit();
 
 // Register with Mastra
 export const mastra = new Mastra({
@@ -111,14 +114,14 @@ import { mastra } from "./path-to-your-workflow";
 
 async function runWorkflow() {
   // Get the workflow
-  const workflow = mastra.getWorkflow("my-workflow");
+  const workflow = mastra.getWorkflow("myWorkflow");
   
   // Create a run
-  const { runId, start } = workflow.createRun();
+  const run = await workflow.createRunAsync();
   
-  // Start the workflow with trigger data
-  const result = await start({
-    triggerData: {
+  // Start the workflow with input data
+  const result = await run.start({
+    inputData: {
       inputValue: 5,
     },
   });
@@ -127,11 +130,11 @@ async function runWorkflow() {
   // Should output something like:
   // Result: {
   //   status: "success",
-  //   runId: "...",
   //   steps: {
-  //     doubleStep: { status: "success", output: { doubledValue: 10 } },
-  //     incrementStep: { status: "success", output: { finalValue: 11 } }
-  //   }
+  //     doubleStep: { status: "success", result: { doubledValue: 10 } },
+  //     incrementStep: { status: "success", result: { finalValue: 11 } }
+  //   },
+  //   result: { finalValue: 11 }
   // }
 }
 
@@ -141,7 +144,7 @@ runWorkflow();
 You can also run workflows through the API if you're using Mastra's local development server or a deployed instance:
 
 ```bash
-curl --location 'http://localhost:4111/api/workflows/my-workflow/start-async' \
+curl --location 'http://localhost:4111/api/workflows/myWorkflow/run' \
   --header 'Content-Type: application/json' \
   --data '{ "inputValue": 5 }'
 ```
@@ -155,16 +158,13 @@ Real-world applications rarely follow a simple linear path. Let's explore how Ma
 Sometimes you need to run multiple steps simultaneously, especially when they don't depend on each other:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 
-const workflow = new Workflow({
-  name: "parallel-workflow",
-});
-
 // Define two independent steps
-const fetchUserData = new Step({
+const fetchUserData = createStep({
   id: "fetchUserData",
+  inputSchema: z.object({}),
   outputSchema: z.object({
     user: z.object({
       id: z.string(),
@@ -183,8 +183,9 @@ const fetchUserData = new Step({
   },
 });
 
-const fetchWeatherData = new Step({
+const fetchWeatherData = createStep({
   id: "fetchWeatherData",
+  inputSchema: z.object({}),
   outputSchema: z.object({
     weather: z.object({
       temperature: z.number(),
@@ -203,33 +204,42 @@ const fetchWeatherData = new Step({
   },
 });
 
-// Run the steps in parallel
-workflow.step(fetchUserData).step(fetchWeatherData);
-
 // Add a step that uses the results from both parallel steps
-const combineResults = new Step({
+const combineResults = createStep({
   id: "combineResults",
+  inputSchema: z.object({
+    user: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
+    weather: z.object({
+      temperature: z.number(),
+      condition: z.string(),
+    }),
+  }),
   outputSchema: z.object({
     message: z.string(),
   }),
   execute: async ({ context }) => {
-    const userResult = context.getStepResult<{ user: { name: string } }>("fetchUserData");
-    const weatherResult = context.getStepResult<{ weather: { temperature: number, condition: string } }>("fetchWeatherData");
-    
-    if (!userResult || !weatherResult) {
-      throw new Error("Missing data from previous steps");
-    }
+    const { user, weather } = context.inputData;
     
     return {
-      message: `Hello ${userResult.user.name}, the weather is ${weatherResult.weather.condition} at ${weatherResult.weather.temperature}°F`,
+      message: `Hello ${user.name}, the weather is ${weather.condition} at ${weather.temperature}°F`,
     };
   },
 });
 
-// Add the final step after both parallel steps
-workflow.after(["fetchUserData", "fetchWeatherData"], combineResults);
-
-workflow.commit();
+const workflow = createWorkflow({
+  id: "parallel-workflow",
+  inputSchema: z.object({}),
+  outputSchema: z.object({
+    message: z.string(),
+  }),
+})
+  .then(fetchUserData)
+  .then(fetchWeatherData)
+  .then(combineResults)
+  .commit();
 ```
 
 In this example, `fetchUserData` and `fetchWeatherData` will run simultaneously, and `combineResults` will wait for both to complete before executing.
@@ -239,25 +249,21 @@ In this example, `fetchUserData` and `fetchWeatherData` will run simultaneously,
 Often, you need to determine the next step based on the outcome of a previous step:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 
-const workflow = new Workflow({
-  name: "conditional-workflow",
-  triggerSchema: z.object({
+// Step to analyze user input
+const analyzeInput = createStep({
+  id: "analyzeInput",
+  inputSchema: z.object({
     userInput: z.string(),
   }),
-});
-
-// Step to analyze user input
-const analyzeInput = new Step({
-  id: "analyzeInput",
   outputSchema: z.object({
     sentiment: z.enum(["positive", "negative", "neutral"]),
     topic: z.string(),
   }),
   execute: async ({ context }) => {
-    const userInput = context.triggerData.userInput.toLowerCase();
+    const userInput = context.inputData.userInput.toLowerCase();
     
     // Very simple sentiment analysis for example purposes
     let sentiment: "positive" | "negative" | "neutral" = "neutral";
@@ -283,84 +289,88 @@ const analyzeInput = new Step({
 });
 
 // Step for positive sentiment response
-const positiveResponse = new Step({
+const positiveResponse = createStep({
   id: "positiveResponse",
+  inputSchema: z.object({
+    sentiment: z.enum(["positive", "negative", "neutral"]),
+    topic: z.string(),
+  }),
   outputSchema: z.object({
     response: z.string(),
   }),
   execute: async ({ context }) => {
-    const analyzeResult = context.getStepResult<{ topic: string }>("analyzeInput");
-    
-    if (!analyzeResult) {
-      throw new Error("Analysis result not found");
-    }
+    const { topic } = context.inputData;
     
     return {
-      response: `I'm glad you feel positive about ${analyzeResult.topic}!`,
+      response: `I'm glad you feel positive about ${topic}!`,
     };
   },
 });
 
 // Step for negative sentiment response
-const negativeResponse = new Step({
+const negativeResponse = createStep({
   id: "negativeResponse",
+  inputSchema: z.object({
+    sentiment: z.enum(["positive", "negative", "neutral"]),
+    topic: z.string(),
+  }),
   outputSchema: z.object({
     response: z.string(),
   }),
   execute: async ({ context }) => {
-    const analyzeResult = context.getStepResult<{ topic: string }>("analyzeInput");
-    
-    if (!analyzeResult) {
-      throw new Error("Analysis result not found");
-    }
+    const { topic } = context.inputData;
     
     return {
-      response: `I'm sorry you feel negative about ${analyzeResult.topic}.`,
+      response: `I'm sorry you feel negative about ${topic}.`,
     };
   },
 });
 
 // Step for neutral sentiment response
-const neutralResponse = new Step({
+const neutralResponse = createStep({
   id: "neutralResponse",
+  inputSchema: z.object({
+    sentiment: z.enum(["positive", "negative", "neutral"]),
+    topic: z.string(),
+  }),
   outputSchema: z.object({
     response: z.string(),
   }),
   execute: async ({ context }) => {
-    const analyzeResult = context.getStepResult<{ topic: string }>("analyzeInput");
-    
-    if (!analyzeResult) {
-      throw new Error("Analysis result not found");
-    }
+    const { topic } = context.inputData;
     
     return {
-      response: `Thanks for sharing your thoughts on ${analyzeResult.topic}.`,
+      response: `Thanks for sharing your thoughts on ${topic}.`,
     };
   },
 });
 
-// Add the analysis step
-workflow.step(analyzeInput)
+const workflow = createWorkflow({
+  id: "conditional-workflow",
+  inputSchema: z.object({
+    userInput: z.string(),
+  }),
+  outputSchema: z.object({
+    response: z.string(),
+  }),
+})
+  .then(analyzeInput)
   .then(positiveResponse, {
     when: ({ context }) => {
-      const result = context.getStepResult<{ sentiment: string }>("analyzeInput");
-      return result?.sentiment === "positive";
+      return context.inputData.sentiment === "positive";
     },
   })
   .then(negativeResponse, {
     when: ({ context }) => {
-      const result = context.getStepResult<{ sentiment: string }>("analyzeInput");
-      return result?.sentiment === "negative";
+      return context.inputData.sentiment === "negative";
     },
   })
   .then(neutralResponse, {
     when: ({ context }) => {
-      const result = context.getStepResult<{ sentiment: string }>("analyzeInput");
-      return result?.sentiment === "neutral";
+      return context.inputData.sentiment === "neutral";
     },
-  });
-
-workflow.commit();
+  })
+  .commit();
 ```
 
 This workflow analyzes the sentiment of user input and then branches to different response steps based on the analysis.
@@ -370,25 +380,21 @@ This workflow analyzes the sentiment of user input and then branches to differen
 One of the most powerful features of Mastra workflows is the ability to suspend execution and resume it later. This is perfect for human-in-the-loop processes:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 
-const workflow = new Workflow({
-  name: "approval-workflow",
-  triggerSchema: z.object({
+// Step to generate a summary
+const summarizeStep = createStep({
+  id: "summarizeStep",
+  inputSchema: z.object({
     documentId: z.string(),
     content: z.string(),
   }),
-});
-
-// Step to generate a summary
-const summarizeStep = new Step({
-  id: "summarizeStep",
   outputSchema: z.object({
     summary: z.string(),
   }),
   execute: async ({ context }) => {
-    const { content } = context.triggerData;
+    const { content } = context.inputData;
     
     // In a real application, this might use an LLM to generate a summary
     const summary = `Summary: ${content.substring(0, 100)}...`;
@@ -400,11 +406,10 @@ const summarizeStep = new Step({
 });
 
 // Step to request approval
-const approvalStep = new Step({
+const approvalStep = createStep({
   id: "approvalStep",
   inputSchema: z.object({
-    approved: z.boolean(),
-    feedback: z.string().optional(),
+    summary: z.string(),
   }),
   outputSchema: z.object({
     approved: z.boolean(),
@@ -415,60 +420,72 @@ const approvalStep = new Step({
     await suspend();
     
     // This code will only run after the workflow is resumed with input data
+    const approvalData = await context.getHumanInput();
+    
     return {
-      approved: context.inputData.approved,
-      feedback: context.inputData.feedback,
+      approved: approvalData.approved,
+      feedback: approvalData.feedback,
     };
   },
 });
 
 // Final step based on approval
-const finalizeStep = new Step({
+const finalizeStep = createStep({
   id: "finalizeStep",
+  inputSchema: z.object({
+    approved: z.boolean(),
+    feedback: z.string().optional(),
+  }),
   outputSchema: z.object({
     message: z.string(),
   }),
   execute: async ({ context }) => {
-    const approvalResult = context.getStepResult<{ approved: boolean, feedback?: string }>("approvalStep");
+    const { approved, feedback } = context.inputData;
     
-    if (!approvalResult) {
-      throw new Error("Approval result not found");
-    }
-    
-    if (approvalResult.approved) {
+    if (approved) {
       return {
         message: "Document approved and finalized!",
       };
     } else {
       return {
-        message: `Document rejected. Feedback: ${approvalResult.feedback || "No feedback provided"}`,
+        message: `Document rejected. Feedback: ${feedback || "No feedback provided"}`,
       };
     }
   },
 });
 
-// Chain the steps
-workflow.step(summarizeStep).then(approvalStep).then(finalizeStep);
-workflow.commit();
+const workflow = createWorkflow({
+  id: "approval-workflow",
+  inputSchema: z.object({
+    documentId: z.string(),
+    content: z.string(),
+  }),
+  outputSchema: z.object({
+    message: z.string(),
+  }),
+})
+  .then(summarizeStep)
+  .then(approvalStep)
+  .then(finalizeStep)
+  .commit();
 ```
 
 To run this workflow:
 
 ```typescript
 // Start the workflow
-const { runId, start } = workflow.createRun();
-const initialResult = await start({
-  triggerData: {
+const run = await workflow.createRunAsync();
+const initialResult = await run.start({
+  inputData: {
     documentId: "doc123",
     content: "This is a sample document that needs approval...",
   },
 });
 
-console.log("Workflow suspended at:", initialResult.suspendedAt);
+console.log("Workflow suspended at:", initialResult.suspended);
 
 // Later, when we get human input:
-const resumedResult = await workflow.resume({
-  runId: runId,
+const resumedResult = await run.resume({
   stepId: "approvalStep",
   inputData: {
     approved: true,
@@ -486,7 +503,7 @@ This pattern is incredibly useful for applications that require human review, ap
 Now, let's look at how to integrate language models into your workflows. This is where Mastra really shines, as it provides a structured way to orchestrate LLM calls:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { Agent } from "@mastra/core/agent";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
@@ -498,24 +515,19 @@ const contentAgent = new Agent({
   model: openai("gpt-4o-mini"),
 });
 
-// Workflow for content creation
-const contentWorkflow = new Workflow({
-  name: "content-workflow",
-  triggerSchema: z.object({
+// Step to generate an outline
+const outlineStep = createStep({
+  id: "outlineStep",
+  inputSchema: z.object({
     topic: z.string(),
     contentType: z.enum(["blog", "social", "email"]),
     tone: z.enum(["formal", "casual", "enthusiastic"]).optional(),
   }),
-});
-
-// Step to generate an outline
-const outlineStep = new Step({
-  id: "outlineStep",
   outputSchema: z.object({
     outline: z.string(),
   }),
-  execute: async ({ context }) => {
-    const { topic, contentType, tone = "casual" } = context.triggerData;
+  execute: async ({ context, mastra }) => {
+    const { topic, contentType, tone = "casual" } = context.inputData;
     
     const prompt = `Create an outline for a ${contentType} about "${topic}" in a ${tone} tone.`;
     const result = await contentAgent.generate(prompt);
@@ -527,21 +539,22 @@ const outlineStep = new Step({
 });
 
 // Step to generate full content
-const contentStep = new Step({
+const contentStep = createStep({
   id: "contentStep",
+  inputSchema: z.object({
+    topic: z.string(),
+    contentType: z.enum(["blog", "social", "email"]),
+    tone: z.enum(["formal", "casual", "enthusiastic"]).optional(),
+    outline: z.string(),
+  }),
   outputSchema: z.object({
     content: z.string(),
   }),
-  execute: async ({ context }) => {
-    const { topic, contentType, tone = "casual" } = context.triggerData;
-    const outlineResult = context.getStepResult<{ outline: string }>("outlineStep");
-    
-    if (!outlineResult) {
-      throw new Error("Outline not found");
-    }
+  execute: async ({ context, mastra }) => {
+    const { topic, contentType, tone = "casual", outline } = context.inputData;
     
     const prompt = `Create full ${contentType} content about "${topic}" in a ${tone} tone. 
-    Use this outline as a guide: ${outlineResult.outline}`;
+    Use this outline as a guide: ${outline}`;
     
     const result = await contentAgent.generate(prompt);
     
@@ -552,21 +565,20 @@ const contentStep = new Step({
 });
 
 // Step to proofread and improve
-const proofreadStep = new Step({
+const proofreadStep = createStep({
   id: "proofreadStep",
+  inputSchema: z.object({
+    content: z.string(),
+  }),
   outputSchema: z.object({
     finalContent: z.string(),
   }),
-  execute: async ({ context }) => {
-    const contentResult = context.getStepResult<{ content: string }>("contentStep");
-    
-    if (!contentResult) {
-      throw new Error("Content not found");
-    }
+  execute: async ({ context, mastra }) => {
+    const { content } = context.inputData;
     
     const prompt = `Proofread and improve this content:
     
-    ${contentResult.content}
+    ${content}
     
     Fix any grammar or spelling issues, improve flow, and ensure it's engaging.`;
     
@@ -578,9 +590,22 @@ const proofreadStep = new Step({
   },
 });
 
-// Chain the steps
-contentWorkflow.step(outlineStep).then(contentStep).then(proofreadStep);
-contentWorkflow.commit();
+// Workflow for content creation
+const contentWorkflow = createWorkflow({
+  id: "content-workflow",
+  inputSchema: z.object({
+    topic: z.string(),
+    contentType: z.enum(["blog", "social", "email"]),
+    tone: z.enum(["formal", "casual", "enthusiastic"]).optional(),
+  }),
+  outputSchema: z.object({
+    finalContent: z.string(),
+  }),
+})
+  .then(outlineStep)
+  .then(contentStep)
+  .then(proofreadStep)
+  .commit();
 
 // Register with Mastra
 export const mastra = new Mastra({
@@ -605,19 +630,15 @@ Each step builds on the previous one, creating a structured content creation pip
 Robust error handling is crucial for production workflows. Mastra provides several patterns for handling errors:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { z } from "zod";
 
-const workflow = new Workflow({
-  name: "error-handling-workflow",
-  triggerSchema: z.object({
+// Step that might fail
+const fetchUserDataStep = createStep({
+  id: "fetchUserDataStep",
+  inputSchema: z.object({
     userId: z.string(),
   }),
-});
-
-// Step that might fail
-const fetchUserDataStep = new Step({
-  id: "fetchUserDataStep",
   outputSchema: z.object({
     user: z.object({
       id: z.string(),
@@ -628,7 +649,7 @@ const fetchUserDataStep = new Step({
   execute: async ({ context }) => {
     try {
       // Simulate an API call that might fail
-      const userId = context.triggerData.userId;
+      const userId = context.inputData.userId;
       
       // For demonstration, randomly simulate success or failure
       if (Math.random() < 0.5) {
@@ -653,27 +674,33 @@ const fetchUserDataStep = new Step({
 });
 
 // Success path
-const processUserDataStep = new Step({
+const processUserDataStep = createStep({
   id: "processUserDataStep",
+  inputSchema: z.object({
+    user: z.object({
+      id: z.string(),
+      name: z.string(),
+      email: z.string(),
+    }),
+  }),
   outputSchema: z.object({
     message: z.string(),
   }),
   execute: async ({ context }) => {
-    const userResult = context.getStepResult<{ user: { name: string } }>("fetchUserDataStep");
-    
-    if (!userResult) {
-      throw new Error("User data not found");
-    }
+    const { user } = context.inputData;
     
     return {
-      message: `Hello ${userResult.user.name}, your data has been processed successfully!`,
+      message: `Hello ${user.name}, your data has been processed successfully!`,
     };
   },
 });
 
 // Fallback path for error recovery
-const fallbackStep = new Step({
+const fallbackStep = createStep({
   id: "fallbackStep",
+  inputSchema: z.object({
+    error: z.string(),
+  }),
   outputSchema: z.object({
     message: z.string(),
   }),
@@ -684,22 +711,29 @@ const fallbackStep = new Step({
   },
 });
 
-// Add steps with conditional branching based on success/failure
-workflow.step(fetchUserDataStep)
+const workflow = createWorkflow({
+  id: "error-handling-workflow",
+  inputSchema: z.object({
+    userId: z.string(),
+  }),
+  outputSchema: z.object({
+    message: z.string(),
+  }),
+})
+  .then(fetchUserDataStep)
   .then(processUserDataStep, {
     // Only follow this path if fetchUserDataStep succeeded
     when: ({ context }) => {
-      return context.steps.fetchUserDataStep?.status === "success";
+      return context.status === "success";
     },
   })
   .then(fallbackStep, {
     // Only follow this path if fetchUserDataStep failed
     when: ({ context }) => {
-      return context.steps.fetchUserDataStep?.status === "failed";
+      return context.status === "failed";
     },
-  });
-
-workflow.commit();
+  })
+  .commit();
 ```
 
 This workflow demonstrates how to handle errors by:
@@ -710,22 +744,18 @@ This workflow demonstrates how to handle errors by:
 You can also monitor workflow runs for errors:
 
 ```typescript
-const { start, watch } = workflow.createRun();
+const run = await workflow.createRunAsync();
 
-watch(async ({ results }) => {
+run.watch(async (event) => {
   // Check for any failed steps
-  const failedSteps = Object.entries(results)
-    .filter(([_, step]) => step.status === "failed")
-    .map(([stepId]) => stepId);
-  
-  if (failedSteps.length > 0) {
-    console.error(`Workflow has failed steps: ${failedSteps.join(', ')}`);
+  if (event.type === 'step.failed') {
+    console.error(`Step ${event.stepId} failed:`, event.error);
     // Take remedial action, such as alerting or logging
   }
 });
 
-await start({
-  triggerData: {
+await run.start({
+  inputData: {
     userId: "user123",
   },
 });
@@ -736,7 +766,7 @@ await start({
 For complex AI applications, you often need multiple specialized agents working together. Mastra makes this easy with hierarchical multi-agent workflows:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { Agent } from "@mastra/core/agent";
 import { createTool } from "@mastra/core/tools";
 import { openai } from "@ai-sdk/openai";
@@ -841,24 +871,19 @@ const editingTool = createTool({
   },
 });
 
-// Create a content production workflow
-const contentWorkflow = new Workflow({
-  name: "content-production",
-  triggerSchema: z.object({
+// Research step
+const researchStep = createStep({
+  id: "researchStep",
+  inputSchema: z.object({
     topic: z.string(),
     contentType: z.enum(["article", "blog", "report"]),
     audience: z.enum(["general", "academic", "professional"]),
   }),
-});
-
-// Research step
-const researchStep = new Step({
-  id: "researchStep",
   outputSchema: z.object({
     findings: z.string(),
   }),
   execute: async ({ context }) => {
-    const { topic } = context.triggerData;
+    const { topic } = context.inputData;
     
     const result = await researchTool.execute({
       context: {
@@ -873,23 +898,24 @@ const researchStep = new Step({
 });
 
 // Writing step
-const writingStep = new Step({
+const writingStep = createStep({
   id: "writingStep",
+  inputSchema: z.object({
+    topic: z.string(),
+    contentType: z.enum(["article", "blog", "report"]),
+    audience: z.enum(["general", "academic", "professional"]),
+    findings: z.string(),
+  }),
   outputSchema: z.object({
     draft: z.string(),
   }),
   execute: async ({ context }) => {
-    const { topic, contentType } = context.triggerData;
-    const researchResult = context.getStepResult<{ findings: string }>("researchStep");
-    
-    if (!researchResult) {
-      throw new Error("Research findings not available");
-    }
+    const { topic, contentType, findings } = context.inputData;
     
     const result = await writingTool.execute({
       context: {
         topic,
-        findings: researchResult.findings,
+        findings,
         contentType,
       },
     });
@@ -901,22 +927,21 @@ const writingStep = new Step({
 });
 
 // Editing step
-const editingStep = new Step({
+const editingStep = createStep({
   id: "editingStep",
+  inputSchema: z.object({
+    audience: z.enum(["general", "academic", "professional"]),
+    draft: z.string(),
+  }),
   outputSchema: z.object({
     final: z.string(),
   }),
   execute: async ({ context }) => {
-    const { audience } = context.triggerData;
-    const writingResult = context.getStepResult<{ draft: string }>("writingStep");
-    
-    if (!writingResult) {
-      throw new Error("Draft not available");
-    }
+    const { audience, draft } = context.inputData;
     
     const result = await editingTool.execute({
       context: {
-        draft: writingResult.draft,
+        draft,
         target: audience,
       },
     });
@@ -927,9 +952,22 @@ const editingStep = new Step({
   },
 });
 
-// Chain the steps
-contentWorkflow.step(researchStep).then(writingStep).then(editingStep);
-contentWorkflow.commit();
+// Create a content production workflow
+const contentWorkflow = createWorkflow({
+  id: "content-production",
+  inputSchema: z.object({
+    topic: z.string(),
+    contentType: z.enum(["article", "blog", "report"]),
+    audience: z.enum(["general", "academic", "professional"]),
+  }),
+  outputSchema: z.object({
+    final: z.string(),
+  }),
+})
+  .then(researchStep)
+  .then(writingStep)
+  .then(editingStep)
+  .commit();
 
 // Register with Mastra
 export const mastra = new Mastra({
@@ -972,11 +1010,11 @@ import { mastra } from "./your-workflow-file";
 
 describe("Content Workflow", () => {
   it("should generate content successfully", async () => {
-    const workflow = mastra.getWorkflow("content-production");
-    const { start } = workflow.createRun();
+    const workflow = mastra.getWorkflow("contentWorkflow");
+    const run = await workflow.createRunAsync();
     
-    const result = await start({
-      triggerData: {
+    const result = await run.start({
+      inputData: {
         topic: "Artificial Intelligence Ethics",
         contentType: "article",
         audience: "general",
@@ -987,23 +1025,26 @@ describe("Content Workflow", () => {
     expect(result.steps.researchStep.status).toBe("success");
     expect(result.steps.writingStep.status).toBe("success");
     expect(result.steps.editingStep.status).toBe("success");
-    expect(result.steps.editingStep.output.final).toBeTruthy();
+    expect(result.result.final).toBeTruthy();
   });
   
   it("should handle errors gracefully", async () => {
     // Mock a failing step for testing
-    const originalExecute = mastra.getWorkflow("content-production").getStepById("researchStep").execute;
+    const workflow = mastra.getWorkflow("contentWorkflow");
     
     // Replace with a failing implementation
-    mastra.getWorkflow("content-production").getStepById("researchStep").execute = async () => {
-      throw new Error("Simulated failure");
-    };
+    const originalStep = workflow.getStep("researchStep");
+    workflow.replaceStep("researchStep", {
+      ...originalStep,
+      execute: async () => {
+        throw new Error("Simulated failure");
+      },
+    });
     
-    const workflow = mastra.getWorkflow("content-production");
-    const { start } = workflow.createRun();
+    const run = await workflow.createRunAsync();
     
-    const result = await start({
-      triggerData: {
+    const result = await run.start({
+      inputData: {
         topic: "Artificial Intelligence Ethics",
         contentType: "article",
         audience: "general",
@@ -1014,7 +1055,7 @@ describe("Content Workflow", () => {
     expect(result.steps.researchStep.status).toBe("failed");
     
     // Restore original implementation
-    mastra.getWorkflow("content-production").getStepById("researchStep").execute = originalExecute;
+    workflow.replaceStep("researchStep", originalStep);
   });
 });
 ```
@@ -1048,10 +1089,10 @@ export async function POST(
     }
     
     const body = await request.json();
-    const { runId, start } = workflow.createRun();
+    const run = await workflow.createRunAsync();
     
-    const result = await start({
-      triggerData: body,
+    const result = await run.start({
+      inputData: body,
     });
     
     return NextResponse.json(result);
@@ -1090,10 +1131,10 @@ app.post("/api/workflows/:name", async (c) => {
     }
     
     const body = await c.req.json();
-    const { runId, start } = workflow.createRun();
+    const run = await workflow.createRunAsync();
     
-    const result = await start({
-      triggerData: body,
+    const result = await run.start({
+      inputData: body,
     });
     
     return c.json(result);
@@ -1121,8 +1162,8 @@ app.post("/api/workflows/:name/resume", async (c) => {
     
     const { runId, stepId, inputData } = await c.req.json();
     
-    const result = await workflow.resume({
-      runId,
+    const run = await workflow.getRunAsync(runId);
+    const result = await run.resume({
       stepId,
       inputData,
     });
