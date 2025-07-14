@@ -1201,16 +1201,12 @@ This command will bundle your agents and workflows and deploy them to your confi
 
 Now that we've covered the fundamentals and advanced patterns of Mastra workflows, let's look at some real-world applications:
 
-# Real-World Examples and Use Cases
-
-Now that we've covered the fundamentals and advanced patterns of Mastra workflows, let's look at some real-world applications:
-
 ## 1. Customer Support Automation
 
 Workflows are perfect for customer support flows that combine automation with human intervention:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { Agent } from "@mastra/core/agent";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
@@ -1222,19 +1218,14 @@ const supportAgent = new Agent({
   model: openai("gpt-4o-mini"),
 });
 
-// Create the workflow
-const supportWorkflow = new Workflow({
-  name: "support-workflow",
-  triggerSchema: z.object({
+// Step 1: Analyze customer query
+const analyzeQueryStep = createStep({
+  id: "analyzeQueryStep",
+  inputSchema: z.object({
     customerId: z.string(),
     query: z.string(),
     email: z.string().email(),
   }),
-});
-
-// Step 1: Analyze customer query
-const analyzeQueryStep = new Step({
-  id: "analyzeQueryStep",
   outputSchema: z.object({
     category: z.enum([
       "billing", 
@@ -1248,7 +1239,7 @@ const analyzeQueryStep = new Step({
     key_points: z.array(z.string()),
   }),
   execute: async ({ context }) => {
-    const { query } = context.triggerData;
+    const { query } = context.inputData;
     
     // Prompt the agent to analyze the query
     const prompt = `
@@ -1290,8 +1281,13 @@ const analyzeQueryStep = new Step({
 });
 
 // Step 2: Search knowledge base for solutions
-const searchKnowledgeBaseStep = new Step({
+const searchKnowledgeBaseStep = createStep({
   id: "searchKnowledgeBaseStep",
+  inputSchema: z.object({
+    query: z.string(),
+    category: z.enum(["billing", "technical", "account", "product", "other"]),
+    key_points: z.array(z.string()),
+  }),
   outputSchema: z.object({
     articles: z.array(
       z.object({
@@ -1305,23 +1301,15 @@ const searchKnowledgeBaseStep = new Step({
     has_relevant_articles: z.boolean(),
   }),
   execute: async ({ context }) => {
-    const { query } = context.triggerData;
-    const analysis = context.getStepResult<{
-      category: string;
-      key_points: string[];
-    }>("analyzeQueryStep");
-    
-    if (!analysis) {
-      throw new Error("Analysis not available");
-    }
+    const { query, category, key_points } = context.inputData;
     
     // In a real implementation, this would call your knowledge base API
     // For this example, we'll simulate the response
     
     // Create a search query based on the category and key points
     const searchTerms = [
-      analysis.category,
-      ...analysis.key_points,
+      category,
+      ...key_points,
     ].join(" ");
     
     console.log(`Searching knowledge base for: ${searchTerms}`);
@@ -1334,14 +1322,14 @@ const searchKnowledgeBaseStep = new Step({
     const mockArticles = [
       {
         id: "kb-123",
-        title: `How to resolve ${analysis.category} issues`,
-        summary: `Common solutions for ${analysis.category} problems.`,
+        title: `How to resolve ${category} issues`,
+        summary: `Common solutions for ${category} problems.`,
         relevance: 0.92,
-        url: `/help/${analysis.category}/overview`,
+        url: `/help/${category}/overview`,
       },
       {
         id: "kb-456",
-        title: `Troubleshooting guide for ${analysis.key_points[0] || "common issues"}`,
+        title: `Troubleshooting guide for ${key_points[0] || "common issues"}`,
         summary: "Step-by-step guide to diagnose and fix problems.",
         relevance: 0.85,
         url: "/help/troubleshooting",
@@ -1366,10 +1354,24 @@ const searchKnowledgeBaseStep = new Step({
 });
 
 // Step 3: Generate a response or escalate to human
-const generateResponseStep = new Step({
+const generateResponseStep = createStep({
   id: "generateResponseStep",
   inputSchema: z.object({
-    human_input: z.string().optional(),
+    query: z.string(),
+    customerId: z.string(),
+    category: z.enum(["billing", "technical", "account", "product", "other"]),
+    urgency: z.enum(["low", "medium", "high"]),
+    sentiment: z.enum(["positive", "neutral", "negative"]),
+    articles: z.array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        summary: z.string(),
+        relevance: z.number(),
+        url: z.string(),
+      })
+    ),
+    has_relevant_articles: z.boolean(),
   }),
   outputSchema: z.object({
     response: z.string(),
@@ -1377,33 +1379,24 @@ const generateResponseStep = new Step({
     ticket_id: z.string().optional(),
   }),
   execute: async ({ context, suspend }) => {
-    const { query, customerId } = context.triggerData;
-    const analysis = context.getStepResult<{
-      category: string;
-      urgency: string;
-      sentiment: string;
-    }>("analyzeQueryStep");
-    const kbResults = context.getStepResult<{
-      articles: Array<{
-        title: string;
-        summary: string;
-        url: string;
-      }>;
-      has_relevant_articles: boolean;
-    }>("searchKnowledgeBaseStep");
-    
-    if (!analysis || !kbResults) {
-      throw new Error("Required step results not available");
-    }
+    const { 
+      query, 
+      customerId, 
+      category, 
+      urgency, 
+      sentiment, 
+      articles, 
+      has_relevant_articles 
+    } = context.inputData;
     
     // Check if this needs human escalation based on criteria
     const needsHuman = 
-      analysis.urgency === "high" || 
-      analysis.sentiment === "negative" || 
-      !kbResults.has_relevant_articles ||
-      analysis.category === "billing"; // Billing issues always go to humans
+      urgency === "high" || 
+      sentiment === "negative" || 
+      !has_relevant_articles ||
+      category === "billing"; // Billing issues always go to humans
     
-    if (needsHuman && !context.inputData?.human_input) {
+    if (needsHuman) {
       // Create a ticket in your ticketing system
       // In a real implementation, this would call your ticket API
       console.log(`Creating support ticket for customer ${customerId}`);
@@ -1415,22 +1408,23 @@ const generateResponseStep = new Step({
       // Suspend the workflow until human input is received
       await suspend();
       
-      // When resumed, we'll have human_input in context.inputData
+      // When resumed, we'll have human_input
+      const humanInput = await context.getHumanInput();
+      
       return {
-        response: context.inputData?.human_input || "No response provided",
+        response: humanInput.response || "No response provided",
         requires_human: true,
         ticket_id: ticketId,
       };
     }
     
-    // If we don't need human intervention or already have human input,
-    // generate an AI response
+    // If we don't need human intervention, generate an AI response
     
     // Build a prompt that includes knowledge base articles
     let articlesContext = "";
-    if (kbResults.articles.length > 0) {
+    if (articles.length > 0) {
       articlesContext = "Here are some relevant help articles:\n\n" + 
-        kbResults.articles.map(article => 
+        articles.map(article => 
           `Title: ${article.title}\nSummary: ${article.summary}\nURL: ${article.url}`
         ).join("\n\n");
     }
@@ -1440,9 +1434,9 @@ const generateResponseStep = new Step({
       
       Customer query: "${query}"
       
-      Category: ${analysis.category}
-      Urgency: ${analysis.urgency}
-      Sentiment: ${analysis.sentiment}
+      Category: ${category}
+      Urgency: ${urgency}
+      Sentiment: ${sentiment}
       
       ${articlesContext}
       
@@ -1462,37 +1456,35 @@ const generateResponseStep = new Step({
 });
 
 // Step 4: Send email to customer
-const sendEmailStep = new Step({
+const sendEmailStep = createStep({
   id: "sendEmailStep",
+  inputSchema: z.object({
+    email: z.string().email(),
+    customerId: z.string(),
+    response: z.string(),
+    requires_human: z.boolean(),
+    ticket_id: z.string().optional(),
+  }),
   outputSchema: z.object({
     email_sent: z.boolean(),
     message_id: z.string().optional(),
   }),
   execute: async ({ context }) => {
-    const { email, customerId } = context.triggerData;
-    const responseResult = context.getStepResult<{
-      response: string;
-      requires_human: boolean;
-      ticket_id?: string;
-    }>("generateResponseStep");
-    
-    if (!responseResult) {
-      throw new Error("Response not available");
-    }
+    const { email, customerId, response, requires_human, ticket_id } = context.inputData;
     
     // Prepare email content
     let subject = "Your Support Request";
     let ticketReference = "";
     
-    if (responseResult.requires_human && responseResult.ticket_id) {
-      subject = `Your Support Request (Ticket #${responseResult.ticket_id})`;
-      ticketReference = `\n\nFor future reference, your ticket number is: ${responseResult.ticket_id}`;
+    if (requires_human && ticket_id) {
+      subject = `Your Support Request (Ticket #${ticket_id})`;
+      ticketReference = `\n\nFor future reference, your ticket number is: ${ticket_id}`;
     }
     
     const emailBody = `
       Dear Customer,
       
-      ${responseResult.response}
+      ${response}
       ${ticketReference}
       
       Thank you for contacting us.
@@ -1519,50 +1511,52 @@ const sendEmailStep = new Step({
 });
 
 // Step 5: Update CRM with interaction details
-const updateCrmStep = new Step({
+const updateCrmStep = createStep({
   id: "updateCrmStep",
+  inputSchema: z.object({
+    customerId: z.string(),
+    query: z.string(),
+    category: z.enum(["billing", "technical", "account", "product", "other"]),
+    urgency: z.enum(["low", "medium", "high"]),
+    sentiment: z.enum(["positive", "neutral", "negative"]),
+    response: z.string(),
+    requires_human: z.boolean(),
+    ticket_id: z.string().optional(),
+    email_sent: z.boolean(),
+    message_id: z.string().optional(),
+  }),
   outputSchema: z.object({
     crm_updated: z.boolean(),
     interaction_id: z.string(),
   }),
   execute: async ({ context }) => {
-    const { customerId, query } = context.triggerData;
-    
-    const analysis = context.getStepResult<{
-      category: string;
-      urgency: string;
-      sentiment: string;
-    }>("analyzeQueryStep");
-    
-    const responseResult = context.getStepResult<{
-      response: string;
-      requires_human: boolean;
-      ticket_id?: string;
-    }>("generateResponseStep");
-    
-    const emailResult = context.getStepResult<{
-      email_sent: boolean;
-      message_id?: string;
-    }>("sendEmailStep");
-    
-    if (!analysis || !responseResult || !emailResult) {
-      throw new Error("Required step results not available");
-    }
+    const { 
+      customerId, 
+      query, 
+      category, 
+      urgency, 
+      sentiment, 
+      response, 
+      requires_human, 
+      ticket_id, 
+      email_sent, 
+      message_id 
+    } = context.inputData;
     
     // Prepare CRM update data
     const crmData = {
       customer_id: customerId,
       timestamp: new Date().toISOString(),
       interaction_type: "support_request",
-      category: analysis.category,
-      urgency: analysis.urgency,
-      sentiment: analysis.sentiment,
-      query: query,
-      response: responseResult.response,
-      handled_by: responseResult.requires_human ? "human" : "ai",
-      ticket_id: responseResult.ticket_id,
-      email_sent: emailResult.email_sent,
-      email_message_id: emailResult.message_id,
+      category,
+      urgency,
+      sentiment,
+      query,
+      response,
+      handled_by: requires_human ? "human" : "ai",
+      ticket_id,
+      email_sent,
+      email_message_id: message_id,
     };
     
     // In a real implementation, this would call your CRM API
@@ -1582,15 +1576,25 @@ const updateCrmStep = new Step({
   },
 });
 
-// Chain the steps together
-supportWorkflow
-  .step(analyzeQueryStep)
+// Create and configure the workflow
+const supportWorkflow = createWorkflow({
+  id: "support-workflow",
+  inputSchema: z.object({
+    customerId: z.string(),
+    query: z.string(),
+    email: z.string().email(),
+  }),
+  outputSchema: z.object({
+    crm_updated: z.boolean(),
+    interaction_id: z.string(),
+  }),
+})
+  .then(analyzeQueryStep)
   .then(searchKnowledgeBaseStep)
   .then(generateResponseStep)
   .then(sendEmailStep)
-  .then(updateCrmStep);
-
-supportWorkflow.commit();
+  .then(updateCrmStep)
+  .commit();
 ```
 
 ## 2. Content Moderation
@@ -1598,7 +1602,7 @@ supportWorkflow.commit();
 Workflows can orchestrate sophisticated content moderation pipelines:
 
 ```typescript
-import { Step, Workflow } from "@mastra/core/workflows";
+import { createWorkflow, createStep } from "@mastra/core/workflows";
 import { Agent } from "@mastra/core/agent";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
@@ -1696,27 +1700,22 @@ const toxicityTool = createTool({
   },
 });
 
-// Create the workflow
-const moderationWorkflow = new Workflow({
-  name: "moderation-workflow",
-  triggerSchema: z.object({
+// Step 1: Check against explicit word list
+const explicitWordCheckStep = createStep({
+  id: "explicitWordCheckStep",
+  inputSchema: z.object({
     contentId: z.string(),
     content: z.string(),
     contentType: z.enum(["text", "image", "video"]),
     userId: z.string(),
   }),
-});
-
-// Step 1: Check against explicit word list
-const explicitWordCheckStep = new Step({
-  id: "explicitWordCheckStep",
   outputSchema: z.object({
     contains_explicit_words: z.boolean(),
     flagged_words: z.array(z.string()),
     passed: z.boolean(),
   }),
   execute: async ({ context }) => {
-    const { content } = context.triggerData;
+    const { content } = context.inputData;
     
     // List of explicit words to check against
     // This would be much more comprehensive in a real system
@@ -1744,8 +1743,12 @@ const explicitWordCheckStep = new Step({
 });
 
 // Step 2: Run toxicity analysis with LLM
-const toxicityAnalysisStep = new Step({
+const toxicityAnalysisStep = createStep({
   id: "toxicityAnalysisStep",
+  inputSchema: z.object({
+    content: z.string(),
+    passed: z.boolean(),
+  }),
   outputSchema: z.object({
     toxicity_results: z.object({
       flagged: z.boolean(),
@@ -1771,13 +1774,9 @@ const toxicityAnalysisStep = new Step({
   }),
   execute: async ({ context }) => {
     // Skip if the content already failed explicit word check
-    const wordCheckResult = context.getStepResult<{ passed: boolean }>("explicitWordCheckStep");
+    const { passed, content } = context.inputData;
     
-    if (!wordCheckResult) {
-      throw new Error("Word check result not available");
-    }
-    
-    if (!wordCheckResult.passed) {
+    if (!passed) {
       // Content already failed, no need for further analysis
       return {
         toxicity_results: {
@@ -1804,8 +1803,6 @@ const toxicityAnalysisStep = new Step({
       };
     }
     
-    const { content } = context.triggerData;
-    
     // Call toxicity analysis tool
     const toxicityResults = await toxicityTool.execute({
       context: {
@@ -1821,58 +1818,56 @@ const toxicityAnalysisStep = new Step({
     
     // Determine if content passes based on moderation score
     // Scores below 0.7 are flagged for human review
-    const passed = !toxicityResults.flagged && moderationScore >= 0.7;
+    const passedAnalysis = !toxicityResults.flagged && moderationScore >= 0.7;
     
     return {
       toxicity_results: toxicityResults,
-      passed,
+      passed: passedAnalysis,
       moderation_score: moderationScore,
     };
   },
 });
 
 // Step 3: Branch based on moderation score
-const contentDecisionStep = new Step({
+const contentDecisionStep = createStep({
   id: "contentDecisionStep",
+  inputSchema: z.object({
+    contains_explicit_words: z.boolean(),
+    flagged_words: z.array(z.string()),
+    toxicity_results: z.object({
+      flagged: z.boolean(),
+      categories: z.record(z.boolean()),
+      category_scores: z.record(z.number()),
+    }),
+    passed: z.boolean(),
+    moderation_score: z.number(),
+  }),
   outputSchema: z.object({
     decision: z.enum(["approve", "reject", "review"]),
     reason: z.string(),
     confidence: z.number(),
   }),
   execute: async ({ context }) => {
-    const wordCheckResult = context.getStepResult<{
-      contains_explicit_words: boolean;
-      flagged_words: string[];
-      passed: boolean;
-    }>("explicitWordCheckStep");
-    
-    const toxicityResult = context.getStepResult<{
-      toxicity_results: {
-        flagged: boolean;
-        categories: Record<string, boolean>;
-        category_scores: Record<string, number>;
-      };
-      passed: boolean;
-      moderation_score: number;
-    }>("toxicityAnalysisStep");
-    
-    if (!wordCheckResult || !toxicityResult) {
-      throw new Error("Required step results not available");
-    }
+    const { 
+      contains_explicit_words, 
+      flagged_words, 
+      toxicity_results, 
+      moderation_score 
+    } = context.inputData;
     
     // Automatic rejection if explicit words were found
-    if (wordCheckResult.contains_explicit_words) {
+    if (contains_explicit_words) {
       return {
         decision: "reject",
-        reason: `Content contains explicit words: ${wordCheckResult.flagged_words.join(", ")}`,
+        reason: `Content contains explicit words: ${flagged_words.join(", ")}`,
         confidence: 1.0, // High confidence
       };
     }
     
     // Determine decision based on toxicity results
-    if (toxicityResult.toxicity_results.flagged) {
+    if (toxicity_results.flagged) {
       // Get the categories that were flagged
-      const flaggedCategories = Object.entries(toxicityResult.toxicity_results.categories)
+      const flaggedCategories = Object.entries(toxicity_results.categories)
         .filter(([_, flagged]) => flagged)
         .map(([category]) => category);
       
@@ -1884,29 +1879,32 @@ const contentDecisionStep = new Step({
     }
     
     // If moderation score is high enough, approve
-    if (toxicityResult.moderation_score >= 0.8) {
+    if (moderation_score >= 0.8) {
       return {
         decision: "approve",
         reason: "Content passed all moderation checks",
-        confidence: toxicityResult.moderation_score,
+        confidence: moderation_score,
       };
     }
     
     // Otherwise, send for human review
     return {
       decision: "review",
-      reason: `Moderation score (${toxicityResult.moderation_score.toFixed(2)}) is below automatic approval threshold`,
-      confidence: 1 - toxicityResult.moderation_score, // Confidence in needing review
+      reason: `Moderation score (${moderation_score.toFixed(2)}) is below automatic approval threshold`,
+      confidence: 1 - moderation_score, // Confidence in needing review
     };
   },
 });
 
 // Step 4: Human review for borderline cases
-const humanReviewStep = new Step({
+const humanReviewStep = createStep({
   id: "humanReviewStep",
   inputSchema: z.object({
-    review_decision: z.enum(["approve", "reject"]),
-    review_notes: z.string().optional(),
+    contentId: z.string(),
+    content: z.string(),
+    contentType: z.enum(["text", "image", "video"]),
+    userId: z.string(),
+    decision: z.enum(["approve", "reject", "review"]),
   }),
   outputSchema: z.object({
     decision: z.enum(["approve", "reject"]),
@@ -1915,23 +1913,15 @@ const humanReviewStep = new Step({
     review_notes: z.string().optional(),
   }),
   execute: async ({ context, suspend }) => {
-    const decisionResult = context.getStepResult<{
-      decision: "approve" | "reject" | "review";
-    }>("contentDecisionStep");
-    
-    if (!decisionResult) {
-      throw new Error("Decision result not available");
-    }
+    const { decision, contentId, content, contentType, userId } = context.inputData;
     
     // If the decision isn't to review, this step should be skipped
-    if (decisionResult.decision !== "review") {
+    if (decision !== "review") {
       return {
-        decision: decisionResult.decision,
+        decision: decision as "approve" | "reject",
         reason: "Automatic decision, no human review needed",
       };
     }
-    
-    const { contentId, content, contentType, userId } = context.triggerData;
     
     // In a real implementation, you would:
     // 1. Add the content to a review queue
@@ -1943,23 +1933,31 @@ const humanReviewStep = new Step({
     console.log(`Content: ${content.substring(0, 100)}...`);
     
     // Suspend the workflow until human review is completed
-    if (!context.inputData) {
-      await suspend();
-    }
+    await suspend();
     
     // When the workflow is resumed, we'll have the human decision
+    const humanInput = await context.getHumanInput();
+    
     return {
-      decision: context.inputData?.review_decision || "reject", // Default to reject if missing
+      decision: humanInput.review_decision || "reject", // Default to reject if missing
       reason: "Human review decision",
       reviewer_id: "mod_123", // In a real system, this would be the actual moderator ID
-      review_notes: context.inputData?.review_notes,
+      review_notes: humanInput.review_notes,
     };
   },
 });
 
 // Step 5: Apply moderation decision
-const applyModerationStep = new Step({
+const applyModerationStep = createStep({
   id: "applyModerationStep",
+  inputSchema: z.object({
+    contentId: z.string(),
+    userId: z.string(),
+    decision: z.enum(["approve", "reject"]),
+    reason: z.string(),
+    reviewer_id: z.string().optional(),
+    review_notes: z.string().optional(),
+  }),
   outputSchema: z.object({
     content_id: z.string(),
     user_id: z.string(),
@@ -1968,38 +1966,24 @@ const applyModerationStep = new Step({
     notification_sent: z.boolean(),
   }),
   execute: async ({ context }) => {
-    const { contentId, userId } = context.triggerData;
+    const { 
+      contentId, 
+      userId, 
+      decision, 
+      reason, 
+      reviewer_id, 
+      review_notes 
+    } = context.inputData;
     
-    const decisionResult = context.getStepResult<{
-      decision: "approve" | "reject" | "review";
-    }>("contentDecisionStep");
+    // Determine the final decision and action taken
+    const finalDecision = decision;
+    let actionTaken = `Content ${finalDecision}ed. Reason: ${reason}`;
     
-    const humanReviewResult = context.getStepResult<{
-      decision: "approve" | "reject";
-      reviewer_id?: string;
-      review_notes?: string;
-    }>("humanReviewStep");
-    
-    if (!decisionResult) {
-      throw new Error("Decision result not available");
-    }
-    
-    // Determine the final decision
-    let finalDecision: "approve" | "reject";
-    let actionTaken: string;
-    
-    if (decisionResult.decision === "review" && humanReviewResult) {
-      // Use the human review decision
-      finalDecision = humanReviewResult.decision;
-      actionTaken = `Human moderator (${humanReviewResult.reviewer_id || "unknown"}) ${finalDecision}ed the content.`;
-      
-      if (humanReviewResult.review_notes) {
-        actionTaken += ` Notes: ${humanReviewResult.review_notes}`;
+    if (reviewer_id) {
+      actionTaken = `Human moderator (${reviewer_id}) ${finalDecision}ed the content. Reason: ${reason}`;
+      if (review_notes) {
+        actionTaken += ` Notes: ${review_notes}`;
       }
-    } else {
-      // Use the automated decision
-      finalDecision = decisionResult.decision as "approve" | "reject";
-      actionTaken = `Content automatically ${finalDecision}ed by the system.`;
     }
     
     // In a real implementation, you would:
@@ -2034,23 +2018,34 @@ const applyModerationStep = new Step({
   },
 });
 
-// Chain the steps with conditional logic
-moderationWorkflow
-  .step(explicitWordCheckStep)
+// Create the moderation workflow
+const moderationWorkflow = createWorkflow({
+  id: "moderation-workflow",
+  inputSchema: z.object({
+    contentId: z.string(),
+    content: z.string(),
+    contentType: z.enum(["text", "image", "video"]),
+    userId: z.string(),
+  }),
+  outputSchema: z.object({
+    content_id: z.string(),
+    user_id: z.string(),
+    final_decision: z.enum(["approve", "reject"]),
+    action_taken: z.string(),
+    notification_sent: z.boolean(),
+  }),
+})
+  .then(explicitWordCheckStep)
   .then(toxicityAnalysisStep)
   .then(contentDecisionStep)
   .then(humanReviewStep, {
     // Only go to human review if the decision is "review"
     when: ({ context }) => {
-      const decisionResult = context.getStepResult<{
-        decision: "approve" | "reject" | "review";
-      }>("contentDecisionStep");
-      return decisionResult?.decision === "review";
+      return context.inputData.decision === "review";
     },
   })
-  .then(applyModerationStep);
-
-moderationWorkflow.commit();
+  .then(applyModerationStep)
+  .commit();
 ```
 ## Performance Considerations
 
@@ -2101,8 +2096,12 @@ async function cachedLlmCall(prompt: string, model: string) {
 
 ```typescript
 // Example of a step with timeout
-const timeoutStep = new Step({
+const timeoutStep = createStep({
   id: "timeoutStep",
+  inputSchema: z.object({}),
+  outputSchema: z.object({
+    result: z.string(),
+  }),
   execute: async ({ context }) => {
     return await Promise.race([
       yourActualFunction(),
@@ -2117,8 +2116,12 @@ const timeoutStep = new Step({
 4. **Resource Cleanup**: Ensure resources are properly cleaned up, especially in error cases:
 
 ```typescript
-const cleanupStep = new Step({
+const cleanupStep = createStep({
   id: "cleanupStep",
+  inputSchema: z.object({}),
+  outputSchema: z.object({
+    result: z.string(),
+  }),
   execute: async ({ context }) => {
     try {
       // Your step logic here
@@ -2137,23 +2140,29 @@ For production workflows, monitoring is crucial. Mastra integrates with observab
 
 ```typescript
 import { Mastra } from "@mastra/core";
-import { TelemetryExporter } from "@mastra/datadog"; // Example with Datadog
+import { PinoLogger } from "@mastra/loggers";
 
-// Create a telemetry exporter
-const telemetryExporter = new TelemetryExporter({
-  apiKey: process.env.DATADOG_API_KEY,
-  serviceName: "my-mastra-app",
-  environment: process.env.NODE_ENV,
-});
-
-// Initialize Mastra with the exporter
+// Initialize Mastra with telemetry
 const mastra = new Mastra({
   workflows: {
     // Your workflows here
   },
   telemetry: {
-    exporter: telemetryExporter,
+    serviceName: "my-mastra-app",
+    enabled: true,
+    sampling: {
+      type: "ratio",
+      probability: 0.5,
+    },
+    export: {
+      type: "otlp",
+      endpoint: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+    },
   },
+  logger: new PinoLogger({
+    name: "MyApp",
+    level: "info",
+  }),
 });
 ```
 
@@ -2179,6 +2188,8 @@ Happy building with Mastra workflows!
 
 - [Mastra Documentation](https://mastra.ai/docs)
 - [Workflow Overview](https://mastra.ai/docs/workflows/overview)
+- [createWorkflow Reference](https://mastra.ai/reference/workflows/workflow)
+- [createStep Reference](https://mastra.ai/reference/workflows/step)
 - [Workflow Examples](https://mastra.ai/examples/workflows)
 - [GitHub Repository](https://github.com/mastra-ai/mastra)
 - [Community Discord](https://discord.gg/mastra)
