@@ -1,0 +1,29 @@
+---
+import ArticlePreview from './ArticlePreview.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'posts'>[] | CollectionEntry<'til'>[];
+  type?: 'blog' | 'til';
+}
+
+const { posts, type = 'blog' } = Astro.props;
+---
+
+<section>
+  <ul class="divide-y-2 divide-y-primary">
+    {posts.map((post) => (
+      <li>
+        <ArticlePreview
+          slug={post.slug}
+          title={post.data.title}
+          description={post.data.description}
+          published={post.data.published}
+          tags={post.data.tags}
+          type={type}
+        />
+      </li>
+    ))}
+  </ul>
+</section>
+

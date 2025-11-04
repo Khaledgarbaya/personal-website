@@ -1,0 +1,75 @@
+---
+import Badge from './ui/Badge.astro';
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  published: Date;
+  tags: string;
+  type?: 'blog' | 'til';
+}
+
+const { slug, title, description, published, tags, type = 'blog' } = Astro.props;
+
+// Parse tags from comma-separated string
+const tagList = tags ? tags.split(',').map(tag => tag.trim()) : [];
+const basePath = type === 'til' ? '/til' : '/blog';
+---
+
+<article class="py-6">
+  <div class="flex items-center justify-between mb-3 text-gray-500">
+    <div class="space-x-2">
+      {tagList.map((tag: string) => (
+        <Badge>
+          <a href={`${basePath}/tags/${tag}`}>
+            #{tag}
+          </a>
+        </Badge>
+      ))}
+    </div>
+    <span class="text-sm">
+      Published{' '}
+      <time class="block text-sm text-cyan-700" datetime={published.toISOString()}>
+        {published.toISOString().split('T')[0].replace(/-/g, '/')}
+      </time>
+    </span>
+  </div>
+  <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:underline">
+    <a href={`${basePath}/${slug}`}>
+      {title}
+    </a>
+  </h2>
+  <p class="mb-5 text-gray-500 dark:text-gray-400">
+    {description}
+  </p>
+  <div class="flex items-center justify-between">
+    <a class="flex items-center space-x-2" href="/about/">
+      <img
+        class="rounded-full w-7 h-7"
+        src="/logo.svg"
+        alt="Khaled Garbaya profile picture"
+      />
+      <span class="font-medium dark:text-white">Khaled Garbaya</span>
+    </a>
+    <a
+      class="inline-flex items-center font-medium text-blue-600 hover:underline dark:text-blue-500"
+      href={`${basePath}/${slug}`}
+    >
+      Read more
+      <svg
+        class="w-4 h-4 ml-2"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </a>
+  </div>
+</article>
+

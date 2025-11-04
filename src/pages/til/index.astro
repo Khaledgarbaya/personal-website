@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import RecentPosts from '../../components/RecentPosts.astro';
+import WebsiteSchema from '../../components/schemas/WebsiteSchema.astro';
+import PersonSchema from '../../components/schemas/PersonSchema.astro';
+
+const allTil = await getCollection('til');
+const sortedTil = allTil.sort((a, b) => 
+  b.data.published.getTime() - a.data.published.getTime()
+);
+---
+
+<BaseLayout 
+  title="TIL - Today I Learned - Khaled Garbaya"
+  description="Quick tips and tricks I learn along the way"
+  keywords="today i learned, til, tips, tricks, web development, javascript, programming"
+>
+  <WebsiteSchema slot="head" />
+  <PersonSchema slot="head" />
+  
+  <!-- START: TIL Archive -->
+  <!-- CONTENT_TYPE: Today I Learned Archive -->
+  <!-- AUTHOR: Khaled Garbaya -->
+  <div class="flex-none h-52"></div>
+  <PageHero
+    title="Today I Learned"
+    description="Quick tips and tricks I learn along the way"
+  />
+  <div class="flex-none h-32"></div>
+  <main>
+    <section class="container" aria-label="Today I Learned posts">
+      <div class="mx-auto max-w-2xl lg:max-w-5xl">
+        <RecentPosts posts={sortedTil} type="til" />
+      </div>
+    </section>
+  </main>
+  <!-- END: TIL Archive -->
+</BaseLayout>
+

@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MainHero from '../components/MainHero.astro';
+import RecentPosts from '../components/RecentPosts.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import Button from '../components/ui/Button.astro';
+import WebsiteSchema from '../components/schemas/WebsiteSchema.astro';
+import PersonSchema from '../components/schemas/PersonSchema.astro';
+
+// Get the 5 most recent posts
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => 
+  b.data.published.getTime() - a.data.published.getTime()
+).slice(0, 5);
+---
+
+<BaseLayout>
+  <WebsiteSchema slot="head" />
+  <PersonSchema slot="head" />
+  
+  <!-- START: Homepage -->
+  <!-- CONTENT_TYPE: Homepage -->
+  <!-- AUTHOR: Khaled Garbaya -->
+  <div class="flex-none h-52"></div>
+  <MainHero />
+  <div class="flex-none h-32"></div>
+  <main>
+    <div class="mx-auto w-full max-w-7xl lg:px-8">
+      <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
+        <div>
+          <section class="container" aria-label="Latest blog posts">
+            <div class="mx-auto max-w-2xl lg:max-w-5xl">
+              <h2 class="text-3xl font-bold">Latest posts</h2>
+              <RecentPosts posts={sortedPosts} />
+              <a
+                href="/blog"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-md px-8 mt-8 w-full"
+                aria-label="View all blog posts"
+              >
+                More posts
+              </a>
+            </div>
+          </section>
+        </div>
+        <aside class="space-y-10 lg:pl-16 xl:pl-24" aria-label="Sidebar content">
+          <NewsletterForm />
+          <section class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40" aria-label="Latest videos">
+            <h2 class="flex text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <span class="ml-3">Latest Videos</span>
+            </h2>
+            <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              Latest videos from my youtube channel
+            </p>
+            <div class="mt-6 flex items-center justify-center">
+              <div class="flex-none w-16 h-16 bg-zinc-100 dark:bg-zinc-800 rounded-md" role="img" aria-label="Video thumbnail placeholder"></div>
+              <div class="flex-auto ml-4 not-prose">
+                <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <a
+                    class="inline-flex items-center font-medium text-blue-600 hover:underline dark:text-blue-500"
+                    href="https://www.youtube.com/watch?v=TW0Ic0n_PZ8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Numbered Bookmarks in VS Code
+                  </a>
+                </h3>
+                <p class="text-sm !mt-0 text-zinc-600 dark:text-zinc-400">
+                  Numbered bookmarks will allow us to select a block of code,
+                  bookmark it and easily navigate back to it using the
+                  bookmark number.
+                </p>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <!-- END: Homepage -->
+</BaseLayout>

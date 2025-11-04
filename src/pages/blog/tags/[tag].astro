@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import RecentPosts from '../../../components/RecentPosts.astro';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  
+  // Get all unique tags
+  const allTags = new Set<string>();
+  allPosts.forEach((post) => {
+    const tags = post.data.tags.split(',').map(tag => tag.trim());
+    tags.forEach(tag => allTags.add(tag));
+  });
+
+  return Array.from(allTags).map((tag) => {
+    const filteredPosts = allPosts.filter((post) => {
+      const postTags = post.data.tags.split(',').map(t => t.trim());
+      return postTags.includes(tag);
+    });
+    
+    return {
+      params: { tag },
+      props: { 
+        tag,
+        posts: filteredPosts.sort((a, b) => 
+          b.data.published.getTime() - a.data.published.getTime()
+        )
+      },
+    };
+  });
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout 
+  title={`Posts tagged with "${tag}" - Khaled Garbaya`}
+  description={`All blog posts tagged with ${tag}`}
+>
+  <div class="flex-none h-52"></div>
+  <PageHero
+    title={`Posts tagged with "${tag}"`}
+    description={`${posts.length} post${posts.length === 1 ? '' : 's'} found`}
+  />
+  <div class="flex-none h-32"></div>
+  <section class="container">
+    <div class="mx-auto max-w-2xl lg:max-w-5xl">
+      <RecentPosts posts={posts} />
+    </div>
+  </section>
+</BaseLayout>
+

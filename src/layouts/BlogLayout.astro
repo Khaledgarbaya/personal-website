@@ -1,0 +1,120 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SocialShare from '../components/SocialShare.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import BlogPostSchema from '../components/schemas/BlogPostSchema.astro';
+import PersonSchema from '../components/schemas/PersonSchema.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  published: Date;
+  modified?: Date;
+  tags: string;
+  slug: string;
+  headings?: any[];
+  type?: 'blog' | 'til';
+}
+
+const { title, description, published, modified, tags, slug, headings = [], type = 'blog' } = Astro.props;
+
+const image = `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:${encodeURIComponent(title)},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`;
+
+// Parse tags from comma-separated string
+const tagList = tags ? tags.split(',').map(tag => tag.trim()) : [];
+const basePath = type === 'til' ? 'til' : 'blog';
+const sectionName = type === 'til' ? 'Today I Learned' : 'Blog';
+
+// Breadcrumb items
+const breadcrumbItems = [
+  { name: 'Home', url: 'https://khaledgarbaya.net/' },
+  { name: sectionName, url: `https://khaledgarbaya.net/${basePath}` },
+  { name: title, url: `https://khaledgarbaya.net/${basePath}/${slug}` }
+];
+
+// Enhanced meta keywords
+const keywords = `${tagList.join(', ')}, web development, software engineering`;
+---
+
+<BaseLayout 
+  title={title} 
+  description={description} 
+  image={image}
+  type="article"
+  author="Khaled Garbaya"
+  keywords={keywords}
+  publishedTime={published.toISOString()}
+  modifiedTime={modified ? modified.toISOString() : published.toISOString()}
+  articleTags={tagList}
+>
+  <!-- JSON-LD Structured Data -->
+  <BlogPostSchema 
+    title={title}
+    description={description}
+    published={published}
+    modified={modified}
+    slug={slug}
+    tags={tags}
+    type={type}
+    image={image}
+    slot="head"
+  />
+  <PersonSchema slot="head" />
+
+  <!-- START: Main Content -->
+  <!-- CONTENT_TYPE: {type === 'til' ? 'Today I Learned' : 'Blog Post'} -->
+  <!-- AUTHOR: Khaled Garbaya -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex-none h-52"></div>
+    <Breadcrumb items={breadcrumbItems} />
+    <div class="lg:flex lg:space-x-8">
+      <article 
+        class="lg:w-3/4" 
+        data-content-type={type === 'til' ? 'til-post' : 'blog-post'}
+        data-author="Khaled Garbaya"
+        itemscope 
+        itemtype="https://schema.org/BlogPosting"
+      >
+        <header class="mb-8">
+          <h1 class="text-4xl font-bold mb-2" itemprop="headline">{title}</h1>
+          <p class="text-gray-600 mb-2 dark:text-gray-400" itemprop="description">{description}</p>
+          <time 
+            class="text-sm text-gray-500 dark:text-gray-500" 
+            datetime={published.toISOString()}
+            itemprop="datePublished"
+          >
+            {published.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+          {modified && (
+            <meta itemprop="dateModified" content={modified.toISOString()} />
+          )}
+          <div class="mt-4" itemprop="keywords">
+            {tagList.map((tag: string) => (
+              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 dark:bg-gray-700 dark:text-gray-200">
+                #{tag}
+              </span>
+            ))}
+          </div>
+          <meta itemprop="author" content="Khaled Garbaya" />
+          <meta itemprop="image" content={image} />
+        </header>
+        <div class="prose prose-lg dark:prose-invert max-w-none" itemprop="articleBody">
+          <slot />
+        </div>
+      </article>
+      <aside class="lg:w-1/4 mb-8 lg:mb-0">
+        <div class="sticky top-8">
+          {headings && headings.length > 0 && (
+            <TableOfContents headings={headings} />
+          )}
+          <div class="mt-8 py-4 flex gap-4 border-t border-t-border">
+            <SocialShare url={`https://khaledgarbaya.net/${basePath}/${slug}`} title={title} />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <!-- END: Main Content -->
+</BaseLayout>
+

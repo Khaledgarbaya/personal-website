@@ -1,0 +1,32 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const tilEntries = await getCollection('til');
+  return tilEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'til'>;
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await entry.render();
+---
+
+<BlogLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  published={entry.data.published}
+  tags={entry.data.tags}
+  slug={entry.slug}
+  headings={headings}
+  type="til"
+>
+  <Content />
+</BlogLayout>
+

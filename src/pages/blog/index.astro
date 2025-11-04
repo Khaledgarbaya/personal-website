@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import RecentPosts from '../../components/RecentPosts.astro';
+import WebsiteSchema from '../../components/schemas/WebsiteSchema.astro';
+import PersonSchema from '../../components/schemas/PersonSchema.astro';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => 
+  b.data.published.getTime() - a.data.published.getTime()
+);
+---
+
+<BaseLayout 
+  title="Blog - Khaled Garbaya"
+  description="I write about software engineering, leadership, and productivity. I also share my thoughts on the tech industry and how to navigate it."
+  keywords="blog, software engineering, leadership, productivity, web development, javascript, typescript"
+>
+  <WebsiteSchema slot="head" />
+  <PersonSchema slot="head" />
+  
+  <!-- START: Blog Archive -->
+  <!-- CONTENT_TYPE: Blog Archive -->
+  <!-- AUTHOR: Khaled Garbaya -->
+  <div class="flex-none h-52"></div>
+  <PageHero
+    title="Blog"
+    description="I write about software engineering, leadership, and productivity. I also share my thoughts on the tech industry and how to navigate it."
+  />
+  <div class="flex-none h-32"></div>
+  <main>
+    <section class="container" aria-label="Blog posts">
+      <div class="mx-auto max-w-2xl lg:max-w-5xl">
+        <RecentPosts posts={sortedPosts} />
+      </div>
+    </section>
+  </main>
+  <!-- END: Blog Archive -->
+</BaseLayout>
+
