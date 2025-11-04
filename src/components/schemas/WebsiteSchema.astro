@@ -1,0 +1,26 @@
+---
+// WebsiteSchema component for site-level schema
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://khaledgarbaya.net/#website",
+  name: "Khaled Garbaya",
+  url: "https://khaledgarbaya.net",
+  description:
+    "Engineering Leader, Developer and educator. I write about web development, software engineering and leadership.",
+  publisher: {
+    "@id": "https://khaledgarbaya.net/#person",
+  },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://khaledgarbaya.net/blog?search={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+  inLanguage: "en-US",
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />

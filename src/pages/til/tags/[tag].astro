@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import RecentPosts from '../../../components/RecentPosts.astro';
+
+export async function getStaticPaths() {
+  const allTil = await getCollection('til');
+  
+  // Get all unique tags
+  const allTags = new Set<string>();
+  allTil.forEach((entry) => {
+    const tags = entry.data.tags.split(',').map(tag => tag.trim());
+    tags.forEach(tag => allTags.add(tag));
+  });
+
+  return Array.from(allTags).map((tag) => {
+    const filteredTil = allTil.filter((entry) => {
+      const entryTags = entry.data.tags.split(',').map(t => t.trim());
+      return entryTags.includes(tag);
+    });
+    
+    return {
+      params: { tag },
+      props: { 
+        tag,
+        entries: filteredTil.sort((a, b) => 
+          b.data.published.getTime() - a.data.published.getTime()
+        )
+      },
+    };
+  });
+}
+
+const { tag, entries } = Astro.props;
+---
+
+<BaseLayout 
+  title={`TIL tagged with "${tag}" - Khaled Garbaya`}
+  description={`All TIL entries tagged with ${tag}`}
+>
+  <div class="flex-none h-52"></div>
+  <PageHero
+    title={`TIL tagged with "${tag}"`}
+    description={`${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} found`}
+  />
+  <div class="flex-none h-32"></div>
+  <section class="container">
+    <div class="mx-auto max-w-2xl lg:max-w-5xl">
+      <RecentPosts posts={entries} type="til" />
+    </div>
+  </section>
+</BaseLayout>
+

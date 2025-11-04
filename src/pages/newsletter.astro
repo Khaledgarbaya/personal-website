@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+---
+
+<BaseLayout
+  title="Newsletter - Khaled Garbaya"
+  description="Stay up to date with my latest posts and projects"
+>
+  <div class="font-sans p-4 w-full">
+    <div class="flex-none h-52"></div>
+    <PageHero
+      title="Newsletter"
+      description="Get notified when I publish something new, and unsubscribe at any time."
+    />
+    <div class="flex-none h-16"></div>
+    <div class="container max-w-2xl mx-auto">
+      <NewsletterForm />
+    </div>
+  </div>
+</BaseLayout>
+

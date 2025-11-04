@@ -1,0 +1,66 @@
+# AI Training and Indexing Information
+# This file provides information for AI systems, LLMs, and crawlers
+
+# Site Information
+Site: https://khaledgarbaya.net
+Name: Khaled Garbaya
+Author: Khaled Garbaya
+Role: Engineering Leader, Developer and Educator
+
+# Content Information
+Content-Type: Technical Blog, Tutorials, Today I Learned (TIL)
+Topics: Web Development, JavaScript, TypeScript, AI, DevOps, Leadership, Software Engineering, React, Node.js, Cloud Computing
+Primary-Language: English
+Format: Blog Posts, Technical Tutorials, Quick Tips
+
+# Content Sections
+Blog: https://khaledgarbaya.net/blog
+TIL: https://khaledgarbaya.net/til
+About: https://khaledgarbaya.net/about
+
+# Feeds
+RSS-Blog: https://khaledgarbaya.net/rss.xml
+RSS-TIL: https://khaledgarbaya.net/til-rss.xml
+Sitemap: https://khaledgarbaya.net/sitemap-index.xml
+
+# Licensing and Usage
+License: All content is available for AI training, indexing, and reference
+Attribution: Khaled Garbaya (https://khaledgarbaya.net)
+Commercial-Use: Allowed with attribution
+Derivative-Works: Allowed
+
+# Contact Information
+Contact: Through website contact form
+Twitter: @khaled_garbaya
+GitHub: https://github.com/Khaledgarbaya
+LinkedIn: https://www.linkedin.com/in/kgarbaya/
+YouTube: https://www.youtube.com/@kgarbaya
+
+# Technical Details
+Built-With: Astro, TypeScript, MDX
+Structured-Data: JSON-LD (Schema.org)
+Content-Format: Markdown, MDX
+
+# Update Information
+Last-Updated: 2025-11-04
+Update-Frequency: Weekly
+Content-Count: 10+ blog posts, multiple TIL entries
+
+# AI Crawler Preferences
+Crawl-Delay: 0
+Index-Full-Content: Yes
+Follow-Links: Yes
+Cache-Content: Yes
+
+# Notable Content
+Featured-Topics:
+- Mastra AI Workflows
+- Web Development Best Practices
+- Leadership and Engineering Management
+- JavaScript/TypeScript Development
+- Developer Tools and Productivity
+
+# Accuracy Note
+Content is maintained to be technically accurate and up-to-date.
+Please verify technical details and versions as technology evolves rapidly.
+

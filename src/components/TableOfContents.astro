@@ -1,0 +1,82 @@
+---
+interface Props {
+  headings: any[];
+}
+
+const { headings } = Astro.props;
+
+// Filter to only show h2 and h3 headings
+const tocHeadings = headings.filter(h => h.depth <= 3);
+---
+
+{tocHeadings && tocHeadings.length > 0 && (
+  <nav class="toc">
+    <h2 class="text-xl font-semibold mb-4">Table of Contents</h2>
+    <ul class="space-y-2">
+      {tocHeadings.map((heading: any) => (
+        <li
+          class:list={[
+            'transition-colors',
+            heading.depth === 1 ? 'font-semibold' : heading.depth === 2 ? '' : 'pl-4',
+            'hover:text-blue-500'
+          ]}
+        >
+          <a href={`#${heading.slug}`} class="toc-link">
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <script>
+    let tocObserver: IntersectionObserver | null = null;
+
+    function setupTableOfContents() {
+      // Disconnect previous observer if it exists
+      if (tocObserver) {
+        tocObserver.disconnect();
+      }
+
+      tocObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const id = entry.target.getAttribute('id');
+            if (id) {
+              const tocLink = document.querySelector(`.toc-link[href="#${id}"]`);
+              if (tocLink) {
+                if (entry.isIntersecting) {
+                  // Remove active from all links
+                  document.querySelectorAll('.toc-link').forEach(link => {
+                    link.classList.remove('text-blue-500', 'border-l-2', 'border-primary', 'pl-2');
+                  });
+                  // Add active to current link
+                  tocLink.classList.add('text-blue-500', 'border-l-2', 'border-primary', 'pl-2');
+                }
+              }
+            }
+          });
+        },
+        { rootMargin: '-20% 0% -35% 0%' }
+      );
+
+      // Observe all headings
+      document.querySelectorAll('h2[id], h3[id]').forEach((heading) => {
+        tocObserver?.observe(heading);
+      });
+    }
+
+    // Run on page load
+    setupTableOfContents();
+
+    // Re-run on view transitions
+    document.addEventListener('astro:after-swap', setupTableOfContents);
+
+    // Cleanup before page navigation
+    document.addEventListener('astro:before-preparation', () => {
+      if (tocObserver) {
+        tocObserver.disconnect();
+      }
+    });
+  </script>
+)}

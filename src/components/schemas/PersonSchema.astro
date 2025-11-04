@@ -1,0 +1,31 @@
+---
+// PersonSchema component for author/person identity
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://khaledgarbaya.net/#person",
+  name: "Khaled Garbaya",
+  url: "https://khaledgarbaya.net",
+  image: "https://khaledgarbaya.net/Khaled_Garbaya_Colour.jpg",
+  jobTitle: "Engineering Leader, Developer and Educator",
+  description:
+    "Engineering Leader, Developer and educator. I write about web development, software engineering and leadership.",
+  sameAs: [
+    "https://twitter.com/khaled_garbaya",
+    "https://github.com/Khaledgarbaya",
+    "https://www.linkedin.com/in/kgarbaya/",
+    "https://www.youtube.com/@kgarbaya",
+  ],
+  knowsAbout: [
+    "Web Development",
+    "JavaScript",
+    "TypeScript",
+    "AI",
+    "DevOps",
+    "Leadership",
+    "Software Engineering",
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />

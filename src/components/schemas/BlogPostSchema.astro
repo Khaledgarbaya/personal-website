@@ -1,0 +1,62 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  published: Date;
+  modified?: Date;
+  slug: string;
+  tags: string;
+  type?: "blog" | "til";
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  published,
+  modified,
+  slug,
+  tags,
+  type = "blog",
+  image,
+} = Astro.props;
+
+const basePath = type === "til" ? "til" : "blog";
+const url = `https://khaledgarbaya.net/${basePath}/${slug}`;
+const defaultImage =
+  image || "https://khaledgarbaya.net/Khaled_Garbaya_Colour.jpg";
+
+// Parse tags from comma-separated string
+const tagList = tags ? tags.split(",").map((tag) => tag.trim()) : [];
+
+const blogPostSchema = {
+  "@context": "https://schema.org",
+  "@type": type === "til" ? "Article" : "BlogPosting",
+  "@id": url,
+  headline: title,
+  name: title,
+  description: description,
+  url: url,
+  datePublished: published.toISOString(),
+  dateModified: (modified || published).toISOString(),
+  author: {
+    "@id": "https://khaledgarbaya.net/#person",
+  },
+  publisher: {
+    "@id": "https://khaledgarbaya.net/#person",
+  },
+  image: {
+    "@type": "ImageObject",
+    url: defaultImage,
+  },
+  keywords: tagList.join(", "),
+  articleSection: type === "til" ? "Today I Learned" : "Blog",
+  inLanguage: "en-US",
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": url,
+  },
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(blogPostSchema)} />
