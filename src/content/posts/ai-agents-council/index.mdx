@@ -358,6 +358,7 @@ import {
   skepticalAgent,
   pragmaticAgent,
 } from './agents/council-members';
+import { SCHEMA } from './database/schema';
 
 interface CouncilResponse {
   agentId: string;
@@ -399,7 +400,7 @@ export class CouncilManager {
     const votes = await this.conductVoting(responses);
     
     // Step 3: Determine winner
-    const winner = this.determineWinner(votes);
+    const winner = this.determineWinner(votes, responses);
     
     // Step 4: Update performance metrics
     await this.updatePerformance(winner.agentId);
@@ -464,7 +465,10 @@ Consider: accuracy, completeness, practicality, and insight.`;
     return votes;
   }
   
-  private determineWinner(votes: Map<string, number>): { agentId: string; response: string; votes: number } {
+  private determineWinner(
+    votes: Map<string, number>,
+    responses: CouncilResponse[]
+  ): { agentId: string; response: string; votes: number } {
     // Find agent with most votes
     let maxVotes = 0;
     let winnerId = '';
@@ -476,11 +480,13 @@ Consider: accuracy, completeness, practicality, and insight.`;
       }
     }
     
-    const winnerAgent = this.agents.get(winnerId);
+    // Find the response for the winning agent
+    const winnerResponseObj = responses.find(r => r.agentId === winnerId);
+    const winnerResponse = winnerResponseObj ? winnerResponseObj.response : '';
     
     return {
       agentId: winnerId,
-      response: '', // We'll get this from our stored responses
+      response: winnerResponse,
       votes: maxVotes,
     };
   }
@@ -634,7 +640,12 @@ private async initializeDatabase() {
   }
 }
 
-private async updatePerformance(winnerId: string, queryId: string) {
+// Note: Call initializeDatabase() before first use of the council.
+// For example, in your main application setup:
+// const council = new CouncilManager();
+// await council.initializeDatabase();
+
+private async updatePerformance(winnerId: string) {
   // Increment total queries for all agents
   for (const agentId of this.agents.keys()) {
     await this.storage.query(`
