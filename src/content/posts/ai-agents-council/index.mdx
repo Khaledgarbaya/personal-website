@@ -153,6 +153,9 @@ Create three more agents with different personalities:
 
 ```typescript
 // src/mastra/agents/council-members/analytical.ts
+import { Agent } from '@mastra/core/agent';
+import { openai } from '@ai-sdk/openai';
+
 export const analyticalAgent = new Agent({
   name: 'analytical-agent',
   instructions: `You are a data-driven, logical thinker who prioritizes:
@@ -167,6 +170,9 @@ export const analyticalAgent = new Agent({
 });
 
 // src/mastra/agents/council-members/skeptical.ts
+import { Agent } from '@mastra/core/agent';
+import { openai } from '@ai-sdk/openai';
+
 export const skepticalAgent = new Agent({
   name: 'skeptical-agent',
   instructions: `You are a skeptical, questioning thinker who prioritizes:
@@ -181,6 +187,9 @@ export const skepticalAgent = new Agent({
 });
 
 // src/mastra/agents/council-members/pragmatic.ts
+import { Agent } from '@mastra/core/agent';
+import { openai } from '@ai-sdk/openai';
+
 export const pragmaticAgent = new Agent({
   name: 'pragmatic-agent',
   instructions: `You are a practical, efficient thinker who prioritizes:
@@ -349,8 +358,10 @@ Now we need a proper voting system. Let's create a Council Manager class that or
 
 ```typescript
 // src/mastra/council-manager.ts
+import { Agent } from '@mastra/core/agent';
 import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/core/storage';
+import { openai } from '@ai-sdk/openai';
 import {
   conservativeAgent,
   creativeAgent,
@@ -888,6 +899,9 @@ Which response is best? Reply with just the response number (1-${shuffledRespons
 Use external quality metrics instead of peer voting:
 
 ```typescript
+// Note: Import your scorers first (see Step 10 for implementation)
+// import { responseQualityScorer, answerRelevancyScorer } from './scorers/quality-scorer';
+
 private async evaluateWithExternalScorers(response: string): Promise<number> {
   // Use Mastra's built-in scorers for objective evaluation
   const qualityScore = await responseQualityScorer.score({ output: response });
@@ -918,7 +932,7 @@ The lesson: **Be careful what you optimize for.** If you penalize poor performan
 
 ## Step 10: Adding Mastra Scorers for Quality Evaluation
 
-Let's add proper evaluation using Mastra's built-in scorers:
+Let's add proper evaluation using Mastra's built-in scorers. Note: This is a simplified example - consult the [Mastra Evals documentation](https://mastra.ai/docs/evals) for the latest API:
 
 ```typescript
 // src/mastra/scorers/quality-scorer.ts
