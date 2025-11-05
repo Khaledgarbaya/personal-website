@@ -32,8 +32,19 @@ const til = defineCollection({
   }),
 });
 
+const pages = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    image: z.string().optional(),
+    keywords: z.string().optional(),
+  }),
+});
+
 export const collections = {
   posts,
   til,
+  pages,
 };
 

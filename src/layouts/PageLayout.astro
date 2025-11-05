@@ -1,0 +1,67 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import PersonSchema from '../components/schemas/PersonSchema.astro';
+import WebsiteSchema from '../components/schemas/WebsiteSchema.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  keywords?: string;
+  showHero?: boolean;
+  showImage?: boolean;
+}
+
+const { 
+  title, 
+  description, 
+  image = `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:${encodeURIComponent(description)},g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
+  keywords = 'khaled garbaya, web development, software engineering, leadership',
+  showHero = true,
+  showImage = false,
+} = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  keywords={keywords}
+>
+  <PersonSchema slot="head" />
+  <WebsiteSchema slot="head" />
+  
+  <!-- START: Page -->
+  <!-- CONTENT_TYPE: Page -->
+  <!-- AUTHOR: Khaled Garbaya -->
+  <div class="font-sans p-4 w-full">
+    <div class="flex-none h-52"></div>
+    {showHero && (
+      <header class="container max-w-6xl mx-auto flex flex-col-reverse md:flex-row justify-center items-center">
+        <PageHero
+          title={title.replace('Khaled Garbaya - ', '')}
+          description={description}
+        />
+        {showImage && (
+          <img
+            src="/Khaled_Garbaya_Colour.jpg"
+            alt="Khaled Garbaya - Engineering Leader, Developer and Educator"
+            width="400"
+            height="400"
+            loading="lazy"
+            class="aspect-square object-cover rounded-2xl shadow-lg -rotate-3"
+            itemprop="image"
+          />
+        )}
+      </header>
+    )}
+    <div class="flex-none h-24"></div>
+    <main>
+      <article class="container max-w-5xl mx-auto prose dark:prose-invert prose-lg">
+        <slot />
+      </article>
+    </main>
+  </div>
+  <!-- END: Page -->
+</BaseLayout>
