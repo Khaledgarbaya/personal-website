@@ -18,7 +18,7 @@ const basePath = type === 'til' ? '/til' : '/blog';
 ---
 
 <article class="py-6">
-  <div class="flex items-center justify-between mb-3 text-gray-500">
+  <div class="flex items-center justify-between mb-3 text-gray-700 dark:text-gray-400">
     <div class="space-x-2">
       {tagList.map((tag: string) => (
         <Badge>
@@ -30,7 +30,7 @@ const basePath = type === 'til' ? '/til' : '/blog';
     </div>
     <span class="text-sm">
       Published{' '}
-      <time class="block text-sm text-cyan-700" datetime={published.toISOString()}>
+      <time class="block text-sm text-cyan-700 dark:text-cyan-500" datetime={published.toISOString()}>
         {published.toISOString().split('T')[0].replace(/-/g, '/')}
       </time>
     </span>
@@ -40,7 +40,7 @@ const basePath = type === 'til' ? '/til' : '/blog';
       {title}
     </a>
   </h2>
-  <p class="mb-5 text-gray-500 dark:text-gray-400">
+  <p class="mb-5 text-gray-700 dark:text-gray-400">
     {description}
   </p>
   <div class="flex items-center justify-between">
@@ -50,7 +50,7 @@ const basePath = type === 'til' ? '/til' : '/blog';
         src="/logo.svg"
         alt="Khaled Garbaya profile picture"
       />
-      <span class="font-medium dark:text-white">Khaled Garbaya</span>
+      <span class="font-medium text-gray-900 dark:text-white">Khaled Garbaya</span>
     </a>
     <a
       class="inline-flex items-center font-medium text-blue-600 hover:underline dark:text-blue-500"
