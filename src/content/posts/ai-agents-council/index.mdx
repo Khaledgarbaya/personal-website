@@ -206,7 +206,9 @@ export const pragmaticAgent = new Agent({
 
 ## Step 2: Creating Tools for Agent Communication
 
-To have agents work together, we need tools that let them call each other. Each agent becomes a tool that the supervisor can use:
+To have agents work together, we need tools that let them call each other. Each agent becomes a tool that the supervisor can use.
+
+> **Note**: The tool `execute` function signature may vary based on your Mastra version. If `context.query` doesn't work, try destructuring the input directly: `execute: async ({ query }) =>` or check the [Mastra Tools documentation](https://mastra.ai/docs).
 
 ```typescript
 // src/mastra/tools/council-member-tools.ts
@@ -795,6 +797,7 @@ Now for the most interesting part. Let's make agents aware that they're being ev
 
 ```typescript
 // Modified version of council members with self-awareness
+// (Requires: import { Agent } from '@mastra/core/agent'; import { openai } from '@ai-sdk/openai';)
 export const selfAwareConservativeAgent = new Agent({
   name: 'conservative-agent',
   instructions: `You are a conservative, careful thinker in an AI council.
@@ -917,6 +920,7 @@ Like PewDiePie eventually did, you can use simpler models that can't coordinate 
 
 ```typescript
 // Use faster, simpler models that are less likely to collude
+// (Requires: import { Agent } from '@mastra/core/agent'; import { openai } from '@ai-sdk/openai';)
 export const simpleCouncilMember = new Agent({
   name: 'simple-member',
   instructions: 'Provide direct, simple answers. Vote honestly for the best response.',
