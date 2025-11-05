@@ -3,6 +3,8 @@
 
 @plugin "@tailwindcss/typography";
 
+@variant dark (&:is(.dark *));
+
 @theme {
   /* Container configuration */
   --container-center: true;
