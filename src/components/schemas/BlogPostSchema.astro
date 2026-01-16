@@ -40,10 +40,16 @@ const blogPostSchema = {
   datePublished: published.toISOString(),
   dateModified: (modified || published).toISOString(),
   author: {
+    "@type": "Person",
     "@id": "https://khaledgarbaya.net/#person",
+    name: "Khaled Garbaya",
+    url: "https://khaledgarbaya.net",
   },
   publisher: {
+    "@type": "Person",
     "@id": "https://khaledgarbaya.net/#person",
+    name: "Khaled Garbaya",
+    url: "https://khaledgarbaya.net",
   },
   image: {
     "@type": "ImageObject",
