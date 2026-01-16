@@ -34,3 +34,7 @@ Allow: /
 Sitemap: https://khaledgarbaya.net/sitemap-index.xml
 Sitemap: https://khaledgarbaya.net/rss.xml
 Sitemap: https://khaledgarbaya.net/til-rss.xml
+
+# LLM-specific resources
+# See /llms.txt for structured LLM guidance
+# See /api/content.json for machine-readable content graph

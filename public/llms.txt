@@ -1,0 +1,27 @@
+# Khaled Garbaya
+
+> Engineering Leader, Developer, and Educator. Personal website with technical blog posts and TIL entries about web development, AI, and software engineering.
+
+## Documentation
+
+- [Blog](/blog): Technical blog posts about web development, AI, leadership, and software engineering
+- [TIL](/til): Today I Learned entries - short-form technical learnings
+- [About](/about): Background, journey, and professional experience
+- [Uses](/uses): Tools, software, and hardware setup
+
+## Feeds
+
+- [Blog RSS](/rss.xml): Subscribe to blog posts
+- [TIL RSS](/til-rss.xml): Subscribe to TIL entries
+- [Sitemap](/sitemap-index.xml): Full site structure
+- [AI Info](/ai.txt): AI crawling and usage information
+
+## Author
+
+Khaled Garbaya is an Engineering Leader and Developer based in Munich, Germany. He writes about web development, software engineering, AI, and leadership topics.
+
+## Contact
+
+- Website: https://khaledgarbaya.net
+- Twitter: @khaled_garbaya
+- GitHub: @kgarbaya

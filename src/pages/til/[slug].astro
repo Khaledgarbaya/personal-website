@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
+import FAQSchema from '../../components/schemas/FAQSchema.astro';
 
 export async function getStaticPaths() {
   const tilEntries = await getCollection('til');
@@ -17,6 +18,8 @@ interface Props {
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
 ---
+
+<FAQSchema question={entry.data.title} answer={entry.data.description} />
 
 <BlogLayout
   title={entry.data.title}
