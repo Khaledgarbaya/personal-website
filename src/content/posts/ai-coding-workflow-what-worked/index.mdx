@@ -186,6 +186,21 @@ After running variations of these workflows, a few prompt patterns consistently 
 
 The common thread? Specificity. Not "review my auth" but "audit all server functions for middleware consistency." Not "check my database code" but "look for query patterns, relations, and migration setup."
 
+## Capture What You Learn in CLAUDE.md
+
+Here's something I almost missed: after a productive session, update your `CLAUDE.md` file with what you learned.
+
+Every codebase has quirks - naming conventions, architectural decisions, gotchas that aren't obvious from the code alone. When the AI discovers these during exploration or review, that knowledge shouldn't disappear when the session ends.
+
+After the code review session, I added notes like:
+- "Auth middleware pattern: use `authMiddleware` from `lib/auth.ts`, not manual `getSession()` calls"
+- "D1 queries: prefer prepared statements for frequently-called functions"
+- "Server functions in `app/server/` follow `[domain].ts` naming"
+
+Next time I (or Claude) work on this codebase, that context is immediately available. No re-discovery needed.
+
+Think of `CLAUDE.md` as institutional memory for your AI pair programmer. The more you invest in it, the faster every future session becomes. It's the difference between onboarding a new developer every time versus working with someone who already knows the codebase.
+
 ## The Bigger Picture
 
 Both of these workflows - delegated testing and parallel code review - share the same underlying structure:
@@ -195,6 +210,7 @@ Both of these workflows - delegated testing and parallel code review - share the
 3. **Human intervention at checkpoints** - Not micromanaging, but not fully autonomous either
 4. **Structured output** - Tables, todos, plans - not just prose
 5. **Documentation grounding** - Current best practices, not stale knowledge
+6. **Capture insights** - Update CLAUDE.md so future sessions start smarter
 
 I think we're still early in figuring out how to work effectively with AI coding assistants. The instinct is to use them like autocomplete on steroids, but the real leverage comes from treating them like a team of junior developers who can work in parallel, follow specific instructions, and report back structured findings.
 
