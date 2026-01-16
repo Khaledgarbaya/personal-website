@@ -1,0 +1,201 @@
+---
+title: "AI Coding Workflow: What Actually Worked"
+description: "After months of experimenting with AI-assisted development, I've found patterns that actually work. Two case studies: delegated testing and parallel code review with Claude Code."
+published: 2026-01-16
+featured: true
+tags: ai, workflow, productivity
+---
+
+I've been experimenting with AI-assisted coding for a while now, and most of it has been... fine. Helpful for boilerplate, decent for explaining code, occasionally useful for debugging. But last week, something clicked. I found a workflow pattern that felt genuinely different - like I'd finally figured out how to actually work *with* the AI instead of just *using* it.
+
+The session was straightforward: I needed to test six features on a running server, and some required magic links for authentication. What happened next surprised me.
+
+## The Pattern: Delegated Testing with Human-in-the-Loop
+
+Here's the core idea: you define the task, the AI executes autonomously, and you only intervene when necessary.
+
+The conversation went something like this:
+
+```
+Me: "Test these 6 things, server is running, I'll provide magic links"
+     ↓
+Claude: [Creates todo list, executes tests, takes screenshots, reports progress]
+     ↓
+Me: [Provides magic link when prompted]
+     ↓
+Claude: [Continues autonomously]
+     ↓
+Me: "Update the PR with results"
+     ↓
+Claude: [Updates PR via gh CLI]
+     ↓
+Me: "PR merged, switch to develop"
+```
+
+That's it. Two manual interventions to paste magic links, and the rest happened automatically. The AI navigated the browser, clicked through forms, verified results, and updated the PR - all while I worked on something else.
+
+## Why This Actually Worked
+
+I've thought a lot about why this session felt different from my usual AI interactions. A few things stood out.
+
+### Clear Scope and Constraints
+
+I told Claude exactly what to test and that I'd provide magic links when needed. No ambiguity about who's responsible for what. This sounds obvious, but I've wasted so many sessions with vague instructions like "help me test this" and then getting frustrated when the AI couldn't read my mind about which edge cases mattered.
+
+### Minimal Intervention
+
+I jumped in exactly twice - to paste magic links that required browser authentication I couldn't delegate. Everything else was autonomous: navigation, form filling, result verification, progress tracking. The AI figured out the details without asking me to clarify every step.
+
+### Structured Visibility
+
+The todo list let me see progress at a glance without reading every action. I could check in, see "4 of 6 tests complete," and go back to my other work. When something needed my attention, it was obvious.
+
+### Tool Composition
+
+Browser automation, bash commands, and GitHub CLI worked together seamlessly. Test in browser, capture results, update PR via CLI. I didn't have to context-switch between tools or copy-paste results between windows.
+
+### Trust but Verify
+
+Screenshots provided proof of each step. I could skim them quickly or ignore them entirely - my choice. But they were there if I needed them, which meant I could trust the process without babysitting it.
+
+### Clean Handoffs
+
+"Update the PR" - done. "Switch to develop" - done. Short commands, and Claude figured out the details. I didn't need to spell out `git checkout develop && git pull origin develop`. The AI understood the intent.
+
+## The Formula
+
+If I had to distill this into a repeatable pattern, it would look something like this:
+
+1. Define task boundaries clearly
+2. Specify what inputs you'll provide (and when)
+3. Let the AI run autonomously
+4. Intervene only at explicit checkpoints
+5. Use todos for progress visibility
+6. End with documentation (PR update, commit, etc.)
+
+## What I Didn't Have to Do
+
+This is the part that still feels a bit surreal. In a traditional testing session, I would have:
+
+- Written test scripts or manual test checklists
+- Clicked through the app myself
+- Kept track of which tests passed
+- Manually written up the PR description
+- Looked up the git commands I always forget
+
+None of that happened. I defined the scope, provided authentication tokens when asked, and got back a tested PR with documented results.
+
+## The Takeaway
+
+I think the key insight is that AI coding assistants work best when you treat them like a capable junior developer with specific constraints. You wouldn't give a junior a vague task and expect them to read your mind. You'd give them clear scope, tell them what resources they have access to, and check in periodically.
+
+The magic isn't in any single capability - it's in the composition. Browser automation alone isn't new. Todo lists aren't new. Git integration isn't new. But combining them with an AI that can adapt to context and figure out the details? That's where the productivity multiplier comes from.
+
+But testing isn't the only place this pattern shines. Let me share another workflow that surprised me even more.
+
+## Case Study: Parallel Code Review
+
+I had a TanStack Start app using Better Auth, Drizzle ORM with Cloudflare D1, and Vercel AI SDK. The kind of stack where each library has its own patterns, and it's easy for inconsistencies to creep in over time. I wanted a comprehensive review but dreaded the manual effort.
+
+Here's what the workflow looked like:
+
+```
+1. PARALLEL EXPLORATION
+   └── Multiple agents analyzing different domains simultaneously
+
+2. DOCUMENTATION LOOKUP
+   └── Context7 MCP for current library best practices
+
+3. PLAN DESIGN
+   └── Synthesizing findings into improvements
+
+4. TARGETED AUDIT
+   └── Deep dive on specific concerns (auth consistency)
+
+5. STRUCTURED OUTPUT
+   └── Prioritized, actionable improvements
+```
+
+### Parallel Exploration Changed Everything
+
+Instead of one agent slowly working through the entire codebase, I launched three Explore agents simultaneously:
+
+- One analyzing Drizzle ORM patterns and D1 setup
+- One reviewing Better Auth flows and middleware
+- One examining Vercel AI SDK streaming patterns
+
+The prompt for each was specific:
+
+```
+Explore how Drizzle ORM with Cloudflare D1 is implemented. Look for:
+1. Database schema definitions
+2. Relations configuration
+3. Database client setup and connection patterns
+4. Query patterns used throughout the codebase
+5. Migration setup and configuration
+```
+
+All three ran concurrently. What would have been 30+ minutes of sequential exploration took a fraction of that time. And each agent provided structured findings I could actually use.
+
+### Documentation Lookup Prevented Outdated Advice
+
+Here's something I didn't expect to matter as much as it did: using Context7 MCP to fetch current library documentation.
+
+Libraries evolve. What was best practice six months ago might be deprecated now. By querying the actual docs for Drizzle, Vercel AI SDK, and Better Auth, the recommendations were based on current patterns - not whatever the AI remembered from training.
+
+This caught things like prepared statements for D1 optimization and `onError` callbacks in the AI SDK that the codebase wasn't using.
+
+### The Targeted Audit Found Real Problems
+
+After the broad exploration, I asked for something specific: audit all server functions for auth middleware consistency.
+
+```
+Audit ALL server functions to check if they're consistently
+using auth middleware. For each function, document:
+1. Function name
+2. HTTP method
+3. Which middleware is used
+4. Whether it SHOULD require auth
+```
+
+The result? 18 mutation functions were using manual `auth.api.getSession()` calls instead of proper middleware. That's the kind of inconsistency that leads to security bugs, and I never would have caught it manually reviewing 41 functions.
+
+### The Numbers
+
+| What was analyzed | Count |
+|-------------------|-------|
+| Server functions audited | 41 |
+| Database operations reviewed | 82 |
+| Critical auth issues found | 18 functions |
+| Missing logging middleware | 6 functions |
+
+The output wasn't just a list of problems - it was a structured plan with before/after code examples, prioritized by impact, with specific file paths and line numbers.
+
+## Prompt Patterns That Keep Working
+
+After running variations of these workflows, a few prompt patterns consistently produce good results:
+
+**For exploration:**
+> "Explore how [LIBRARY] is implemented. Look for: [SPECIFIC PATTERNS]"
+
+**For auditing:**
+> "Audit ALL [RESOURCES] to check [CONDITION]. For each, document: [FIELDS]"
+
+**For planning:**
+> "Based on [FINDINGS], design specific improvements. Include file paths and code patterns."
+
+The common thread? Specificity. Not "review my auth" but "audit all server functions for middleware consistency." Not "check my database code" but "look for query patterns, relations, and migration setup."
+
+## The Bigger Picture
+
+Both of these workflows - delegated testing and parallel code review - share the same underlying structure:
+
+1. **Clear task boundaries** - The AI knows exactly what to do
+2. **Parallel execution where possible** - Don't serialize what can run concurrently
+3. **Human intervention at checkpoints** - Not micromanaging, but not fully autonomous either
+4. **Structured output** - Tables, todos, plans - not just prose
+5. **Documentation grounding** - Current best practices, not stale knowledge
+
+I think we're still early in figuring out how to work effectively with AI coding assistants. The instinct is to use them like autocomplete on steroids, but the real leverage comes from treating them like a team of junior developers who can work in parallel, follow specific instructions, and report back structured findings.
+
+I'm curious if others have found similar patterns. What's worked for you when collaborating with AI on coding tasks?
