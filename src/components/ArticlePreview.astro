@@ -17,8 +17,8 @@ const tagList = tags ? tags.split(',').map(tag => tag.trim()) : [];
 const basePath = type === 'til' ? '/til' : '/blog';
 ---
 
-<article class="py-6">
-  <div class="flex items-center justify-between mb-3 text-gray-700 dark:text-gray-400">
+<article class="py-6 border-l-3 border-cerulean hover:border-terracotta pl-4 transition-all hover:bg-muted/50 hover:shadow-sm rounded-r-md">
+  <div class="flex items-center justify-between mb-3 text-muted-foreground">
     <div class="space-x-2">
       {tagList.map((tag: string) => (
         <Badge>
@@ -30,17 +30,17 @@ const basePath = type === 'til' ? '/til' : '/blog';
     </div>
     <span class="text-sm">
       Published{' '}
-      <time class="block text-sm text-cyan-700 dark:text-cyan-500" datetime={published.toISOString()}>
+      <time class="block text-sm text-cerulean" datetime={published.toISOString()}>
         {published.toISOString().split('T')[0].replace(/-/g, '/')}
       </time>
     </span>
   </div>
-  <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white hover:underline">
+  <h2 class="mb-2 text-2xl font-bold tracking-tight text-foreground hover:underline">
     <a href={`${basePath}/${slug}`}>
       {title}
     </a>
   </h2>
-  <p class="mb-5 text-gray-700 dark:text-gray-400">
+  <p class="mb-5 text-muted-foreground">
     {description}
   </p>
   <div class="flex items-center justify-between">
@@ -50,10 +50,10 @@ const basePath = type === 'til' ? '/til' : '/blog';
         src="/logo.svg"
         alt="Khaled Garbaya profile picture"
       />
-      <span class="font-medium text-gray-900 dark:text-white">Khaled Garbaya</span>
+      <span class="font-medium text-foreground">Khaled Garbaya</span>
     </a>
     <a
-      class="inline-flex items-center font-medium text-blue-600 hover:underline dark:text-blue-500"
+      class="inline-flex items-center font-medium text-cerulean hover:underline"
       href={`${basePath}/${slug}`}
     >
       Read more
@@ -72,4 +72,3 @@ const basePath = type === 'til' ? '/til' : '/blog';
     </a>
   </div>
 </article>
-

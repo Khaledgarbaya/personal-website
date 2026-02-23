@@ -17,12 +17,18 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.6.0
         version: 3.6.0
+      '@fontsource-variable/outfit':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@fontsource-variable/signika':
         specifier: ^5.2.8
         version: 5.2.8
       '@fontsource/alike':
         specifier: ^5.2.8
         version: 5.2.8
+      '@fontsource/source-sans-3':
+        specifier: ^5.2.9
+        version: 5.2.9
       '@remark-embedder/core':
         specifier: ^3.0.3
         version: 3.0.3
@@ -41,6 +47,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -275,11 +284,17 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@fontsource-variable/outfit@5.2.8':
+    resolution: {integrity: sha512-4oUDCZx/Tcz6HZP423w/niqEH31Gks5IsqHV2ZZz1qKHaVIZdj2f0/S1IK2n8jl6Xo0o3N+3RjNHlV9R73ozQA==}
+
   '@fontsource-variable/signika@5.2.8':
     resolution: {integrity: sha512-z08S0guPYmt4/Ov3QVhODI9VB5tv4YYgfsURjsgZcY7ndEHvrOXPAaPgb4jpVjgq5UOkIc9i/fMnz7/DOlMAXQ==}
 
   '@fontsource/alike@5.2.8':
     resolution: {integrity: sha512-Mtg2kK8oajJhjdnRV+CEuuuGLpNNFZS1WCdXF5uJteC/r3hKdzbd1XRVqsiiGmHI90GANEjg3/OSTLa1TcpK6g==}
+
+  '@fontsource/source-sans-3@5.2.9':
+    resolution: {integrity: sha512-u3ymIq4rfmCCyB9MEw/sFR5lPVJ1yTNXmIMbUz+9kVCFIHvNtfzXOEBuvkg3Tk0zhmioPeJ28ZK5smZ7TurezQ==}
 
   '@img/colour@1.0.0':
     resolution: {integrity: sha512-A5P/LfWGFSl6nsckYtjw9da+19jB8hkJ6ACTGcDfEJ0aE+l2n2El7dsVM7UVHZQ9s2lmYMWlrS21YLy2IR1LUw==}
@@ -842,6 +857,9 @@ packages:
   ci-info@4.3.1:
     resolution: {integrity: sha512-Wdy2Igu8OcBpI2pZePZ5oWjPC38tmDVx5WKUXKwlLYkA0ozo85sLsLvkBbBn/sZaSCMFOGZJ14fvW9t5/d7kdA==}
     engines: {node: '>=8'}
+
+  class-variance-authority@0.7.1:
+    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
 
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
@@ -2135,9 +2153,13 @@ snapshots:
   '@esbuild/win32-x64@0.25.12':
     optional: true
 
+  '@fontsource-variable/outfit@5.2.8': {}
+
   '@fontsource-variable/signika@5.2.8': {}
 
   '@fontsource/alike@5.2.8': {}
+
+  '@fontsource/source-sans-3@5.2.9': {}
 
   '@img/colour@1.0.0':
     optional: true
@@ -2720,6 +2742,10 @@ snapshots:
       readdirp: 4.1.2
 
   ci-info@4.3.1: {}
+
+  class-variance-authority@0.7.1:
+    dependencies:
+      clsx: 2.1.1
 
   cli-boxes@3.0.0: {}
 

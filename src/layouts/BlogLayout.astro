@@ -19,7 +19,7 @@ interface Props {
 
 const { title, description, published, modified, tags, slug, headings = [], type = 'blog' } = Astro.props;
 
-const image = `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_45_bold:${encodeURIComponent(title)},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`;
+const image = `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:0891B2,l_text:Quicksand_45_bold:${encodeURIComponent(title)},g_north_west,x_436,y_290,w_670,c_fit/v1727002971/og-image.png`;
 
 // Parse tags from comma-separated string
 const tagList = tags ? tags.split(',').map(tag => tag.trim()) : [];
@@ -78,9 +78,9 @@ const keywords = `${tagList.join(', ')}, web development, software engineering`;
       >
         <header class="mb-8">
           <h1 class="text-4xl font-bold mb-2" itemprop="headline">{title}</h1>
-          <p class="text-gray-600 mb-2 dark:text-gray-400" itemprop="description">{description}</p>
-          <time 
-            class="text-sm text-gray-500 dark:text-gray-500" 
+          <p class="text-muted-foreground mb-2" itemprop="description">{description}</p>
+          <time
+            class="text-sm text-muted-foreground"
             datetime={published.toISOString()}
             itemprop="datePublished"
           >
@@ -91,7 +91,7 @@ const keywords = `${tagList.join(', ')}, web development, software engineering`;
           )}
           <div class="mt-4" itemprop="keywords">
             {tagList.map((tag: string) => (
-              <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 dark:bg-gray-700 dark:text-gray-200">
+              <span class="inline-block bg-cerulean/5 border border-cerulean/20 rounded-md px-3 py-1 text-sm font-semibold text-cerulean mr-2 mb-2">
                 #{tag}
               </span>
             ))}

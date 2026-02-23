@@ -11,7 +11,7 @@ const { posts, type = 'blog' } = Astro.props;
 ---
 
 <section>
-  <ul class="divide-y-2 divide-y-primary">
+  <ul class="divide-y divide-border">
     {posts.map((post) => (
       <li>
         <ArticlePreview

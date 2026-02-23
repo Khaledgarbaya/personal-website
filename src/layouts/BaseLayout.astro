@@ -19,7 +19,7 @@ interface Props {
 const {
   title = 'Khaled Garbaya',
   description = 'Engineering Leader, Developer and educator. I write about web development, software engineering and leadership.',
-  image = 'https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Quicksand_55_bold:I write about web development leadership and productivity,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png',
+  image = 'https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:0891B2,l_text:Quicksand_55_bold:I write about web development leadership and productivity,g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png',
   author = 'Khaled Garbaya',
   keywords = 'web development, software engineering, leadership, javascript, typescript, ai, devops',
   publishedTime,
@@ -49,7 +49,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
     <meta name="bingbot" content="index, follow" />
-    <meta name="theme-color" content="#1A39A9" />
+    <meta name="theme-color" content="#0891b2" />
     
     <!-- Citation Meta Tags for Academic/LLM Indexing -->
     {type === 'article' && (
@@ -139,7 +139,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     
     <ViewTransitions />
   </head>
-  <body class="h-full">
+  <body class="h-full zellige-pattern">
     <div class="py-6">
       <MainNav />
       <slot />

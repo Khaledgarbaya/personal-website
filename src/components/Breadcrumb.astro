@@ -21,7 +21,7 @@ const fullItems =
 
 <nav aria-label="Breadcrumb" class="mb-8">
   <ol
-    class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400"
+    class="flex items-center space-x-2 text-sm text-muted-foreground"
   >
     {
       fullItems.map((item, index) => (
@@ -43,7 +43,7 @@ const fullItems =
           )}
           {index === fullItems.length - 1 ? (
             <span
-              class="font-medium text-gray-900 dark:text-gray-100"
+              class="font-medium text-foreground"
               aria-current="page"
             >
               {item.name}
@@ -51,7 +51,7 @@ const fullItems =
           ) : (
             <a
               href={item.url}
-              class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              class="hover:text-cerulean transition-colors"
             >
               {item.name}
             </a>

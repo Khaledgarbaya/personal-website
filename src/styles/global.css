@@ -1,4 +1,8 @@
-@import '@fontsource-variable/signika/wght.css';
+@import '@fontsource-variable/outfit/wght.css';
+@import '@fontsource/source-sans-3/400.css';
+@import '@fontsource/source-sans-3/500.css';
+@import '@fontsource/source-sans-3/600.css';
+@import '@fontsource/source-sans-3/700.css';
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
@@ -11,26 +15,32 @@
   --container-padding: 2rem;
   --container-screen-2xl: 1400px;
 
-  /* Custom colors */
-  --color-border: hsl(214.3 31.8% 91.4%);
-  --color-input: hsl(214.3 31.8% 91.4%);
-  --color-ring: hsl(222.2 84% 4.9%);
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(222.2 84% 4.9%);
-  --color-primary: hsl(222.2 47.4% 11.2%);
-  --color-primary-foreground: hsl(210 40% 98%);
-  --color-secondary: hsl(210 40% 96.1%);
-  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
+  /* Tunisian palette - Light mode */
+  --color-border: hsl(36 20% 88%);
+  --color-input: hsl(36 20% 88%);
+  --color-ring: hsl(225 50% 12%);
+  --color-background: hsl(36 33% 97%);
+  --color-foreground: hsl(225 50% 12%);
+  --color-primary: hsl(225 50% 12%);
+  --color-primary-foreground: hsl(36 33% 97%);
+  --color-secondary: hsl(36 20% 93%);
+  --color-secondary-foreground: hsl(225 50% 12%);
   --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-muted: hsl(210 40% 96.1%);
-  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
-  --color-accent: hsl(210 40% 96.1%);
-  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(222.2 84% 4.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222.2 84% 4.9%);
+  --color-destructive-foreground: hsl(36 33% 97%);
+  --color-muted: hsl(36 15% 93%);
+  --color-muted-foreground: hsl(225 15% 45%);
+  --color-accent: hsl(36 20% 93%);
+  --color-accent-foreground: hsl(225 50% 12%);
+  --color-popover: hsl(36 33% 97%);
+  --color-popover-foreground: hsl(225 50% 12%);
+  --color-card: hsl(36 33% 97%);
+  --color-card-foreground: hsl(225 50% 12%);
+
+  /* Tunisian accent colors */
+  --color-cerulean: hsl(191 91% 37%);
+  --color-gold: hsl(43 96% 56%);
+  --color-terracotta: hsl(14 80% 50%);
+  --color-navy: hsl(225 50% 12%);
 
   /* Border radius */
   --radius: 0.5rem;
@@ -41,6 +51,9 @@
   /* Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-fade-in-up: fade-in-up 0.6s ease-out both;
+  --animate-spin-slow: spin-slow 30s linear infinite;
+  --animate-gradient-shift: gradient-shift 8s ease infinite;
 
   @keyframes accordion-down {
     from { height: 0; }
@@ -51,28 +64,49 @@
     from { height: var(--radix-accordion-content-height); }
     to { height: 0; }
   }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
 }
 
 :root.dark {
-  --color-background: hsl(222.2 84% 4.9%);
-  --color-foreground: hsl(210 40% 98%);
-  --color-card: hsl(222.2 84% 4.9%);
-  --color-card-foreground: hsl(210 40% 98%);
-  --color-popover: hsl(222.2 84% 4.9%);
-  --color-popover-foreground: hsl(210 40% 98%);
-  --color-primary: hsl(210 40% 98%);
-  --color-primary-foreground: hsl(222.2 47.4% 11.2%);
-  --color-secondary: hsl(217.2 32.6% 17.5%);
-  --color-secondary-foreground: hsl(210 40% 98%);
-  --color-muted: hsl(217.2 32.6% 17.5%);
-  --color-muted-foreground: hsl(215 20.2% 65.1%);
-  --color-accent: hsl(217.2 32.6% 17.5%);
-  --color-accent-foreground: hsl(210 40% 98%);
+  --color-background: hsl(225 50% 7%);
+  --color-foreground: hsl(36 25% 93%);
+  --color-card: hsl(225 45% 10%);
+  --color-card-foreground: hsl(36 25% 93%);
+  --color-popover: hsl(225 45% 10%);
+  --color-popover-foreground: hsl(36 25% 93%);
+  --color-primary: hsl(36 25% 93%);
+  --color-primary-foreground: hsl(225 50% 12%);
+  --color-secondary: hsl(225 30% 15%);
+  --color-secondary-foreground: hsl(36 25% 93%);
+  --color-muted: hsl(225 30% 15%);
+  --color-muted-foreground: hsl(225 15% 65%);
+  --color-accent: hsl(225 30% 15%);
+  --color-accent-foreground: hsl(36 25% 93%);
   --color-destructive: hsl(0 62.8% 30.6%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-border: hsl(217.2 32.6% 17.5%);
-  --color-input: hsl(217.2 32.6% 17.5%);
-  --color-ring: hsl(212.7 26.8% 83.9);
+  --color-destructive-foreground: hsl(36 25% 93%);
+  --color-border: hsl(225 30% 18%);
+  --color-input: hsl(225 30% 18%);
+  --color-ring: hsl(191 91% 37%);
 }
 
 @layer base {
@@ -81,6 +115,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
   }
   h1,
   h2,
@@ -88,7 +123,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Signika Variable', sans-serif;
+    font-family: 'Outfit Variable', system-ui, sans-serif;
   }
   h1 {
     @apply text-4xl font-bold tracking-tight lg:text-5xl;
@@ -111,31 +146,41 @@
   }
 
   .link {
-    @apply text-primary hover:text-primary/90;
+    @apply text-cerulean hover:text-cerulean/80;
   }
 }
 
 .nav-link {
-  @apply rounded-md px-6 py-2 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none;
+  @apply rounded-md px-6 py-2 transition-colors hover:text-cerulean hover:bg-cerulean/5 focus:text-cerulean focus:bg-cerulean/5 focus:outline-none;
+}
+
+/* Zellige-inspired SVG pattern */
+.zellige-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230891b2' fill-opacity='0.035'%3E%3Cpath d='M30 0L60 30L30 60L0 30z M30 8L52 30L30 52L8 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+:root.dark .zellige-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230891b2' fill-opacity='0.04'%3E%3Cpath d='M30 0L60 30L30 60L0 30z M30 8L52 30L30 52L8 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* Post styles */
 
 .prose .anchor {
   @apply no-underline;
-  /* Remove invisible class to make wrapped headings visible */
 }
 
 .prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700 absolute invisible;
+  @apply absolute invisible;
   content: '#';
   margin-left: -1em;
   padding-right: 0.5em;
   cursor: pointer;
+  color: var(--color-cerulean);
 }
 
 .prose a {
-  @apply transition-all decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em];
+  @apply transition-all underline-offset-2 decoration-[0.1em];
+  text-decoration-color: var(--color-cerulean);
 }
 
 .prose *:hover > .anchor:after {
@@ -147,33 +192,34 @@
 }
 
 .prose pre {
-  @apply border border-neutral-800;
+  @apply border border-border;
 }
 
 .prose code {
-  @apply text-neutral-800 dark:text-neutral-200 px-1 py-0.5 border border-neutral-100 dark:border-neutral-800 rounded-lg;
+  @apply px-1 py-0.5 rounded-lg;
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
 }
 
 .prose pre code {
-  @apply text-neutral-50 px-0 py-0 rounded-none;
+  @apply px-0 py-0 rounded-none;
   border: initial;
   background: transparent;
+  color: hsl(210 40% 96%);
 }
 
 .prose img {
-  /* Don't apply styles to next/image */
   @apply m-0;
 }
 
 .prose > :first-child {
-  /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
   margin-bottom: 1.25em !important;
 }
 
 code[class*='language-'],
 pre[class*='language-'] {
-  @apply text-neutral-50;
+  color: hsl(210 40% 96%);
 }
 
 pre::-webkit-scrollbar {
@@ -181,8 +227,8 @@ pre::-webkit-scrollbar {
 }
 
 pre {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Remove Safari input shadow on mobile */
@@ -202,10 +248,26 @@ input[type='email'] {
   margin: 0 !important;
 }
 
+/* Reduced motion */
 @media (prefers-reduced-motion) {
   ::view-transition-old(root),
-  ::view-transition-old(root) {
+  ::view-transition-new(root) {
     animation: none;
+  }
+
+  .animate-fade-in-up,
+  [style*="animation"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-spin-slow {
+    animation: none !important;
+  }
+
+  .animate-gradient-shift {
+    animation: none !important;
   }
 }
 
@@ -221,4 +283,3 @@ input[type='email'] {
 .embed iframe {
   @apply absolute top-0 left-0 w-full h-full border-0 rounded;
 }
-
