@@ -1,0 +1,128 @@
+---
+interface TerminalLine {
+  type: 'speaker' | 'arrow' | 'action' | 'numbered' | 'indent';
+  label?: string;
+  content: string;
+  color?: string;
+}
+
+interface Props {
+  title?: string;
+  lines: TerminalLine[];
+  lineDelay?: number;
+}
+
+const { title = 'terminal', lines, lineDelay = 400 } = Astro.props;
+---
+
+<div
+  class="terminal-simulation not-prose my-8 overflow-hidden rounded-lg border border-border"
+  style={`--terminal-line-delay: ${lineDelay}ms`}
+>
+  {/* Title bar */}
+  <div class="flex items-center gap-2 px-4 py-2.5" style="background: hsl(225 30% 13%)">
+    <div class="flex gap-1.5">
+      <span class="block h-3 w-3 rounded-full" style="background: #ff5f57"></span>
+      <span class="block h-3 w-3 rounded-full" style="background: #febc2e"></span>
+      <span class="block h-3 w-3 rounded-full" style="background: #28c840"></span>
+    </div>
+    <span class="ml-2 text-xs" style="color: hsl(225 15% 50%)">{title}</span>
+  </div>
+
+  {/* Terminal body */}
+  <div class="px-5 py-4 font-mono text-sm leading-relaxed" style="background: hsl(225 50% 7%)">
+    {lines.map((line, i) => (
+      <div
+        class="terminal-line"
+        style={`--line-index: ${i}; opacity: 0`}
+      >
+        {line.type === 'speaker' && (
+          <div class="flex gap-2 py-0.5">
+            <span style={`color: ${line.color || 'hsl(36 25% 93%)'}`} class="font-semibold shrink-0">
+              {line.label}:
+            </span>
+            <span style="color: hsl(36 25% 93%)">{line.content}</span>
+          </div>
+        )}
+        {line.type === 'arrow' && (
+          <div class="py-0.5 pl-4" style="color: hsl(225 15% 45%)">
+            {line.content}
+          </div>
+        )}
+        {line.type === 'action' && (
+          <div class="flex gap-2 py-0.5">
+            <span style={`color: ${line.color || 'hsl(191 91% 37%)'}`} class="font-semibold shrink-0">
+              {line.label}:
+            </span>
+            <span style="color: hsl(191 70% 70%)">{line.content}</span>
+          </div>
+        )}
+        {line.type === 'numbered' && (
+          <div class="py-0.5" style={`color: ${line.color || 'hsl(36 25% 93%)'}`}>
+            <span class="font-semibold">{line.label}</span>
+            {' '}{line.content}
+          </div>
+        )}
+        {line.type === 'indent' && (
+          <div class="py-0.5 pl-4" style={`color: ${line.color || 'hsl(225 15% 65%)'}`}>
+            {line.content}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  let terminalObserver: IntersectionObserver | null = null;
+
+  function setupTerminalSimulations() {
+    if (terminalObserver) {
+      terminalObserver.disconnect();
+    }
+
+    terminalObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('terminal-active');
+            terminalObserver?.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    document.querySelectorAll('.terminal-simulation').forEach((el) => {
+      if (!el.classList.contains('terminal-active')) {
+        terminalObserver?.observe(el);
+      }
+    });
+  }
+
+  // Respect reduced motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReducedMotion.matches) {
+    document.querySelectorAll('.terminal-simulation').forEach((el) => {
+      el.classList.add('terminal-active', 'terminal-no-animation');
+    });
+  } else {
+    setupTerminalSimulations();
+  }
+
+  document.addEventListener('astro:after-swap', () => {
+    if (!prefersReducedMotion.matches) {
+      setupTerminalSimulations();
+    } else {
+      document.querySelectorAll('.terminal-simulation').forEach((el) => {
+        el.classList.add('terminal-active', 'terminal-no-animation');
+      });
+    }
+  });
+
+  document.addEventListener('astro:before-preparation', () => {
+    if (terminalObserver) {
+      terminalObserver.disconnect();
+    }
+  });
+</script>

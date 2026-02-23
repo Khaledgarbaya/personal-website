@@ -248,6 +248,46 @@ input[type='email'] {
   margin: 0 !important;
 }
 
+/* Terminal simulation animations */
+@keyframes terminal-line-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.terminal-active .terminal-line {
+  animation: terminal-line-appear 0.3s ease-out forwards;
+  animation-delay: calc(var(--line-index) * var(--terminal-line-delay, 400ms));
+}
+
+.terminal-active .terminal-line:last-child::after {
+  content: '\2588';
+  color: hsl(36 25% 93%);
+  animation: terminal-blink 1s step-end infinite;
+  animation-delay: calc((var(--line-index) + 1) * var(--terminal-line-delay, 400ms));
+  margin-left: 0.25rem;
+}
+
+.terminal-no-animation .terminal-line {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+.terminal-no-animation .terminal-line:last-child::after {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion) {
   ::view-transition-old(root),
@@ -268,6 +308,17 @@ input[type='email'] {
 
   .animate-gradient-shift {
     animation: none !important;
+  }
+
+  .terminal-line {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .terminal-line:last-child::after {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }
 

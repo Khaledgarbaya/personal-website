@@ -5,6 +5,7 @@ published: 2026-01-16
 featured: true
 tags: ai, workflow, productivity
 ---
+import TerminalSimulation from '../../../components/TerminalSimulation.astro';
 
 I've been experimenting with AI-assisted coding for a while now, and most of it has been... fine. Helpful for boilerplate, decent for explaining code, occasionally useful for debugging. But last week, something clicked. I found a workflow pattern that felt genuinely different - like I'd finally figured out how to actually work *with* the AI instead of just *using* it.
 
@@ -16,21 +17,24 @@ Here's the core idea: you define the task, the AI executes autonomously, and you
 
 The conversation went something like this:
 
-```
-Me: "Test these 6 things, server is running, I'll provide magic links"
-     ↓
-Claude: [Creates todo list, executes tests, takes screenshots, reports progress]
-     ↓
-Me: [Provides magic link when prompted]
-     ↓
-Claude: [Continues autonomously]
-     ↓
-Me: "Update the PR with results"
-     ↓
-Claude: [Updates PR via gh CLI]
-     ↓
-Me: "PR merged, switch to develop"
-```
+<TerminalSimulation
+  title="delegated-testing"
+  lines={[
+    { type: 'speaker', label: 'Me', content: '"Test these 6 things, server is running, I\'ll provide magic links"', color: 'hsl(43 96% 56%)' },
+    { type: 'arrow', content: '↓' },
+    { type: 'action', label: 'Claude', content: '[Creates todo list, executes tests, takes screenshots, reports progress]' },
+    { type: 'arrow', content: '↓' },
+    { type: 'speaker', label: 'Me', content: '[Provides magic link when prompted]', color: 'hsl(43 96% 56%)' },
+    { type: 'arrow', content: '↓' },
+    { type: 'action', label: 'Claude', content: '[Continues autonomously]' },
+    { type: 'arrow', content: '↓' },
+    { type: 'speaker', label: 'Me', content: '"Update the PR with results"', color: 'hsl(43 96% 56%)' },
+    { type: 'arrow', content: '↓' },
+    { type: 'action', label: 'Claude', content: '[Updates PR via gh CLI]' },
+    { type: 'arrow', content: '↓' },
+    { type: 'speaker', label: 'Me', content: '"PR merged, switch to develop"', color: 'hsl(43 96% 56%)' },
+  ]}
+/>
 
 That's it. Two manual interventions to paste magic links, and the rest happened automatically. The AI navigated the browser, clicked through forms, verified results, and updated the PR - all while I worked on something else.
 
@@ -99,22 +103,22 @@ I had a TanStack Start app using Better Auth, Drizzle ORM with Cloudflare D1, an
 
 Here's what the workflow looked like:
 
-```
-1. PARALLEL EXPLORATION
-   └── Multiple agents analyzing different domains simultaneously
-
-2. DOCUMENTATION LOOKUP
-   └── Context7 MCP for current library best practices
-
-3. PLAN DESIGN
-   └── Synthesizing findings into improvements
-
-4. TARGETED AUDIT
-   └── Deep dive on specific concerns (auth consistency)
-
-5. STRUCTURED OUTPUT
-   └── Prioritized, actionable improvements
-```
+<TerminalSimulation
+  title="parallel-review"
+  lineDelay={350}
+  lines={[
+    { type: 'numbered', label: '1.', content: 'PARALLEL EXPLORATION', color: 'hsl(191 91% 55%)' },
+    { type: 'indent', content: '└── Multiple agents analyzing different domains simultaneously' },
+    { type: 'numbered', label: '2.', content: 'DOCUMENTATION LOOKUP', color: 'hsl(191 91% 55%)' },
+    { type: 'indent', content: '└── Context7 MCP for current library best practices' },
+    { type: 'numbered', label: '3.', content: 'PLAN DESIGN', color: 'hsl(191 91% 55%)' },
+    { type: 'indent', content: '└── Synthesizing findings into improvements' },
+    { type: 'numbered', label: '4.', content: 'TARGETED AUDIT', color: 'hsl(191 91% 55%)' },
+    { type: 'indent', content: '└── Deep dive on specific concerns (auth consistency)' },
+    { type: 'numbered', label: '5.', content: 'STRUCTURED OUTPUT', color: 'hsl(191 91% 55%)' },
+    { type: 'indent', content: '└── Prioritized, actionable improvements' },
+  ]}
+/>
 
 ### Parallel Exploration Changed Everything
 
