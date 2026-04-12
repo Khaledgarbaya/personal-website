@@ -1,0 +1,155 @@
+---
+title: "AI Engineering Workflows Are Built for One Orchestrator. Here's What Breaks at Team Scale."
+description: Most AI engineering practices assume a single L8 practitioner. Here's what actually breaks when five engineers at different skill levels run agent sessions against the same codebase — and what we did about it.
+published: 2026-04-12
+featured: true
+tags: "ai-engineering, team, harness-engineering, management"
+---
+
+I spent the last few months working on L8 AI engineering: harness engineering, context engineering, multi-agent orchestration, overnight Ralph Loops. When I applied these with a team of five engineers on a 2-week project at work, I hit friction I did not expect.
+
+My first instinct was that these workflows are built for solo developers.
+
+Partly true. Getting specific about why changed what I needed to fix.
+
+## What the skill levels actually mean
+
+Before getting into the gaps, you need to understand what L3, L5, and L8 AI engineering look like in practice. Steve Yegge created the 8-level system; Addy Osmani popularised it.
+
+**L3:** AI-assisted editing. You use autocomplete and inline suggestions. You make every decision. AI speeds up your output, nothing more.
+
+**L5:** AI-assisted implementation. You write specs and review output. Claude writes significant chunks of code. You run multi-turn sessions, write effective prompts, and push back when the output is wrong.
+
+**L8:** AI orchestration. You design the environment that makes agents work effectively. You understand harness engineering: legible environment, verification loops, generic tooling. You run multi-agent systems, overnight loops, phased plans with agent teams. You think about context budgets, AGENTS.md compound learning, and how today's decisions shape what agents can do independently next week.
+
+Most writing on AI engineering assumes L8. That is who writes the blog posts. It creates a real gap in teams where the actual skill distribution is one L8, two L5s, and two L3s — which is common right now.
+
+## The real divide is not solo vs. team
+
+Multi-agent patterns are designed for one human orchestrator plus many agents. The Factory Model (Plan, Spawn, Monitor, Verify, Integrate, Retro) is built for human oversight at scale. Multi-agent orchestration explicitly models org structures: parent orchestrator, feature leads, specialists. AGENTS.md is git-committed and team-shared by design. These are not solo concepts.
+
+The actual gap is this: many humans at different skill levels plus many agents at the same time.
+
+When five engineers each run their own Claude sessions against the same codebase at different skill levels, that situation is almost entirely unspecified in current AI engineering practices. The lower the average skill level, the worse it gets.
+
+## What breaks when you have a knowledge gap in the team
+
+### The L8 bottleneck trap
+
+One L8 engineer designs a solid harness: structured task lists, progress logs, AGENTS.md with curated gotchas, validation hooks, a phased plan. Then three L3 engineers run their own Claude sessions in the same codebase.
+
+They do not break anything on purpose. They just do not know the conventions. Their commits skip the progress update. Their agent sessions do not validate before marking tasks done. One of them tells Claude to "just fix it" without reading the AGENTS.md conventions that explain why the architecture is structured the way it is.
+
+None of this is catastrophic on its own. Together, it degrades the legible environment the harness depends on. The L8 engineer opens their session the next morning and spends 45 minutes reconstructing what happened.
+
+The result: the L8 person reviews everything, fixes the damage, and gradually stops trusting agents to work without supervision. The speed gains disappear.
+
+### The L5 false confidence problem
+
+L5 is the riskiest level in a team context. An L5 engineer is confident enough to run Claude sessions without supervision, write prompts for significant feature work, and make real architectural decisions through AI-assisted work. They do not yet have the instincts for when to slow down.
+
+They one-shot a feature instead of breaking it into phases. They let the agent mark tasks complete without end-to-end validation. They prompt around a failing test instead of understanding why it failed. They produce output at L8 speed with L3 verification discipline.
+
+Solo, this only hurts them. In a shared codebase, it compounds.
+
+### The L3 problem
+
+L3 engineers mostly cannot cause damage they do not know they are causing, because they still drive most decisions manually. The real L3 risk is different: they get left behind when a team adopts L8 practices without a clear path forward. They become a slower, frustrated contributor with no visible way to close the gap.
+
+That is a people problem, not a tools problem. Current AI engineering practices offer no guidance on it.
+
+## What breaks when you are solo, and what does not
+
+Most team gaps disappear when you work alone:
+
+- AGENTS.md governance: you are the only owner, no conflict.
+- Shared context: your session memory accumulates in one place.
+- Verification coordination: one queue, one person, no overlap.
+- Compute governance: your budget, your call.
+- Skill stratification: not applicable with one practitioner.
+
+Solo L8 AI engineering is genuinely effective. Running an overnight Ralph Loop, setting up a legible environment from scratch, managing a fleet of agents: all of this works when one person holds all the context.
+
+But solo has its own failure modes:
+
+**Single point of failure.** You built the environment. If you are out, no one can maintain it. AGENTS.md holds your accumulated knowledge with no backup.
+
+**No peer review.** There is no one to catch the pattern you cannot see. A second L5 engineer reading your REFLECTION files would catch things you miss.
+
+**Domain gaps.** You cannot have deep expertise in everything. If you are strong in backend, you may let agents make frontend architecture decisions that a frontend specialist would immediately question.
+
+Solo with agents is effective. Adding a well-structured team takes it further.
+
+## What we got right
+
+We ran a 2-week AI-first project with five engineers: one backend specialist, two frontend engineers, one PM, and one designer. The results: 14 PRs merged, 16,335 lines across 186 files, 6.7 PRs per day, median 2-hour cycle time. Here is what produced those numbers.
+
+### Build the harness before any agents run
+
+Before a single Claude session started on implementation, we had:
+
+- A CLAUDE.md documenting architecture constraints, file ownership, and build commands
+- An AGENTS.md with style conventions, known gotchas, subagent scope, and test strategy
+- A PRD broken into 8 phases, each with a clear implementation plan and acceptance criteria
+- A startup script to boot the dev environment reliably
+
+Every agent session that followed could orient itself in seconds. No agent needed to guess the project structure or rediscover constraints already written down.
+
+### Group Grill Me for shared alignment
+
+We did not have one person design the architecture and hand it to the team. We ran a Group Grill Me: the full team in a room, one person sharing screen, Claude interviewing everyone and routing questions to whoever had domain expertise. Frontend tradeoffs went to the frontend engineers. Backend constraints came from the backend specialist. Product requirements from the PM. Architecture decisions resolved in real time.
+
+80 minutes. Complete architecture for the project. Every major decision on record. No one found out two weeks later that a call was made without them.
+
+A spec written by one person reflects one person's understanding. A spec produced by the whole team reflects what everyone actually agreed to.
+
+### Plan approval before implementation
+
+Every phase started with an agent writing a plan, not code. The lead reviewed and approved before implementation began. This stopped the most common agent failure: one-shotting a feature and running out of context mid-way.
+
+A rejected plan costs nothing. A half-implemented feature with a broken environment costs hours.
+
+### Verify the baseline before each phase
+
+Before starting each phase, we ran the full test and lint suite. Before Phase 3, we found three failing tests left over from Phase 2. Phase 2 agents did not cause them, but Phase 3 agents would have inherited them and potentially worked around failures instead of fixing them.
+
+The temptation is to assume the previous phase was clean and move forward. Checking before spawning saved us multiple times.
+
+### REFLECTIONs as the learning loop
+
+After each phase, the implementing agent wrote a REFLECTION file: what surprised it, patterns to add to AGENTS.md, prompt improvements for the next session. The lead reviewed. Approved items went into AGENTS.md.
+
+Phase 3 agents were better than Phase 1 agents because they started with learnings from earlier phases. Database API quirks, SDK packaging issues, how to structure integration tests in a constrained runtime: each phase's discovery became the next phase's starting point.
+
+Without REFLECTIONs, every agent session starts from zero. With them, the system improves with each iteration.
+
+### One file, one agent, enforced by hooks
+
+We set up a pre-tool-use hook that fired every time an agent tried to write or edit a file: "Reminder: one file, one owner. Check AGENTS.md for file boundaries."
+
+File ownership in AGENTS.md combined with hook enforcement kept agents from stepping on each other. Security-critical components required human plan approval before any implementation. Each agent owned its directory. No one crossed lines.
+
+## The pattern we used but had not named
+
+The way we ran the kickoff: one person sharing screen, Claude interviewing the whole room, routing questions to whoever had relevant expertise, forcing decisions in real time. Every major architecture call resolved in 80 minutes with everyone aligned. No week of back-and-forth in Slack.
+
+Every description of Grill Me I have seen treats it as a solo workflow: one developer extracting their own requirements. That undersells it.
+
+Claude as a neutral interviewer does not let any one voice dominate. It does not let decisions stay vague. It produces a spec that reflects what the team actually agreed on, not what one person assumed everyone agreed on.
+
+Use it for hard architectural questions, not just project kickoffs.
+
+## What is still missing
+
+Current AI engineering practices work well for solo L8 practitioners and for teams with one skilled orchestrator. What has not been written yet:
+
+- A clear path from L3 to L5 to L8 for engineers joining an AI-first codebase
+- AGENTS.md governance for teams with multiple contributors and competing opinions
+- A team-level shared context approach: not just AGENTS.md in a repo, but a way for cross-session knowledge to spread without manual promotion every time
+- Coordination for parallel agent sessions: how to divide a task queue, run overnight loops without conflicts, and distribute review load
+- A clear accountability model for agent-generated code in a shared codebase
+
+The tools exist. The solo practitioner playbook is solid. The team-scale playbook has not been written.
+
+That is what I am working on.
+

@@ -18,7 +18,9 @@
 
 ## Author
 
-Khaled Garbaya is an Engineering Leader and Developer based in Munich, Germany. He writes about web development, software engineering, AI, and leadership topics.
+Khaled Garbaya is a Senior Engineering Manager and daily AI practitioner. Originally from Tunisia, based in Berlin. 15+ years building developer tools and SaaS products — engineering leader by day, builder by night. Current focus: AI-assisted engineering at team scale, harness engineering, and multi-agent workflows.
+
+Full background: [/about](/about)
 
 ## Contact
 
