@@ -58,6 +58,44 @@ L3 engineers mostly cannot cause damage they do not know they are causing, becau
 
 That is a people problem, not a tools problem. Current AI engineering practices offer no guidance on it.
 
+## When your team includes Design and PM
+
+So far this has focused on engineers at different skill levels. But most product teams include designers and product managers. That raises a separate question: should they operate inside the same AI engineering setup, and at what level?
+
+The short answer is that expecting a designer or PM to reach L8 AI engineering skill is the wrong goal. L8 is specific to engineering orchestration: harness design, agent supervision, context management. It does not translate directly to other disciplines, and trying to pull non-engineers into the engineering harness creates more problems than it solves.
+
+The better question is what interface each discipline should have with the agentic system.
+
+### What each discipline actually contributes
+
+A PM working at peak AI capability uses Claude to write precise PRDs, pressure-test requirements, synthesise user research, and draft acceptance criteria that an agent can validate against. That is genuinely hard. Getting a PM to that level in their own domain is a real achievement. It does not require them to understand AGENTS.md.
+
+A designer working at peak AI capability describes components with enough precision that Claude can generate them, runs design critique sessions with AI assistance, and validates output against their specs. Again, hard and valuable. Again, no AGENTS.md required.
+
+The contribution surfaces are different. Engineering runs the harness. PM produces the requirements that feed it. Design produces the specifications that constrain it. The handoff between them happens at defined points, not continuously.
+
+### Define the interface, not the access level
+
+The common mistakes are: pulling Design and PM fully into the engineering harness (they drown in complexity they do not need), or locking them out entirely (you lose their domain knowledge at the wrong moment).
+
+The better approach is to define clear contribution surfaces. In practice this means:
+
+PM owns requirements and acceptance criteria sections of the spec. Design owns visual and UX specifications. Engineering owns technical decisions. All of it lives in the same document, and the agents consume the whole thing. No discipline needs to understand how the other sections get processed.
+
+This works because the spec becomes the contract. Once it is written and agreed on, each discipline can return to their own workflow. The PM is not watching agent sessions. The designer is not reviewing REFLECTION files. They engage at the beginning (shaping the spec) and at the end (validating the output).
+
+### Separate AI workflows for separate disciplines
+
+Design and PM should absolutely use AI in their own work, but in their own contexts. A PM using Claude to draft and refine a PRD is a separate workflow from the engineering harness. A designer using Claude to explore directions, write component specs, or critique their own work is also separate.
+
+These should not run inside the engineering project. They feed into it at defined handoff points. The output of each workflow is a document or spec the engineering harness can consume. The PM does not need to be in the Claude session where that spec becomes code.
+
+Do not create a separate project to manage this. A separate project fragments context and creates synchronisation overhead. The boundary should be a clean interface within the same project: a spec format that disciplines agree on, a review process that brings everyone together at the right moments, and a validation step that lets non-engineers check output without operating the machinery that produced it.
+
+The collective requirements session described earlier does this well. Everyone in the room, answering questions in their area. The designer handles visual constraints. The PM handles user requirements. Engineering handles technical decisions. The result is a shared document that feeds the harness. After that, each discipline returns to their own context.
+
+That is the right integration model: shared input, separate operation, shared validation.
+
 ## What breaks when you are solo, and what does not
 
 Most team gaps disappear when you work alone:
@@ -148,6 +186,7 @@ Current AI engineering practices work well for solo L8 practitioners and for tea
 - A team-level shared context approach: not just AGENTS.md in a repo, but a way for cross-session knowledge to spread without manual promotion every time
 - Coordination for parallel agent sessions: how to divide a task queue, run overnight loops without conflicts, and distribute review load
 - A clear accountability model for agent-generated code in a shared codebase
+- Standard spec formats that work as handoff surfaces between engineering, design, and product: precise enough for agents to consume, readable enough for non-engineers to write
 
 The tools exist. The solo practitioner playbook is solid. The team-scale playbook has not been written.
 
