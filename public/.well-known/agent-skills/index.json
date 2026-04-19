@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "content-api",
+      "type": "skill-md",
+      "description": "Access the machine-readable content graph with all blog posts and TIL entries as JSON-LD",
+      "url": "https://khaledgarbaya.net/.well-known/agent-skills/content-api/SKILL.md",
+      "digest": "sha256:048144547ae6be2ea22c84afec5f2c45923f2bd3ec25801d66d8df822086e119"
+    }
+  ]
+}

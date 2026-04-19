@@ -1,0 +1,14 @@
+# Link response headers for agent discovery (RFC 8288 / RFC 9727)
+/
+  Link: </.well-known/api-catalog>; rel="api-catalog", </llms.txt>; rel="describedby"; type="text/plain", </api/content.json>; rel="service-desc"; type="application/ld+json"
+
+# Correct Content-Type for API Catalog (RFC 9727 requires application/linkset+json)
+/.well-known/api-catalog
+  Content-Type: application/linkset+json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400
+
+# Agent skills discovery
+/.well-known/agent-skills/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,25 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://khaledgarbaya.net/api/content.json",
+      "service-desc": [
+        {
+          "href": "https://khaledgarbaya.net/.well-known/agent-skills/content-api/SKILL.md",
+          "type": "text/markdown"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://khaledgarbaya.net/llms.txt",
+          "type": "text/plain"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://khaledgarbaya.net/api/content.json",
+          "type": "application/ld+json"
+        }
+      ]
+    }
+  ]
+}

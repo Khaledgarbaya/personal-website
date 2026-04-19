@@ -35,6 +35,11 @@ Sitemap: https://khaledgarbaya.net/sitemap-index.xml
 Sitemap: https://khaledgarbaya.net/rss.xml
 Sitemap: https://khaledgarbaya.net/til-rss.xml
 
+# Content Signals - AI content usage preferences (contentsignals.org)
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+
 # LLM-specific resources
 # See /llms.txt for structured LLM guidance
 # See /api/content.json for machine-readable content graph
+# See /.well-known/api-catalog for API discovery (RFC 9727)
+# See /.well-known/agent-skills/index.json for agent skills discovery

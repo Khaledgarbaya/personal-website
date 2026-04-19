@@ -137,6 +137,88 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       document.addEventListener('astro:after-swap', initTheme);
     </script>
     
+    <!-- WebMCP: Expose site tools to AI agents via browser -->
+    <script is:inline>
+      if (typeof navigator !== 'undefined' && navigator.modelContext) {
+        navigator.modelContext.registerTool({
+          name: 'search-content',
+          description: 'Search blog posts and TIL entries by keyword. Returns matching titles, descriptions, URLs, and dates.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string', description: 'Search keyword or phrase' },
+              type: { type: 'string', enum: ['all', 'blog', 'til'], description: 'Filter by content type', default: 'all' }
+            },
+            required: ['query']
+          },
+          async execute(params) {
+            const res = await fetch('/api/content.json');
+            const data = await res.json();
+            const items = data.mainEntity.itemListElement;
+            const q = params.query.toLowerCase();
+            const filtered = items.filter(function(entry) {
+              var item = entry.item;
+              if (params.type === 'blog' && item['@type'] !== 'BlogPosting') return false;
+              if (params.type === 'til' && item.articleSection !== 'Today I Learned') return false;
+              return item.headline.toLowerCase().includes(q) ||
+                     item.description.toLowerCase().includes(q) ||
+                     (item.keywords && item.keywords.toLowerCase().includes(q));
+            });
+            return filtered.map(function(entry) {
+              return { title: entry.item.headline, url: entry.item.url, description: entry.item.description, date: entry.item.datePublished };
+            });
+          }
+        });
+
+        navigator.modelContext.registerTool({
+          name: 'list-recent-posts',
+          description: 'Get the most recent blog posts and TIL entries.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              limit: { type: 'number', description: 'Number of items to return', default: 10 },
+              type: { type: 'string', enum: ['all', 'blog', 'til'], description: 'Filter by content type', default: 'all' }
+            }
+          },
+          async execute(params) {
+            var limit = params.limit || 10;
+            var res = await fetch('/api/content.json');
+            var data = await res.json();
+            var items = data.mainEntity.itemListElement;
+            if (params.type === 'blog') items = items.filter(function(e) { return e.item['@type'] === 'BlogPosting'; });
+            if (params.type === 'til') items = items.filter(function(e) { return e.item.articleSection === 'Today I Learned'; });
+            return items.slice(0, limit).map(function(entry) {
+              return { title: entry.item.headline, url: entry.item.url, description: entry.item.description, date: entry.item.datePublished };
+            });
+          }
+        });
+
+        navigator.modelContext.registerTool({
+          name: 'get-site-info',
+          description: 'Get metadata about this website: author, description, available feeds, and API endpoints.',
+          inputSchema: { type: 'object', properties: {} },
+          async execute() {
+            return {
+              name: 'Khaled Garbaya',
+              description: 'Engineering Leader, Developer, and Educator. Technical blog about web development, AI, and software engineering.',
+              author: 'Khaled Garbaya',
+              url: 'https://khaledgarbaya.net',
+              feeds: {
+                blogRss: '/rss.xml',
+                tilRss: '/til-rss.xml',
+                sitemap: '/sitemap-index.xml'
+              },
+              apis: {
+                contentGraph: '/api/content.json',
+                llmsInfo: '/llms.txt',
+                apiCatalog: '/.well-known/api-catalog'
+              }
+            };
+          }
+        });
+      }
+    </script>
+
     <ViewTransitions />
   </head>
   <body class="h-full zellige-pattern">
