@@ -1,0 +1,153 @@
+---
+title: "Meet APE — Agentic Product Engineering"
+description: "A small team I led shipped a greenfield project in three weeks. We didn't prompt harder than anyone else — we built the system around the models, not the prompts inside them. I call that approach APE: Agentic Product Engineering."
+published: 2026-04-24
+featured: true
+tags: "ai-engineering, agentic-engineering, ai-workflow, engineering-leadership"
+---
+
+*The method that isn't vibe coding.*
+
+## The short version
+
+A small team I led recently shipped a greenfield project in three weeks. We didn't prompt harder than anyone else. We did something more boring and more important: **we built the system around the models, not the prompts inside them.**
+
+I want to give that approach a name, because "vibe coding" undersells it. I call it **APE — Agentic Product Engineering**.
+
+Yes, the acronym is deliberate. A wink at evolution. Mostly a way to stop calling something "vibes" when it's actually a discipline.
+
+## Why not just "vibe coding"?
+
+Andrej Karpathy coined vibe coding for one person having a conversation with an AI until something works. It's real. It's useful. I use it for prototypes, for exploration, for Saturday projects.
+
+It does not ship production software with a team.
+
+Here's the contrast that actually matters:
+
+| | Vibe coding | Agentic Product Engineering (APE) |
+|---|---|---|
+| **Who** | One person + one AI | PM + Design + Engineering + agent teams in parallel |
+| **Starting point** | A prompt | A PRD with acceptance criteria per phase |
+| **How code gets written** | Conversation until it works | Structured agent teams on branches; humans review diffs |
+| **Quality bar** | Whatever runs | Coverage gates (CI-enforced), static analysis, security review |
+| **Architecture** | Emergent, often missing | Architectural decisions recorded before or during implementation |
+| **What humans review** | Does it work? | Is this the right thing to build? Does the architecture fit? |
+| **Learning across sessions** | Resets each time | Reflections feed a shared agent context file — later phases start with knowledge earlier phases didn't have |
+| **Output** | Usually a demo | Live production system |
+
+**The difference is not the AI. It is the discipline around the AI.**
+
+Vibe coding scales to one person for one weekend. APE scales to a team, a quarter, and a production system. The investment is upfront — a good PRD, a structured harness, defined quality gates — and the returns compound across every phase.
+
+## The three shifts
+
+### 1. Your spec is the leverage
+
+Most AI workflows fail for the same reason most software projects fail: the spec was vague.
+
+Vague thinking doesn't just slow one agent down. It **multiplies errors across the fleet** when you're running 3–5 agents in parallel. Every agent interprets ambiguity differently. By the time you notice, you have five different implementations of the same half-formed idea.
+
+In APE, the PRD is not a document that sits in a backlog. It *is* the brief the agent team acts on. A well-written PRD is worth ten clever prompts.
+
+### 2. Agent teams with file ownership
+
+One file, one owner. Every phase has a structured team:
+
+- A **Team Lead** agent that decomposes the work
+- **Several implementation agents** with explicit file boundaries ("Agent A owns the API layer. Agent B owns the frontend.")
+- **A reviewer agent** that fires on every completed task, runs typecheck + lint + tests, and reads the actual diff for things tests would miss
+
+During one of our final batches, the reviewer caught real bugs before any human opened the PR — issues the test suite had missed because they were about code the tests didn't exercise, not about behaviour the tests were asserting. A dedicated reviewer agent reading the diff catches things unit tests were never designed to catch.
+
+### 3. Humans review intent, not mechanics
+
+This is the biggest cultural shift, and the one most engineers underestimate.
+
+Your job moves from *"is this code correct?"* to *"is this solving the right problem? Does the architecture fit? Is there a security concern the tests can't catch?"*
+
+The agents handle syntax, tests, typechecking. You handle judgment.
+
+For many engineers, this is uncomfortable. The identity of "I write code" is strong. APE does not remove that — I still code every day. But the leverage comes from the work you do *around* the code, not in writing every line yourself.
+
+## Everyone has the same models. The harness is the edge.
+
+This is the most important section of this post.
+
+We're all using the same models. Claude. GPT. Gemini. Whatever ships next month. If you think your competitive edge comes from which model you picked, you're going to lose to someone who's thought about the question underneath: **what surrounds the model?**
+
+The thing that surrounds the model is the **harness**. The environment it runs in. The tools it can call. The feedback loops it has access to. The way state is structured between sessions. The way work gets scoped, assigned, and verified.
+
+### Case study 1 — Anthropic's own coding agent
+
+From Anthropic's engineering blog, verbatim:
+
+> *"We actually spent more time optimizing our tools than the overall prompt."*
+
+The specific example they describe: the model was making mistakes with relative filepaths after the agent had moved out of the root directory. They tried prompting around it. Didn't stick. The real fix was **changing the tool to require absolute filepaths**. Once they did, the model used it flawlessly.
+
+That's a tooling change, not a prompt change.
+
+### Case study 2 — a pattern you'll hit yourself
+
+We built an AI-driven scaffolding tool — you describe a thing, it generates a working project. Early versions failed constantly. Wrong config files, mismatched versions, malformed build setups. We burned hours trying to prompt-engineer our way out.
+
+The real fix was the environment. We pre-mounted a stable, known-good project scaffold *before* the AI wrote a single line. The AI only touched the parts unique to the thing the user was describing. **Generation failures dropped to near zero.**
+
+Same pattern as Anthropic's. Same lesson. When the output is flaky, the fix is usually upstream of the prompt.
+
+### The diagnostic questions to ask
+
+- Is the tool returning information in a format the model can reason about? Or is it making the model count lines in a diff?
+- Can the agent verify its own work? Or does it just claim "done"?
+- Does the environment give the agent a stable starting point, or does it have to reconstruct state every session?
+- Are the tools *generic* (grep, git, npm — things the model has millions of training examples of) or *bespoke* (custom schemas the model has to learn from scratch)?
+
+Vercel published a striking stat on that last one. They replaced specialised tools for their text-to-SQL agent with a single generic batch command. The result: **3.5× faster, 37% fewer tokens, success rate from 80% → 100%.**
+
+Generic tools, not specialised ones. Simpler format, not cleverer prompt. Stable environment, not better model.
+
+**The harness is where you invest once and reap forever. The prompt is what you tune last.**
+
+## It's not just an engineering story — it's a trio story
+
+The biggest shift APE brings isn't technical. It's **how Product, Design, and Engineering collaborate**.
+
+The old model is sequential. PM writes a spec. Design creates mockups. Engineering builds. Review. Rework. Each role waits for the previous one. Feedback arrives late. Rework is expensive.
+
+The APE model is parallel. All three roles work simultaneously. The output of each feeds the agents directly.
+
+**Product Managers** write PRDs that serve as the agent team's brief. They can prototype ideas directly with AI to validate before engineering starts. The shift: from specifying *how* to build → specifying *what* and *why*, clearly enough for an agent to act on.
+
+**Designers** encode the design system once in an agent-readable context file — tokens, conventions, anti-patterns, brand voice. Agent teams read it before generating any UI code. Components come out visually consistent without a designer reviewing each one individually. The shift: from reviewing every implementation → encoding the system once, then reviewing intent and system fit.
+
+**Engineers** orchestrate agent teams rather than writing every line. They write the PRD, set constraints, review diffs. The shift: from individual contributor → director of a team that happens to include agents.
+
+**What stays entirely human:** deciding what to build and why. Judging whether it solves the right problem. Making tradeoff decisions under uncertainty. Catching wrong assumptions in intent review.
+
+The trio doesn't shrink — it shifts. Each role operates earlier, with more leverage, and at a higher level of abstraction than before.
+
+## Pit of success, not discipline traps
+
+Harness thinking has a specific flavour when it meets code safety: make the right thing easy and the wrong thing loud.
+
+Here's the general shape. Most frameworks have rules like "always filter by tenant ID" or "always validate input before it hits the database." Rules live in the developer's head. Forget the rule once and you have a bug, a leak, or a security incident.
+
+The APE alternative: push the rule down into a layer where forgetting is impossible. A scoped client that refuses to run unscoped queries. A type system that rejects unsafe column names. A validator that blocks the deploy if a migration is missing the required columns. You cannot do the wrong thing, because the wrong thing is a compile error or a deploy failure.
+
+This is the principle APE applies to everything. Agents will make mistakes. Your job is to design systems where mistakes are loud, not silent. Humans make the same mistakes — the difference is that agents make them faster and in parallel.
+
+## What you can do Monday morning
+
+If you're going to try APE on a real project, here's the order I'd start with:
+
+1. **Write a real PRD.** Not a ticket. An actual document with user stories, acceptance criteria, and architectural decisions. This is the single highest-leverage thing you can do. Use AI to help draft it — that's a good use of vibe coding.
+
+2. **Set up a project-level agent context file.** Build commands, folder structure, architecture constraints, security-sensitive boundaries. Every session reads this first. Keep it lean.
+
+3. **Set up a persistent learnings file.** Start empty. Let it grow from reflections after each phase. Human-curated only — research shows LLM-generated rule files offer no benefit.
+
+4. **Try one agent team on one phase.** Not your whole project. Pick a greenfield slice with clean file boundaries. Spawn a few agents with explicit file ownership and a reviewer. Watch what breaks. Fix the harness, not the prompt.
+
+5. **Invest in tools before prompts.** When output is flaky, the diagnostic questions above are the right place to start.
+
+If you take away one thing from this post, make it this: **the edge isn't the model. It never was.** Teams that ship faster and cleaner with AI aren't prompting harder. They're building better harnesses.
