@@ -75,7 +75,7 @@ This is the most important section of this post.
 
 We're all using the same models. Claude. GPT. Gemini. Whatever ships next month. If you think your competitive edge comes from which model you picked, you're going to lose to someone who's thought about the question underneath: **what surrounds the model?**
 
-The thing that surrounds the model is the **harness**. The environment it runs in. The tools it can call. The feedback loops it has access to. The way state is structured between sessions. The way work gets scoped, assigned, and verified.
+The thing that surrounds the model is the **harness**. The environment it runs in. The tools it can call. The feedback loops it has access to. The way state is structured between sessions. The way work gets scoped, assigned, and verified. [Addy Osmani](https://addyosmani.com/) has been the loudest, clearest voice making the case that this is where the leverage lives — much of how I think about harness engineering and the levels of AI-assisted practice traces back to his writing.
 
 ### Case study 1 — Anthropic's own coding agent
 
@@ -128,7 +128,7 @@ The trio doesn't shrink — it shifts. Each role operates earlier, with more lev
 
 ## Pit of success, not discipline traps
 
-Harness thinking has a specific flavour when it meets code safety: make the right thing easy and the wrong thing loud.
+Harness thinking has a specific flavour when it meets code safety: make the right thing easy and the wrong thing loud. [Mat Pocock](https://www.totaltypescript.com/) has been preaching this for years in TypeScript land — push the rule into the type system so the wrong code can't compile. The same instinct, generalised, is what makes a harness safe to point an agent fleet at.
 
 Here's the general shape. Most frameworks have rules like "always filter by tenant ID" or "always validate input before it hits the database." Rules live in the developer's head. Forget the rule once and you have a bug, a leak, or a security incident.
 
