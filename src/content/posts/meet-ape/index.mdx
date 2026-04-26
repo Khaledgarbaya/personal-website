@@ -49,6 +49,8 @@ Vague thinking doesn't just slow one agent down. It **multiplies errors across t
 
 In APE, the PRD is not a document that sits in a backlog. It *is* the brief the agent team acts on. A well-written PRD is worth ten clever prompts.
 
+The fastest way I've found to sharpen a fuzzy spec is to be interrogated about it. [Mat Pocock](https://www.aihero.dev/)'s "grill me" skill does exactly that — the agent grills you on assumptions, edge cases, and contradictions until the spec is something a fleet of agents can act on without guessing. Use it before you spawn anything.
+
 ### 2. Agent teams with file ownership
 
 One file, one owner. Every phase has a structured team:
@@ -128,7 +130,7 @@ The trio doesn't shrink — it shifts. Each role operates earlier, with more lev
 
 ## Pit of success, not discipline traps
 
-Harness thinking has a specific flavour when it meets code safety: make the right thing easy and the wrong thing loud. [Mat Pocock](https://www.totaltypescript.com/) has been preaching this for years in TypeScript land — push the rule into the type system so the wrong code can't compile. The same instinct, generalised, is what makes a harness safe to point an agent fleet at.
+Harness thinking has a specific flavour when it meets code safety: make the right thing easy and the wrong thing loud.
 
 Here's the general shape. Most frameworks have rules like "always filter by tenant ID" or "always validate input before it hits the database." Rules live in the developer's head. Forget the rule once and you have a bug, a leak, or a security incident.
 
