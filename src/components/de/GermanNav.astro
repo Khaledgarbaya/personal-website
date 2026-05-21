@@ -1,0 +1,68 @@
+---
+import ThemeToggle from '../ThemeToggle.astro';
+---
+
+<nav class="container border-b border-transparent" style="border-image: linear-gradient(to right, transparent, oklch(0.65 0.15 195 / 0.3), transparent) 1;">
+  <div class="mx-auto max-w-2xl lg:max-w-6xl flex items-center justify-between">
+    <a href="/de/leistungen" class="nav-link font-semibold tracking-tight">
+      Khaled Garbaya — Webentwicklung Berlin
+    </a>
+
+    <button
+      class="md:hidden z-50"
+      id="menu-toggle"
+      aria-label="Menü umschalten"
+    >
+      <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+      <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center transition-all duration-300 ease-in-out opacity-0 invisible md:static md:bg-transparent md:flex-row md:justify-between md:opacity-100 md:visible zellige-pattern"
+    >
+      <ul class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+        <li><a class="nav-link" href="/de/leistungen">Leistungen</a></li>
+        <li><a class="nav-link" href="/de/projekte">Projekte</a></li>
+        <li><a class="nav-link" href="/de/kontakt">Kontakt</a></li>
+      </ul>
+      <div class="mt-4 md:mt-0 md:ml-4">
+        <ThemeToggle />
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  function setupMobileMenu() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    if (menuToggle && mobileMenu && menuIcon && closeIcon) {
+      const newToggle = menuToggle.cloneNode(true);
+      menuToggle.parentNode?.replaceChild(newToggle, menuToggle);
+
+      newToggle.addEventListener('click', () => {
+        const isOpen = !mobileMenu.classList.contains('invisible');
+        if (isOpen) {
+          mobileMenu.classList.add('opacity-0', 'invisible');
+          menuIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        } else {
+          mobileMenu.classList.remove('opacity-0', 'invisible');
+          menuIcon.classList.add('hidden');
+          closeIcon.classList.remove('hidden');
+        }
+      });
+    }
+  }
+
+  setupMobileMenu();
+  document.addEventListener('astro:after-swap', setupMobileMenu);
+</script>

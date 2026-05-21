@@ -1,0 +1,246 @@
+---
+import GermanLayout from '../../layouts/GermanLayout.astro';
+import Button from '../../components/ui/Button.astro';
+import Badge from '../../components/ui/Badge.astro';
+
+const tiers = [
+  {
+    name: 'Starter',
+    price: 'ab 499 €',
+    tagline: 'Digitale Visitenkarte',
+    audience: 'Für Handwerker, kleine Vereine, Einzelunternehmer',
+    features: [
+      'Eigene Domain',
+      'Mobiloptimiert',
+      'Kontaktformular',
+      'Impressum + Datenschutz',
+      'SEO-Basis',
+      'Hosting für 1 Jahr inklusive',
+    ],
+    timeline: 'Fertig in 1–2 Wochen',
+    featured: false,
+  },
+  {
+    name: 'Standard',
+    price: 'ab 1.490 €',
+    tagline: 'Mit Online-Funktion',
+    audience: 'Für Restaurants, Friseure, Studios, Vereine mit Mitgliedern',
+    features: [
+      'Alles aus Starter',
+      'Online-Buchung oder Bestellsystem',
+      'Mitglieder- oder Kundenbereich',
+      'Zahlungsanbindung (Stripe)',
+      'E-Mail-Benachrichtigungen',
+      'Individuelles Design',
+    ],
+    timeline: 'Fertig in 3–5 Wochen',
+    featured: true,
+  },
+  {
+    name: 'Custom',
+    price: 'auf Anfrage',
+    tagline: 'Maßgeschneiderte Lösung',
+    audience: 'Für komplexere Projekte, eigene Workflows, mobile Apps',
+    features: [
+      'Individuelle Anforderungsanalyse',
+      'Eigene Backend-Logik',
+      'Native iOS/Android Apps möglich',
+      'API-Integrationen',
+      'Langfristige Wartung',
+    ],
+    timeline: 'Zeitraum nach Absprache',
+    featured: false,
+  },
+];
+
+const useCases = [
+  {
+    title: 'Handwerker',
+    body: 'Website mit Anfrage-Formular und Routing per E-Mail oder WhatsApp.',
+  },
+  {
+    title: 'Restaurants',
+    body: 'Eigenes Bestell- und Reservierungssystem ohne Lieferando-Provision.',
+  },
+  {
+    title: 'Vereine',
+    body: 'Mitgliederportal, Online-Anmeldung, Beitragsverwaltung.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Wie läuft ein Projekt ab?',
+    a: 'Wir starten mit einem kostenlosen Erstgespräch (30 Min., persönlich in Berlin oder per Video). Dann schicke ich dir ein schriftliches Angebot mit Festpreis und Lieferzeitpunkt. Nach Auftrag arbeite ich in wöchentlichen Updates mit Zwischenstand und Feedback-Runden. Launch erfolgt nach deiner Freigabe.',
+  },
+  {
+    q: 'Was kostet die Wartung nach Launch?',
+    a: 'Hosting + kleine Anpassungen kosten ab 29 € im Monat. Du kannst jederzeit kündigen. Größere Erweiterungen werden separat angeboten — auch hier mit Festpreis.',
+  },
+  {
+    q: 'Arbeitest du auch außerhalb Berlins?',
+    a: 'Ja. Berlin ist mein Schwerpunkt, aber ich arbeite deutschlandweit. Erstgespräche und Abstimmungen laufen dann komplett per Video.',
+  },
+  {
+    q: 'Welche Technologien nutzt du?',
+    a: 'Modernes Web-Stack: TypeScript, React/Next.js oder Astro, Cloudflare Workers für die Infrastruktur, Stripe für Zahlungen. Für mobile Apps: React Native mit Expo. Die Wahl richtet sich nach Projekt und Budget.',
+  },
+  {
+    q: 'Was passiert, wenn ich später etwas ändern möchte?',
+    a: 'Du bekommst Zugang zu einem einfachen Adminbereich für Inhalte. Für technische Änderungen kannst du auf mich zukommen — entweder im Wartungsvertrag oder als Einzelauftrag mit Festpreis.',
+  },
+];
+
+const description = 'Websites, Buchungssysteme und Apps für kleine und mittlere Unternehmen in Berlin. Senior-Entwickler mit über 10 Jahren Erfahrung. Festpreis, schriftlicher Vertrag, persönlicher Kontakt.';
+---
+
+<GermanLayout
+  title="Leistungen — Khaled Garbaya"
+  description={description}
+>
+  <main class="font-sans">
+    <!-- Hero -->
+    <section class="container mx-auto max-w-2xl lg:max-w-5xl px-4 pt-24 pb-16">
+      <h1 class="text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+        Websites und Apps für dein Unternehmen in Berlin
+      </h1>
+      <p class="mt-6 text-lg lg:text-xl text-muted-foreground max-w-3xl">
+        Senior-Entwickler mit über 10 Jahren Erfahrung. Festpreis, schriftlicher Vertrag, persönlicher Kontakt.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <Button href="/de/kontakt" size="lg">Kostenloses Erstgespräch</Button>
+        <Button href="/de/projekte" variant="outline" size="lg">Projekte ansehen</Button>
+      </div>
+    </section>
+
+    <!-- Pricing tiers -->
+    <section class="container mx-auto max-w-2xl lg:max-w-6xl px-4 py-16" aria-label="Pakete">
+      <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+        <span class="w-1 h-8 bg-gradient-to-b from-cerulean to-gold rounded-full"></span>
+        Pakete
+      </h2>
+      <p class="mt-3 text-muted-foreground">Drei klare Optionen. Jeder Festpreis enthält ein schriftliches Pflichtenheft und Werkvertrag.</p>
+
+      <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {tiers.map((tier) => (
+          <article
+            class:list={[
+              'rounded-2xl border p-6 flex flex-col bg-card text-card-foreground',
+              tier.featured ? 'border-cerulean shadow-lg ring-1 ring-cerulean/20' : 'border-border',
+            ]}
+          >
+            {tier.featured && (
+              <div class="mb-4">
+                <Badge>Beliebteste Wahl</Badge>
+              </div>
+            )}
+            <h3 class="text-2xl font-semibold">{tier.name}</h3>
+            <p class="mt-1 text-sm text-muted-foreground">{tier.tagline}</p>
+            <p class="mt-4 text-3xl font-bold text-cerulean">{tier.price}</p>
+            <p class="mt-4 text-sm text-muted-foreground">{tier.audience}</p>
+            <ul class="mt-6 space-y-2 text-sm">
+              {tier.features.map((f) => (
+                <li class="flex items-start gap-2">
+                  <svg class="w-4 h-4 mt-1 flex-none text-cerulean" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="mt-6 text-sm font-medium text-foreground">{tier.timeline}</p>
+            <div class="mt-6">
+              <Button href="/de/kontakt" variant={tier.featured ? 'default' : 'outline'} class="w-full">
+                Anfragen
+              </Button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Use cases -->
+    <section class="container mx-auto max-w-2xl lg:max-w-5xl px-4 py-16" aria-label="Anwendungsfälle">
+      <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+        <span class="w-1 h-8 bg-gradient-to-b from-gold to-terracotta rounded-full"></span>
+        Typische Projekte
+      </h2>
+
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {useCases.map((c) => (
+          <div class="rounded-2xl border border-border p-6 bg-card">
+            <h3 class="text-xl font-semibold">{c.title}</h3>
+            <p class="mt-3 text-muted-foreground">{c.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Trust / Über mich -->
+    <section class="container mx-auto max-w-2xl lg:max-w-5xl px-4 py-16" aria-label="Über mich">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div class="lg:col-span-2">
+          <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+            <span class="w-1 h-8 bg-gradient-to-b from-terracotta to-cerulean rounded-full"></span>
+            Über mich
+          </h2>
+          <p class="mt-6 text-lg leading-relaxed text-muted-foreground">
+            Ich bin Khaled Garbaya, Senior Software Engineer in Berlin mit über 10 Jahren Erfahrung. Ich habe für internationale Tech-Unternehmen gearbeitet und eigene Apps wie <a class="link" href="https://apps.apple.com/app/chore-champ" rel="external">Chore Champ</a> im App Store veröffentlicht.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-border p-6 bg-card">
+          <h3 class="text-lg font-semibold">Das versprech ich dir</h3>
+          <ul class="mt-4 space-y-3 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-cerulean">✓</span>
+              <span>Festpreis nach Pflichtenheft</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cerulean">✓</span>
+              <span>Schriftlicher Werkvertrag</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cerulean">✓</span>
+              <span>Saubere Rechnung (Kleinunternehmer gemäß § 19 UStG)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-cerulean">✓</span>
+              <span>Persönliches Erstgespräch in Berlin oder per Video</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container mx-auto max-w-2xl lg:max-w-5xl px-4 py-16" aria-label="Häufige Fragen">
+      <h2 class="text-3xl font-semibold tracking-tight flex items-center gap-3">
+        <span class="w-1 h-8 bg-gradient-to-b from-cerulean to-terracotta rounded-full"></span>
+        Häufige Fragen
+      </h2>
+
+      <div class="mt-10 divide-y divide-border rounded-2xl border border-border bg-card">
+        {faqs.map((item) => (
+          <details class="group p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-semibold list-none">
+              <span>{item.q}</span>
+              <svg class="w-5 h-5 flex-none text-cerulean transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <p class="mt-4 text-muted-foreground leading-relaxed">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="container mx-auto max-w-2xl lg:max-w-5xl px-4 py-20 text-center">
+      <h2 class="text-4xl font-bold tracking-tight">Lass uns sprechen</h2>
+      <p class="mt-4 text-lg text-muted-foreground">Erzähl mir kurz von deinem Projekt. Ich melde mich innerhalb eines Werktags.</p>
+      <div class="mt-8">
+        <Button href="/de/kontakt" size="lg">Kostenloses Erstgespräch</Button>
+      </div>
+    </section>
+  </main>
+</GermanLayout>

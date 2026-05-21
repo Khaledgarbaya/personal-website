@@ -1,0 +1,46 @@
+---
+import GermanLayout from '../../layouts/GermanLayout.astro';
+
+// TODO: Replace this with output from eRecht24 or a similar generator before
+// production launch. The stub below is NOT legally complete.
+const description = 'Datenschutzerklärung.';
+---
+
+<GermanLayout title="Datenschutz — Khaled Garbaya" description={description}>
+  <main class="font-sans">
+    <article class="container mx-auto max-w-2xl lg:max-w-3xl px-4 pt-24 pb-20 prose dark:prose-invert prose-lg">
+      <h1>Datenschutzerklärung</h1>
+
+      <h2>1. Verantwortlicher</h2>
+      <p>
+        Verantwortlich für die Datenverarbeitung auf dieser Website ist:
+      </p>
+      <p>
+        Khaled Garbaya<br />
+        Rigaer Str. 100<br />
+        10247 Berlin<br />
+        E-Mail: <a href="mailto:kontakt@khaledgarbaya.net">kontakt@khaledgarbaya.net</a>
+      </p>
+
+      <h2>2. Erhebung allgemeiner Daten beim Besuch der Website</h2>
+      <p>
+        Bei jedem Aufruf werden automatisch Informationen vom Browser des Endgeräts an den Server übermittelt und temporär in einem Logfile gespeichert (z. B. IP-Adresse, Datum und Uhrzeit, übertragene Datenmenge). Eine personenbezogene Auswertung erfolgt nicht.
+      </p>
+
+      <h2>3. Kontaktaufnahme</h2>
+      <p>
+        Bei Anfragen per Kontaktformular oder E-Mail werden die Angaben des Anfragenden zur Bearbeitung der Anfrage und für den Fall von Anschlussfragen gespeichert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO.
+      </p>
+
+      <h2>4. Rechte der betroffenen Personen</h2>
+      <p>
+        Du hast jederzeit das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch gemäß Art. 15–21 DSGVO. Anfragen bitte per E-Mail an <a href="mailto:kontakt@khaledgarbaya.net">kontakt@khaledgarbaya.net</a>.
+      </p>
+
+      <h2>5. Beschwerderecht bei der Aufsichtsbehörde</h2>
+      <p>
+        Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung deiner personenbezogenen Daten zu beschweren.
+      </p>
+    </article>
+  </main>
+</GermanLayout>

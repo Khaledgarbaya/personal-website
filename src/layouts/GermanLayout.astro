@@ -1,0 +1,73 @@
+---
+import GermanNav from '../components/de/GermanNav.astro';
+import GermanFooter from '../components/de/GermanFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de" class="w-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Indexierung ausschließen: diese Seiten sind nur für Direktbesuche -->
+    <meta name="robots" content="noindex, nofollow, max-image-preview:none" />
+    <meta name="googlebot" content="noindex, nofollow" />
+    <meta name="bingbot" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0891b2" />
+
+    <!-- Open Graph (deutsch) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Khaled Garbaya — Webentwicklung Berlin" />
+    <meta property="og:locale" content="de_DE" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
+    <!-- Theme: share localStorage key with English site so dark mode follows the user -->
+    <script is:inline>
+      function initTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+        window.localStorage.setItem('theme', theme);
+      }
+      initTheme();
+    </script>
+  </head>
+  <body class="h-full zellige-pattern">
+    <div class="py-6">
+      <GermanNav />
+      <slot />
+      <GermanFooter />
+    </div>
+  </body>
+</html>

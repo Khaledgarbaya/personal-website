@@ -1,0 +1,126 @@
+---
+import GermanLayout from '../../layouts/GermanLayout.astro';
+import Button from '../../components/ui/Button.astro';
+
+// Form submits to functions/api/kontakt.ts (Cloudflare Pages Function),
+// which validates and sends via Resend, then redirects back with ?status=ok|error.
+const branchen = [
+  { value: 'handwerk', label: 'Handwerk' },
+  { value: 'gastronomie', label: 'Gastronomie' },
+  { value: 'verein', label: 'Verein' },
+  { value: 'andere', label: 'Andere' },
+];
+
+const status = Astro.url.searchParams.get('status');
+const showSuccess = status === 'ok';
+const showError = status === 'error';
+
+const description = 'Kontaktiere mich für ein kostenloses Erstgespräch. Ich melde mich innerhalb eines Werktags.';
+---
+
+<GermanLayout
+  title="Kontakt — Khaled Garbaya"
+  description={description}
+>
+  <main class="font-sans">
+    <section class="container mx-auto max-w-2xl px-4 pt-24 pb-12">
+      <h1 class="text-5xl font-bold leading-tight tracking-tight">Lass uns sprechen</h1>
+      <p class="mt-6 text-lg text-muted-foreground">
+        Erzähl mir kurz von deinem Projekt. Ich melde mich innerhalb eines Werktags.
+      </p>
+    </section>
+
+    <section class="container mx-auto max-w-2xl px-4 pb-12">
+      {showSuccess && (
+        <div class="mb-6 rounded-md border border-cerulean/40 bg-cerulean/5 p-4 text-sm">
+          <strong>Danke!</strong> Deine Anfrage ist angekommen. Ich melde mich innerhalb eines Werktags.
+        </div>
+      )}
+      {showError && (
+        <div class="mb-6 rounded-md border border-terracotta/40 bg-terracotta/5 p-4 text-sm">
+          <strong>Da ist etwas schiefgegangen.</strong> Bitte versuch es nochmal — oder schreib mir direkt an <a class="link" href="mailto:kontakt@khaledgarbaya.net">kontakt@khaledgarbaya.net</a>.
+        </div>
+      )}
+
+      <form class="space-y-6 rounded-2xl border border-border bg-card p-6 lg:p-8" method="post" action="/api/kontakt">
+        <input
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          class="absolute -left-[9999px] h-0 w-0 opacity-0"
+          aria-hidden="true"
+        />
+
+        <div>
+          <label for="name" class="block text-sm font-medium">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            minlength="2"
+            maxlength="100"
+            autocomplete="name"
+            class="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium">E-Mail</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+
+        <div>
+          <label for="branche" class="block text-sm font-medium">Branche</label>
+          <select
+            id="branche"
+            name="branche"
+            class="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            {branchen.map((b) => (
+              <option value={b.value}>{b.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label for="nachricht" class="block text-sm font-medium">Nachricht</label>
+          <textarea
+            id="nachricht"
+            name="nachricht"
+            rows="6"
+            required
+            minlength="10"
+            maxlength="5000"
+            class="mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-ring"
+          ></textarea>
+        </div>
+
+        <Button size="lg" class="w-full">Anfrage senden</Button>
+
+        <p class="text-xs text-muted-foreground">
+          Mit dem Absenden erklärst du dich mit der Verarbeitung deiner Daten gemäß <a class="link" href="/de/datenschutz">Datenschutzerklärung</a> einverstanden.
+        </p>
+      </form>
+
+      <div class="mt-10 text-center">
+        <p class="text-muted-foreground">Lieber direkt per E-Mail?</p>
+        <a class="mt-2 inline-block text-lg font-semibold text-cerulean hover:underline" href="mailto:kontakt@khaledgarbaya.net">
+          kontakt@khaledgarbaya.net
+        </a>
+      </div>
+
+      <p class="mt-10 text-center text-sm text-muted-foreground">
+        <a class="hover:text-cerulean" href="/de/impressum">Impressum</a>
+      </p>
+    </section>
+  </main>
+</GermanLayout>

@@ -1,0 +1,34 @@
+---
+title: "SKVault — Sicherheits-Scanner für KI-Agenten"
+kunde: "SKVault (eigenes Produkt)"
+branche: "Developer Tools / AI Security"
+zusammenfassung: "Open-Source-CLI, das Sicherheitslücken in KI-Agenten-Skills findet, bevor sie produktiv gehen — mit CI/CD-Integration."
+tags: ["Open-Source-Tool", "Sicherheits-Scan", "Kommandozeile", "CI/CD-Integration"]
+externalUrl: "https://skvault.dev"
+published: 2025-10-01
+featured: false
+---
+
+## Branche
+
+Werkzeug für Entwicklerteams, die KI-Agenten (Claude Code, Cursor, Copilot, Gemini) im Alltag einsetzen.
+
+## Problem
+
+KI-Agenten lassen sich über sogenannte "Skills" erweitern — kleine Skript-Bausteine, die der Agent automatisch ausführen kann. Diese Skills sind ein neuer Angriffsvektor: Prompt-Injection, versteckte Unicode-Anweisungen, Credentials im Klartext, Datenabfluss. Ein einzelner kompromittierter Skill kann ein ganzes Repository öffnen.
+
+## Lösung
+
+- Kommandozeilen-Tool, das Skill-Dateien automatisch auf 29 Sicherheitsregeln in 5 Bedrohungskategorien prüft
+- Keine Konfiguration nötig — `npx skscan` reicht
+- Plattformübergreifend: Claude Code, Cursor, Copilot, Gemini CLI
+- CI/CD-Integration via GitHub Action — Sicherheits-Checks bei jedem Pull Request
+- Status-Badges für die Repo-README
+
+## Tech-Stack
+
+Node.js, TypeScript, GitHub Actions. Veröffentlicht unter MIT-Lizenz auf npm.
+
+## Ergebnis
+
+Live unter [skvault.dev](https://skvault.dev). Open-Source-Werkzeug, das andere Entwicklerteams in ihre Pipeline einbinden können. Zeigt Tiefe in Engineering-Security und Tooling-Design.

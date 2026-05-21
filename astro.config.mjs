@@ -40,6 +40,8 @@ export default defineConfig({
         wrap: true,
       },
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/de/'),
+    }),
   ],
 });

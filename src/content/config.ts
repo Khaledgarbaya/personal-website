@@ -42,9 +42,24 @@ const pages = defineCollection({
   }),
 });
 
+const projekte = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    kunde: z.string(),
+    branche: z.string(),
+    zusammenfassung: z.string(),
+    tags: z.array(z.string()).default([]),
+    externalUrl: z.string().url().optional(),
+    published: z.coerce.date(),
+    featured: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   posts,
   til,
   pages,
+  projekte,
 };
 
