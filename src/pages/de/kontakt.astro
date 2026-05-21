@@ -11,10 +11,6 @@ const branchen = [
   { value: 'andere', label: 'Andere' },
 ];
 
-const status = Astro.url.searchParams.get('status');
-const showSuccess = status === 'ok';
-const showError = status === 'error';
-
 const description = 'Kontaktiere mich für ein kostenloses Erstgespräch. Ich melde mich innerhalb eines Werktags.';
 ---
 
@@ -31,18 +27,29 @@ const description = 'Kontaktiere mich für ein kostenloses Erstgespräch. Ich me
     </section>
 
     <section class="container mx-auto max-w-2xl px-4 pb-12">
-      {showSuccess && (
-        <div class="mb-6 rounded-md border border-cerulean/40 bg-cerulean/5 p-4 text-sm">
-          <strong>Danke!</strong> Deine Anfrage ist angekommen. Ich melde mich innerhalb eines Werktags.
-        </div>
-      )}
-      {showError && (
-        <div class="mb-6 rounded-md border border-terracotta/40 bg-terracotta/5 p-4 text-sm">
-          <strong>Da ist etwas schiefgegangen.</strong> Bitte versuch es nochmal — oder schreib mir direkt an <a class="link" href="mailto:kontakt@khaledgarbaya.net">kontakt@khaledgarbaya.net</a>.
-        </div>
-      )}
+      <div
+        id="status-success"
+        hidden
+        class="mb-6 rounded-2xl border border-cerulean/40 bg-cerulean/5 p-6 text-center"
+      >
+        <svg class="mx-auto h-12 w-12 text-cerulean" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h2 class="mt-4 text-2xl font-semibold tracking-tight">Anfrage angekommen</h2>
+        <p class="mt-2 text-muted-foreground">
+          Danke! Ich melde mich innerhalb eines Werktags bei dir — meistens schneller.
+        </p>
+      </div>
 
-      <form class="space-y-6 rounded-2xl border border-border bg-card p-6 lg:p-8" method="post" action="/api/kontakt">
+      <div
+        id="status-error"
+        hidden
+        class="mb-6 rounded-md border border-terracotta/40 bg-terracotta/5 p-4 text-sm"
+      >
+        <strong>Da ist etwas schiefgegangen.</strong> Bitte versuch es nochmal — oder schreib mir direkt an <a class="link" href="mailto:kontakt@khaledgarbaya.net">kontakt@khaledgarbaya.net</a>.
+      </div>
+
+      <form id="kontakt-form" class="space-y-6 rounded-2xl border border-border bg-card p-6 lg:p-8" method="post" action="/api/kontakt">
         <input
           type="text"
           name="website"
@@ -123,4 +130,19 @@ const description = 'Kontaktiere mich für ein kostenloses Erstgespräch. Ich me
       </p>
     </section>
   </main>
+
+  <script is:inline>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const status = params.get('status');
+
+      if (status === 'ok') {
+        document.getElementById('status-success')?.removeAttribute('hidden');
+        document.getElementById('kontakt-form')?.setAttribute('hidden', '');
+        document.getElementById('status-success')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (status === 'error') {
+        document.getElementById('status-error')?.removeAttribute('hidden');
+      }
+    })();
+  </script>
 </GermanLayout>
