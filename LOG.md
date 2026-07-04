@@ -55,3 +55,7 @@ Refs: domains/brain-to-blog/README.md (updated), signals/simplicity-not-rewarded
 ## 2026-07-04 · blog-voice skill — write like Khaled, strip AI tells · #skill #content
 What: Authored a `blog-voice` skill combining Khaled's brand voice (extracted from published posts — direct, foil-and-subvert, named concepts, anti-hype, bold thesis, credit sources) with the vault's "Signs of AI Writing" field guide as an anti-slop checklist. The brain-to-blog loop uses it to turn topic signals into prose.
 Refs: .claude/skills/blog-voice/SKILL.md (new), domains/brain-to-blog/README.md (updated), qmd://brain/09 WIKI/Signs of AI Writing — Field Guide.md.
+
+## 2026-07-04 · brain-to-blog: first post shipped ("Simplicity Is Invisible by Design") · #content #skill
+What: Ran the full loop end-to-end — vault mine → topic signal → blog-voice skill → draft → PR #23 → merged/live at /blog/simplicity-is-invisible. Engineering-leadership post (non-AI diversity pick); sources traced to their ingested-article URLs and attributed. The attribution catch fed back a new "attribution pass" into the blog-voice skill.
+Refs: src/content/posts/simplicity-is-invisible/index.mdx (new, PR #23), .claude/skills/blog-voice/SKILL.md (attribution pass), signals/simplicity-not-rewarded.md (actioned), domains/brain-to-blog/README.md (updated).

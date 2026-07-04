@@ -41,9 +41,9 @@ outline (the simplicity piece is the strongest non-AI lead).
       first step**; stale index is why the non-AI themes under-returned on the first sweeps
 - [ ] Draft/outline **multi-agent orchestration deep-dive** — [[multi-agent-orchestration-deep-dive]]
       (AI-eng theme; subagents → Agent Teams → cloud; complements team-scale/ape cluster)
-- [ ] Draft/outline **why simplicity is invisible in promotion (a manager's fix)** —
-      [[simplicity-not-rewarded]] (engineering-culture/leadership theme; strongest **non-AI**
-      candidate — needs Khaled's own manager-side take, not a rehash of the source article)
+- [x] **Shipped** — *"Simplicity Is Invisible by Design"* — [[simplicity-not-rewarded]]
+      (engineering-culture/leadership; first post from this loop, drafted via the `blog-voice`
+      skill, sources attributed). PR #23 merged → live at `/blog/simplicity-is-invisible`.
 - [ ] Draft/outline **what makes a staff-engineer promotion case** —
       [[staff-promotion-case-anatomy]] (people-leadership theme; the generalized,
       name-stripped lesson from a real report — a model of the loop's abstract-don't-surface rule)
@@ -83,3 +83,8 @@ the full rotation with focused terms. Mapped the vault: `09-wiki/` = generalized
 people/1-on-1s/reviews/reports = name-bearing. Strongest **non-AI** find:
 [[simplicity-not-rewarded]] (engineering-culture). Also queued decisions-as-code
 (decision-making theme). Diversity confirmed — the rotation now pulls across themes, not just AI.
+2026-07-04 | first post shipped — *"Simplicity Is Invisible by Design"* (leadership theme)
+drafted through the `blog-voice` skill, sources traced to their `00 Inbox/` URLs and
+attributed (terriblesoftware.org, Viktor Cessan). PR #23 merged, live. The attribution catch
+fed back into the skill (new attribution pass). Full loop proven: vault → signal → skill →
+draft → PR → live.

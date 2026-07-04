@@ -4,7 +4,7 @@ category: idea
 frequency: 1
 sources: ["qmd://brain/09-wiki/nobody-gets-promoted-for-simplicity.md", "qmd://brain/09-wiki/unearned-complexity.md"]
 domain: [brain-to-blog]
-status: open
+status: actioned
 ---
 
 # Blog topic: why simplicity is invisible in promotion — and how a manager fixes it
@@ -37,3 +37,5 @@ employer, no names.
 ## Timeline
 2026-07-04 | brain-to-blog fresh-index sweep — surfaced from the "promotion"/"simplicity"
 searches after `qmd update`. Strongest non-AI candidate; filed as the leadership-cluster lead.
+2026-07-04 | actioned — shipped as *"Simplicity Is Invisible by Design"*
+(`/blog/simplicity-is-invisible`, PR #23 merged), drafted via the `blog-voice` skill.
