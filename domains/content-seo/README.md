@@ -50,6 +50,10 @@ opportunities it surfaces.
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
       crawl already guards against breakage)
 - [ ] Topic backlog from AI-engineering / agentic-workflows angle (the site's strongest theme)
+- [ ] **Watch: de-slop CTR effect.** `ai-coding-workflow-what-worked` (baseline pos ~15,
+      606 impr) and `mastering-mastra-ai-workflows` (6917 impr @ pos 9.86) had their body
+      prose de-slopped + `modified` bumped (2026-07-04, PR #24). Titles/descriptions
+      unchanged, so ranking should hold; watch next GSC pulls for any CTR/freshness movement.
 
 ## Evidence & analysis
 [[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]] · [[mastra-ctr-gap]] · [[content-seo-automation]]
