@@ -4,7 +4,7 @@ category: observation
 frequency: 1
 sources: ["content-seo first-run audit 2026-07-04", "src/content/posts/*/index.mdx"]
 domain: ["content-seo"]
-status: open
+status: actioned
 ---
 
 # Most blog meta descriptions are too long for search results
@@ -37,3 +37,5 @@ loop. Prioritize the four >250 first.
 
 ## Timeline
 2026-07-04 | content-seo first run — audit of all 13 post frontmatters surfaced this.
+2026-07-04 | actioned — rewrote all 11 over-long descriptions to ≤152 chars, keyword
+front-loaded, on branch `seo/trim-meta-descriptions` (PR). Verified via `pnpm verify`.
