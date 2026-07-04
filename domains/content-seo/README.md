@@ -28,10 +28,12 @@ first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
       is a PostHog **personal** API key (read scope) + the collector script to query it
 - [x] Connect Google Search Console — collector working (`pnpm gsc:collect` →
       `metrics/gsc.jsonl`), first pull 188 rows. Setup in [[gsc-setup]]. Run weekly.
-- [ ] **Quick-win push** (from first GSC pull): pages one spot off page 1 with high
-      impressions — `4-ways-to-use-axios-interceptors` (1277 impr @ pos 11.5),
-      `ai-coding-workflow-what-worked` (606 @ pos 15), the node stack-trace TIL (402 @
-      pos 10.5). Strengthen content/internal links to push onto page 1.
+- [~] **Quick-win push** (from first GSC pull): pages one spot off page 1 with high
+      impressions. Done: `4-ways-to-use-axios-interceptors` (1277 impr @ pos 11.5) —
+      fixed broken code (smart quotes), working rate-limit example, intro/conclusion,
+      bidirectional internal link ↔ es6-proxies, freshness date (PR `seo/axios-quick-win`).
+      Remaining: `ai-coding-workflow-what-worked` (606 @ pos 15), node stack-trace TIL
+      (402 @ pos 10.5). Re-check positions in next weekly GSC pull.
 - [ ] **"mastra" cluster CTR** (from first GSC pull): "mastra workflows" ranks pos ~7
       with 306 impr but ~0 clicks — strong theme, weak click-through at that rank.
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
@@ -61,3 +63,6 @@ service-account console setup to produce `metrics/gsc.jsonl`.
 2026-07-04 | GSC live — service account wired, first pull 188 rows (139 query, 49 page,
 window 06-03..07-01). Fixed collector to load `.env` (node `--env-file-if-exists`).
 Surfaced page-2 quick wins (axios 1277 impr @ pos 11.5) and a "mastra" CTR gap → backlog.
+2026-07-04 | axios quick-win PR — fixed the page-2 axios post: broken code (smart quotes),
+working rate-limit example, intro + conclusion, bidirectional internal link with es6-proxies,
+`modified` date. Baseline pos 11.5 / 1277 impr — watch next GSC pull for movement.
