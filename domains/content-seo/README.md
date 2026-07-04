@@ -36,14 +36,15 @@ first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
         (↔ meet-ape, → team-scale), freshness date.
       - `show-more-lines-in-a-node-js-error-stack-trace` TIL (402 @ pos 10.5) — trimmed
         over-long meta description (185→149), added Infinity + set-early tips.
-- [ ] **"mastra" cluster CTR** (from first GSC pull): "mastra workflows" ranks pos ~7
-      with 306 impr but ~0 clicks — strong theme, weak click-through at that rank.
+- [x] **"mastra" cluster CTR** — `mastering-mastra-ai-workflows` (6917 impr @ pos 9.86,
+      0.16% CTR, the site's #1 opportunity). Rewrote title + description to target the
+      head tutorial terms. Baseline recorded in [[mastra-ctr-gap]]; watch next GSC pull.
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
       crawl already guards against breakage)
 - [ ] Topic backlog from AI-engineering / agentic-workflows angle (the site's strongest theme)
 
 ## Evidence & analysis
-[[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]]
+[[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]] · [[mastra-ctr-gap]]
 
 ## Metrics
 `metrics/` — TBD. Planned: `traffic.jsonl` from a PostHog collector (pageviews, referrers,
@@ -71,3 +72,6 @@ working rate-limit example, intro + conclusion, bidirectional internal link with
 2026-07-04 | page-2 quick-wins (2/2) — ai-coding-workflow-what-worked linked into the AI
 cluster (↔ meet-ape, → team-scale); node stack-trace TIL description trimmed 185→149 +
 Infinity/set-early tips. Baselines pos 15 (606 impr) and pos 10.5 (402 impr) — watch next pull.
+2026-07-04 | mastra CTR fix — rewrote title+description of the site's #1 page by impressions
+(mastering-mastra-ai-workflows, 6917 impr @ pos 9.86, 0.16% CTR) to target head tutorial
+terms. Filed [[mastra-ctr-gap]] with baseline. Watch clicks/CTR in next pull.
