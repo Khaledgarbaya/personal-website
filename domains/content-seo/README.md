@@ -54,6 +54,10 @@ opportunities it surfaces.
       606 impr) and `mastering-mastra-ai-workflows` (6917 impr @ pos 9.86) had their body
       prose de-slopped + `modified` bumped (2026-07-04, PR #24). Titles/descriptions
       unchanged, so ranking should hold; watch next GSC pulls for any CTR/freshness movement.
+- [ ] **Watch: why-mastra retitle** (PR #25) — title changed from "Unlocking…Best Friend" to
+      "Mastra: An AI Framework Built for TypeScript, Not Ported to It" (URL slug unchanged).
+      Distinct experiment from the de-slop above; watch whether the new title shifts
+      impressions/CTR for Mastra+TypeScript queries.
 
 ## Evidence & analysis
 [[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]] · [[mastra-ctr-gap]] · [[content-seo-automation]]
