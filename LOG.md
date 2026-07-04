@@ -35,3 +35,7 @@ Refs: domains/content-seo/README.md (new), signals/meta-descriptions-too-long.md
 ## 2026-07-04 · PostHog analytics live + event catalog · #analysis #content
 What: PostHog wired into both layouts capturing 10 events (newsletter, social, blog views, German funnel); cataloged the events as a knowledge-base doc (migrated out of the wizard's root-level report).
 Refs: docs/analytics-events.md (new), src/components/posthog.astro, domains/content-seo/README.md (updated).
+
+## 2026-07-04 · content-seo: trim over-long meta descriptions · #content #seo
+What: First SEO-fix PR from the content-seo loop — rewrote all 11 post meta descriptions >160 chars down to ≤152 (keyword front-loaded) so they stop truncating in search results. Also retightened the loop charter's data sources.
+Refs: 11 files under src/content/posts/*/index.mdx, signals/meta-descriptions-too-long.md (actioned), branch seo/trim-meta-descriptions.
