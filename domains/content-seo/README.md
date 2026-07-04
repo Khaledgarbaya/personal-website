@@ -26,9 +26,14 @@ first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
 - [ ] Wire a PostHog collector (`metrics/traffic.jsonl`) — top posts by pageviews, entry pages,
       search referrers. Capture is now live (`src/components/posthog.astro`); the remaining gap
       is a PostHog **personal** API key (read scope) + the collector script to query it
-- [~] Connect Google Search Console (free) for real query/impression/ranking data.
-      Collector built (`pnpm gsc:collect` → `metrics/gsc.jsonl`); site already verified.
-      Blocked on one-time console setup — see [[gsc-setup]]. Then run weekly.
+- [x] Connect Google Search Console — collector working (`pnpm gsc:collect` →
+      `metrics/gsc.jsonl`), first pull 188 rows. Setup in [[gsc-setup]]. Run weekly.
+- [ ] **Quick-win push** (from first GSC pull): pages one spot off page 1 with high
+      impressions — `4-ways-to-use-axios-interceptors` (1277 impr @ pos 11.5),
+      `ai-coding-workflow-what-worked` (606 @ pos 15), the node stack-trace TIL (402 @
+      pos 10.5). Strengthen content/internal links to push onto page 1.
+- [ ] **"mastra" cluster CTR** (from first GSC pull): "mastra workflows" ranks pos ~7
+      with 306 impr but ~0 clicks — strong theme, weak click-through at that rank.
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
       crawl already guards against breakage)
 - [ ] Topic backlog from AI-engineering / agentic-workflows angle (the site's strongest theme)
@@ -53,3 +58,6 @@ SERP scrapers optional/later). [[meta-descriptions-too-long]] → actioned.
 2026-07-04 | GSC collector built — `scripts/gsc-collect.mjs` (`pnpm gsc:collect`) +
 [[gsc-setup]]. Site already verified (DNS). Preflight guard tested; awaits the one-time
 service-account console setup to produce `metrics/gsc.jsonl`.
+2026-07-04 | GSC live — service account wired, first pull 188 rows (139 query, 49 page,
+window 06-03..07-01). Fixed collector to load `.env` (node `--env-file-if-exists`).
+Surfaced page-2 quick wins (axios 1277 impr @ pos 11.5) and a "mastra" CTR gap → backlog.

@@ -9,7 +9,7 @@
     "astro": "astro",
     "verify": "astro check && astro build",
     "test:e2e": "playwright test",
-    "gsc:collect": "node scripts/gsc-collect.mjs"
+    "gsc:collect": "node --env-file-if-exists=.env scripts/gsc-collect.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.9",
