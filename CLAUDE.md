@@ -106,11 +106,63 @@ type-checks every content entry against its Zod schema and fails on broken refs)
 
 ```bash
 pnpm verify      # astro check + astro build — must pass
-pnpm test:e2e    # Playwright smoke: key pages render, nav works, no broken internal links
+pnpm test:e2e    # Playwright: smoke + contact-form behavior
 ```
 
 CI (`.github/workflows/verify.yml`) runs both on every push and PR.
 
+### E2e suite (`e2e/`)
+
+Playwright drives the built site via `astro preview` (specs never boot the app
+themselves). Each new feature PR should add its spec — the gate compounds.
+
+- `e2e/smoke.spec.ts` — key pages render (incl. `/de/*`), main nav works, no
+  broken internal links.
+- `e2e/kontakt.spec.ts` — `/de/kontakt` deterministic behavior: fields + hidden
+  honeypot render, required-field validation blocks submit, and the
+  `?status=ok`/`?status=error` banners toggle correctly.
+
+Intentional scope boundary: the contact **backend send** (`functions/api/kontakt.ts`
+→ Resend) is *not* e2e'd. `astro preview` serves static output only (no Pages
+Functions), and the `.env` Resend key is live — driving it would need
+`wrangler pages dev` + a guarded Resend test key. The banner behavior above is the
+client-visible contract and is fully covered without it.
+
 ## Environment
 
-Requires `.env` file with `POSTHOG_API_KEY` for analytics.
+Local secrets live in a gitignored `.env` (see `.env.example` for the expected
+names). Keys the app uses:
+
+- `PUBLIC_POSTHOG_PROJECT_TOKEN` — client-side PostHog capture token (`phc_…`).
+  `PUBLIC_`-prefixed so Astro exposes it to the browser.
+- `PUBLIC_POSTHOG_HOST` — PostHog ingestion host (e.g. `https://us.i.posthog.com`).
+- `RESEND_API_KEY` — used by `functions/api/kontakt.ts` (contact form) to send via
+  Resend. In production it's set as a Cloudflare Pages env var, not from this file.
+
+**Analytics**: PostHog is wired via `src/components/posthog.astro` (an `is:inline`
+snippet), rendered in `BaseLayout.astro` and `GermanLayout.astro`. Events are captured
+with `window.posthog?.capture(...)` across pages/components (newsletter, social share,
+blog view, contact form, German services). Reading data back out (e.g. the
+`content-seo` loop's traffic collector) needs a separate **personal** API key
+(`phx_…`, read scope) — not the public capture token above.
+
+## Knowledge base (full model: `ARCHITECTURE.md`)
+**Artifacts** are global, foldered by **kind** — `signals/` (feedback, ideas, observations) and
+`docs/` (durable knowledge: analyses, decisions, learnings). Committed work starts as a backlog
+line in the owning domain's `README`; promote to a `task` kind only once that outgrows the
+README. `domain:` is a frontmatter field (a list), never a folder. **Domains**
+(`domains/*/`) are agent loops whose `README` holds the loop's **state** — goal/context, current
+focus, a `## Timeline`, and **links** to its artifacts (it points to them, never contains them).
+Body = main text + optional append-only `## Timeline`. Each folder's `README` is its schema.
+
+**Reuse before creating** (earn the structure, don't pre-build):
+- **Kind** — start with just `signal` + `doc`. Add a new kind only if it has its own status
+  machine **and** queryable fields **and** body shape. Otherwise it's a `doc` or a `signal`.
+- **Domain** — default to a `domain:` tag on an existing one; spin up a new domain only when
+  it's a separable workstream with its own cadence/owner (use the `new-loop` skill).
+
+- **`LOG.md`** — global feed; **append ONE line right before the commit/PR that ships major
+  work** (`## YYYY-MM-DD · title · #tags` + `What:`/`Refs:`). Detail → each artifact's `## Timeline`.
+
+Kinds (now): signal + doc.
+Domains (now): content-seo (weekly).
