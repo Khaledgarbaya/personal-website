@@ -8,7 +8,7 @@ tags: ai, workflow, productivity
 ---
 import TerminalSimulation from '../../../components/TerminalSimulation.astro';
 
-I've been experimenting with AI-assisted coding for a while now, and most of it has been... fine. Helpful for boilerplate, decent for explaining code, occasionally useful for debugging. But last week, something clicked. I found a workflow pattern that felt genuinely different - like I'd finally figured out how to actually work *with* the AI instead of just *using* it.
+I've been experimenting with AI-assisted coding for a while now, and most of it has been... fine. Helpful for boilerplate, decent for explaining code, occasionally useful for debugging. But last week, something clicked. I found a workflow pattern that felt genuinely different: I'd finally figured out how to work *with* the AI instead of just *using* it.
 
 The session was straightforward: I needed to test six features on a running server, and some required magic links for authentication. What happened next surprised me.
 
@@ -37,7 +37,7 @@ The conversation went something like this:
   ]}
 />
 
-That's it. Two manual interventions to paste magic links, and the rest happened automatically. The AI navigated the browser, clicked through forms, verified results, and updated the PR - all while I worked on something else.
+That's it. Two manual interventions to paste magic links, and the rest happened automatically. The AI navigated the browser, clicked through forms, verified results, and updated the PR, all while I worked on something else.
 
 ## Why This Actually Worked
 
@@ -57,15 +57,15 @@ The todo list let me see progress at a glance without reading every action. I co
 
 ### Tool Composition
 
-Browser automation, bash commands, and GitHub CLI worked together seamlessly. Test in browser, capture results, update PR via CLI. I didn't have to context-switch between tools or copy-paste results between windows.
+Browser automation, bash commands, and GitHub CLI worked together. Test in browser, capture results, update PR via CLI. I didn't have to context-switch between tools or copy-paste results between windows.
 
 ### Trust but Verify
 
-Screenshots provided proof of each step. I could skim them quickly or ignore them entirely - my choice. But they were there if I needed them, which meant I could trust the process without babysitting it.
+Screenshots provided proof of each step. I could skim them or ignore them entirely. My choice. But they were there if I needed them, which meant I could trust the process without babysitting it.
 
 ### Clean Handoffs
 
-"Update the PR" - done. "Switch to develop" - done. Short commands, and Claude figured out the details. I didn't need to spell out `git checkout develop && git pull origin develop`. The AI understood the intent.
+"Update the PR" — done. "Switch to develop" — done. Short commands, and Claude figured out the details. I didn't need to spell out `git checkout develop && git pull origin develop`. The AI understood the intent.
 
 ## The Formula
 
@@ -80,7 +80,7 @@ If I had to distill this into a repeatable pattern, it would look something like
 
 ## What I Didn't Have to Do
 
-This is the part that still feels a bit surreal. In a traditional testing session, I would have:
+This is the part that stuck with me. In a traditional testing session, I would have:
 
 - Written test scripts or manual test checklists
 - Clicked through the app myself
@@ -94,9 +94,9 @@ None of that happened. I defined the scope, provided authentication tokens when 
 
 I think the key insight is that AI coding assistants work best when you treat them like a capable junior developer with specific constraints. You wouldn't give a junior a vague task and expect them to read your mind. You'd give them clear scope, tell them what resources they have access to, and check in periodically.
 
-The magic isn't in any single capability - it's in the composition. Browser automation alone isn't new. Todo lists aren't new. Git integration isn't new. But combining them with an AI that can adapt to context and figure out the details? That's where the productivity multiplier comes from.
+The magic isn't in any single capability. It's in the composition. Browser automation alone isn't new. Todo lists aren't new. Git integration isn't new. But combining them with an AI that can adapt to context and figure out the details? That's where the leverage comes from.
 
-But testing isn't the only place this pattern shines. Let me share another workflow that surprised me even more.
+Testing isn't the only place this works. Here's another workflow that surprised me more.
 
 ## Case Study: Parallel Code Review
 
@@ -121,7 +121,7 @@ Here's what the workflow looked like:
   ]}
 />
 
-### Parallel Exploration Changed Everything
+### Three Agents in Parallel, Not One in Sequence
 
 Instead of one agent slowly working through the entire codebase, I launched three Explore agents simultaneously:
 
@@ -174,7 +174,7 @@ The result? 18 mutation functions were using manual `auth.api.getSession()` call
 | Critical auth issues found | 18 functions |
 | Missing logging middleware | 6 functions |
 
-The output wasn't just a list of problems - it was a structured plan with before/after code examples, prioritized by impact, with specific file paths and line numbers.
+The output wasn't just a list of problems. It was a structured plan: before/after code examples, prioritized by impact, with specific file paths and line numbers.
 
 ## Prompt Patterns That Keep Working
 
@@ -210,13 +210,13 @@ Think of `CLAUDE.md` as institutional memory for your AI pair programmer. The mo
 
 Both of these workflows - delegated testing and parallel code review - share the same underlying structure:
 
-1. **Clear task boundaries** - The AI knows exactly what to do
-2. **Parallel execution where possible** - Don't serialize what can run concurrently
-3. **Human intervention at checkpoints** - Not micromanaging, but not fully autonomous either
-4. **Structured output** - Tables, todos, plans - not just prose
-5. **Documentation grounding** - Current best practices, not stale knowledge
-6. **Capture insights** - Update CLAUDE.md so future sessions start smarter
+1. Clear task boundaries — the AI knows exactly what to do
+2. Parallel execution where possible — don't serialize what can run concurrently
+3. Human intervention at checkpoints — not micromanaging, but not fully autonomous either
+4. Structured output — tables, todos, plans, not just prose
+5. Documentation grounding — current best practices, not stale knowledge
+6. Capture insights — update CLAUDE.md so future sessions start smarter
 
 I think we're still early in figuring out how to work effectively with AI coding assistants. The instinct is to use them like autocomplete on steroids, but the real leverage comes from treating them like a team of junior developers who can work in parallel, follow specific instructions, and report back structured findings. That's the same bet behind [APE — Agentic Product Engineering](/blog/meet-ape), the system I use to run this with a real team — and when several engineers do it against one codebase, [new problems show up at team scale](/blog/ai-engineering-workflows-team-scale).
 
-I'm curious if others have found similar patterns. What's worked for you when collaborating with AI on coding tasks?
+The tooling will keep changing. The discipline — tight scope, parallelism, checkpoints, captured context — is what carries over.
