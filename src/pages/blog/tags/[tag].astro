@@ -39,14 +39,15 @@ const { tag, posts } = Astro.props;
   title={`Posts tagged with "${tag}" - Khaled Garbaya`}
   description={`All blog posts tagged with ${tag}`}
 >
-  <div class="flex-none h-52"></div>
-  <PageHero
-    title={`Posts tagged with "${tag}"`}
-    description={`${posts.length} post${posts.length === 1 ? '' : 's'} found`}
-  />
-  <div class="flex-none h-32"></div>
-  <section class="container">
-    <div class="mx-auto max-w-2xl lg:max-w-5xl">
+  <div class="pt-24 sm:pt-32">
+    <PageHero
+      eyebrow={`~ % grep -r "${tag}" ./blog`}
+      title={`#${tag}`}
+      description={`${posts.length} post${posts.length === 1 ? '' : 's'} found`}
+    />
+  </div>
+  <section class="mt-20 px-6 sm:px-10">
+    <div class="mx-auto max-w-7xl border-t border-border">
       <RecentPosts posts={posts} />
     </div>
   </section>

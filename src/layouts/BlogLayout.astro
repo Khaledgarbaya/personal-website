@@ -65,37 +65,47 @@ const keywords = `${tagList.join(', ')}, web development, software engineering`;
   <!-- START: Main Content -->
   <!-- CONTENT_TYPE: {type === 'til' ? 'Today I Learned' : 'Blog Post'} -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex-none h-52"></div>
+  <div class="max-w-6xl mx-auto px-6 py-8 sm:px-10">
+    <div class="pt-16 sm:pt-24"></div>
     <Breadcrumb items={breadcrumbItems} />
     <div class="lg:flex lg:space-x-8">
-      <article 
-        class="lg:w-3/4" 
+      <article
+        class="lg:w-3/4"
         data-content-type={type === 'til' ? 'til-post' : 'blog-post'}
         data-author="Khaled Garbaya"
-        itemscope 
+        itemscope
         itemtype="https://schema.org/BlogPosting"
       >
-        <header class="mb-8">
-          <h1 class="text-4xl font-bold mb-2" itemprop="headline">{title}</h1>
-          <p class="text-muted-foreground mb-2" itemprop="description">{description}</p>
-          <time
-            class="text-sm text-muted-foreground"
-            datetime={published.toISOString()}
-            itemprop="datePublished"
+        <header class="mb-12">
+          <div class="flex flex-wrap items-baseline gap-x-6 gap-y-2">
+            <time
+              class="font-mono-ui text-xs tracking-[0.15em] text-muted-foreground"
+              datetime={published.toISOString()}
+              itemprop="datePublished"
+            >
+              {published.toISOString().split('T')[0]}
+            </time>
+            <div class="flex flex-wrap gap-x-4" itemprop="keywords">
+              {tagList.map((tag: string) => (
+                <a
+                  href={`/${basePath}/tags/${tag}`}
+                  class="font-mono-ui text-xs tracking-wide text-muted-foreground transition hover:text-cerulean"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          </div>
+          <h1
+            class="display-huge mt-6 text-[clamp(2.5rem,6vw,5rem)]"
+            itemprop="headline"
           >
-            {published.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </time>
+            {title}
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg text-muted-foreground" itemprop="description">{description}</p>
           {modified && (
             <meta itemprop="dateModified" content={modified.toISOString()} />
           )}
-          <div class="mt-4" itemprop="keywords">
-            {tagList.map((tag: string) => (
-              <span class="inline-block bg-cerulean/5 border border-cerulean/20 rounded-md px-3 py-1 text-sm font-semibold text-cerulean mr-2 mb-2">
-                #{tag}
-              </span>
-            ))}
-          </div>
           <meta itemprop="author" content="Khaled Garbaya" />
           <meta itemprop="image" content={image} />
         </header>

@@ -23,15 +23,16 @@ const sortedPosts = allPosts.sort((a, b) =>
   <!-- START: Blog Archive -->
   <!-- CONTENT_TYPE: Blog Archive -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="flex-none h-52"></div>
-  <PageHero
-    title="Blog"
-    description="I write about software engineering, leadership, and productivity. I also share my thoughts on the tech industry and how to navigate it."
-  />
-  <div class="flex-none h-32"></div>
+  <div class="pt-24 sm:pt-32">
+    <PageHero
+      eyebrow="~ % ls ./blog"
+      title="Blog"
+      description="I write about software engineering, leadership, and productivity. I also share my thoughts on the tech industry and how to navigate it."
+    />
+  </div>
   <main>
-    <section class="container" aria-label="Blog posts">
-      <div class="mx-auto max-w-2xl lg:max-w-5xl">
+    <section class="mt-20 px-6 sm:px-10" aria-label="Blog posts">
+      <div class="mx-auto max-w-7xl border-t border-border">
         <RecentPosts posts={sortedPosts} />
       </div>
     </section>

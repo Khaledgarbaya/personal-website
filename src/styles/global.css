@@ -1,4 +1,6 @@
-@import '@fontsource-variable/outfit/wght.css';
+@import '@fontsource-variable/bricolage-grotesque/index.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
 @import '@fontsource/source-sans-3/400.css';
 @import '@fontsource/source-sans-3/500.css';
 @import '@fontsource/source-sans-3/600.css';
@@ -15,32 +17,38 @@
   --container-padding: 2rem;
   --container-screen-2xl: 1400px;
 
-  /* Tunisian palette - Light mode */
-  --color-border: hsl(36 20% 88%);
-  --color-input: hsl(36 20% 88%);
-  --color-ring: hsl(225 50% 12%);
-  --color-background: hsl(36 33% 97%);
-  --color-foreground: hsl(225 50% 12%);
-  --color-primary: hsl(225 50% 12%);
-  --color-primary-foreground: hsl(36 33% 97%);
-  --color-secondary: hsl(36 20% 93%);
-  --color-secondary-foreground: hsl(225 50% 12%);
+  /* Type roles */
+  --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', system-ui, sans-serif;
+  --font-mono-ui: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Mediterranean daylight — light mode */
+  --color-border: hsl(36 22% 86%);
+  --color-input: hsl(36 22% 86%);
+  --color-ring: hsl(233 45% 12%);
+  --color-background: hsl(38 38% 95%);
+  --color-foreground: hsl(233 45% 10%);
+  --color-primary: hsl(233 45% 12%);
+  --color-primary-foreground: hsl(38 38% 95%);
+  --color-secondary: hsl(36 25% 90%);
+  --color-secondary-foreground: hsl(233 45% 12%);
   --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(36 33% 97%);
-  --color-muted: hsl(36 15% 93%);
-  --color-muted-foreground: hsl(225 15% 45%);
-  --color-accent: hsl(36 20% 93%);
-  --color-accent-foreground: hsl(225 50% 12%);
-  --color-popover: hsl(36 33% 97%);
-  --color-popover-foreground: hsl(225 50% 12%);
-  --color-card: hsl(36 33% 97%);
-  --color-card-foreground: hsl(225 50% 12%);
+  --color-destructive-foreground: hsl(38 38% 95%);
+  --color-muted: hsl(36 20% 90%);
+  --color-muted-foreground: hsl(233 15% 42%);
+  --color-accent: hsl(36 25% 90%);
+  --color-accent-foreground: hsl(233 45% 12%);
+  --color-popover: hsl(38 38% 95%);
+  --color-popover-foreground: hsl(233 45% 10%);
+  --color-card: hsl(38 38% 95%);
+  --color-card-foreground: hsl(233 45% 10%);
 
   /* Tunisian accent colors */
-  --color-cerulean: hsl(191 91% 37%);
-  --color-gold: hsl(43 96% 56%);
-  --color-terracotta: hsl(14 80% 50%);
-  --color-navy: hsl(225 50% 12%);
+  --color-cerulean: hsl(191 85% 37%);
+  --color-gold: hsl(43 92% 50%);
+  --color-terracotta: hsl(14 78% 50%);
+  --color-navy: hsl(233 45% 12%);
+  --color-sand: hsl(38 40% 92%);
 
   /* Border radius */
   --radius: 0.5rem;
@@ -87,26 +95,30 @@
   }
 }
 
+/* Mediterranean night — dark mode (the cinematic register) */
 :root.dark {
-  --color-background: hsl(225 50% 7%);
-  --color-foreground: hsl(36 25% 93%);
-  --color-card: hsl(225 45% 10%);
-  --color-card-foreground: hsl(36 25% 93%);
-  --color-popover: hsl(225 45% 10%);
-  --color-popover-foreground: hsl(36 25% 93%);
-  --color-primary: hsl(36 25% 93%);
-  --color-primary-foreground: hsl(225 50% 12%);
-  --color-secondary: hsl(225 30% 15%);
-  --color-secondary-foreground: hsl(36 25% 93%);
-  --color-muted: hsl(225 30% 15%);
-  --color-muted-foreground: hsl(225 15% 65%);
-  --color-accent: hsl(225 30% 15%);
-  --color-accent-foreground: hsl(36 25% 93%);
+  --color-background: hsl(233 40% 7%);
+  --color-foreground: hsl(38 40% 92%);
+  --color-card: hsl(233 36% 10%);
+  --color-card-foreground: hsl(38 40% 92%);
+  --color-popover: hsl(233 36% 10%);
+  --color-popover-foreground: hsl(38 40% 92%);
+  --color-primary: hsl(38 40% 92%);
+  --color-primary-foreground: hsl(233 40% 7%);
+  --color-secondary: hsl(233 28% 14%);
+  --color-secondary-foreground: hsl(38 40% 92%);
+  --color-muted: hsl(233 28% 14%);
+  --color-muted-foreground: hsl(233 12% 62%);
+  --color-accent: hsl(233 28% 14%);
+  --color-accent-foreground: hsl(38 40% 92%);
   --color-destructive: hsl(0 62.8% 30.6%);
-  --color-destructive-foreground: hsl(36 25% 93%);
-  --color-border: hsl(225 30% 18%);
-  --color-input: hsl(225 30% 18%);
-  --color-ring: hsl(191 91% 37%);
+  --color-destructive-foreground: hsl(38 40% 92%);
+  --color-border: hsl(233 25% 17%);
+  --color-input: hsl(233 25% 17%);
+  --color-ring: hsl(43 92% 58%);
+  --color-cerulean: hsl(191 85% 48%);
+  --color-gold: hsl(43 92% 58%);
+  --color-terracotta: hsl(14 78% 58%);
 }
 
 @layer base {
@@ -115,7 +127,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Source Sans 3', system-ui, sans-serif;
+    font-family: var(--font-body);
   }
   h1,
   h2,
@@ -123,7 +135,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'Outfit Variable', system-ui, sans-serif;
+    font-family: var(--font-display);
   }
   h1 {
     @apply text-4xl font-bold tracking-tight lg:text-5xl;
@@ -151,7 +163,21 @@
 }
 
 .nav-link {
-  @apply rounded-md px-6 py-2 transition-colors hover:text-cerulean hover:bg-cerulean/5 focus:text-cerulean focus:bg-cerulean/5 focus:outline-none;
+  @apply px-4 py-2 text-sm font-mono-ui tracking-wide transition-colors hover:text-gold focus:text-gold focus:outline-none;
+}
+
+/* Eyebrow: mono metadata voice above display headlines */
+.eyebrow {
+  @apply font-mono-ui text-xs tracking-[0.2em] uppercase text-muted-foreground;
+}
+
+/* Display headline: the huge cinematic register */
+.display-huge {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 /* Zellige-inspired SVG pattern */
@@ -161,6 +187,41 @@
 
 :root.dark .zellige-pattern {
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230891b2' fill-opacity='0.04'%3E%3Cpath d='M30 0L60 30L30 60L0 30z M30 8L52 30L30 52L8 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ---- Cinematic scroll system ---- */
+
+/* Reveal: hidden until IntersectionObserver adds .is-visible.
+   Only applies under html.js so content is never lost without JS. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(2.5rem);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero scrub: the name loosens and fades as it leaves the viewport */
+@supports (animation-timeline: view()) {
+  .hero-scrub {
+    animation: hero-exit linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 90%;
+  }
+
+  @keyframes hero-exit {
+    to {
+      opacity: 0;
+      letter-spacing: 0.06em;
+      transform: translateY(-8vh);
+    }
+  }
 }
 
 /* Post styles */
@@ -307,6 +368,17 @@ input[type='email'] {
   }
 
   .animate-gradient-shift {
+    animation: none !important;
+  }
+
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .hero-scrub {
     animation: none !important;
   }
 

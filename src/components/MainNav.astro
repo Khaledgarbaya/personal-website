@@ -4,17 +4,15 @@ import ThemeToggle from './ThemeToggle.astro';
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="container border-b border-transparent" style="border-image: linear-gradient(to right, transparent, oklch(0.65 0.15 195 / 0.3), transparent) 1;">
-  <div class="mx-auto max-w-2xl lg:max-w-6xl flex items-center justify-between">
+<nav class="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-10">
     <div class="flex items-center">
-      {currentPath !== '/' && (
-        <a href="/" class="nav-link">
-          <img
-            src="/logo.svg"
-            alt="Logo"
-            class="h-8"
-          />
+      {currentPath !== '/' ? (
+        <a href="/" class="font-mono-ui text-sm tracking-wide transition hover:text-gold">
+          ~/khaled-garbaya
         </a>
+      ) : (
+        <span class="font-mono-ui text-sm tracking-wide text-muted-foreground">~</span>
       )}
     </div>
 
@@ -33,9 +31,9 @@ const currentPath = Astro.url.pathname;
 
     <div
       id="mobile-menu"
-      class="fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center transition-all duration-300 ease-in-out opacity-0 invisible md:static md:bg-transparent md:flex-row md:justify-between md:opacity-100 md:visible zellige-pattern"
+      class="fixed inset-0 bg-background/95 backdrop-blur-sm z-40 flex flex-col items-center justify-center transition-all duration-300 ease-in-out opacity-0 invisible md:static md:bg-transparent md:backdrop-blur-none md:flex-row md:justify-between md:opacity-100 md:visible"
     >
-      <ul class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+      <ul class="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-2">
         <li>
           <a class="nav-link" href="/blog">Blog</a>
         </li>
@@ -52,7 +50,7 @@ const currentPath = Astro.url.pathname;
           <a class="nav-link" href="/newsletter">Newsletter</a>
         </li>
       </ul>
-      <div class="mt-4 md:mt-0">
+      <div class="mt-4 md:mt-0 md:ml-4">
         <ThemeToggle />
       </div>
     </div>
@@ -68,8 +66,11 @@ const currentPath = Astro.url.pathname;
 
     if (menuToggle && mobileMenu && menuIcon && closeIcon) {
       // Remove old listeners by cloning the button
-      const newToggle = menuToggle.cloneNode(true);
+      const newToggle = menuToggle.cloneNode(true) as HTMLElement;
       menuToggle.parentNode?.replaceChild(newToggle, menuToggle);
+      // Re-query the icons inside the clone — the originals are now detached
+      const menuIcon = newToggle.querySelector('#menu-icon')!;
+      const closeIcon = newToggle.querySelector('#close-icon')!;
 
       newToggle.addEventListener('click', () => {
         const isOpen = !mobileMenu.classList.contains('invisible');

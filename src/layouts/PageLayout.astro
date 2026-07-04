@@ -35,14 +35,15 @@ const {
   <!-- START: Page -->
   <!-- CONTENT_TYPE: Page -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="font-sans p-4 w-full">
-    <div class="flex-none h-52"></div>
+  <div class="w-full pt-24 sm:pt-32">
     {showHero && (
-      <header class="container mx-auto max-w-2xl lg:max-w-5xl flex flex-col-reverse md:flex-row items-center">
-        <PageHero
-          title={title.replace('Khaled Garbaya - ', '')}
-          description={description}
-        />
+      <header class="flex flex-col-reverse items-start gap-10 md:flex-row md:items-center">
+        <div class="flex-auto">
+          <PageHero
+            title={title.replace('Khaled Garbaya - ', '')}
+            description={description}
+          />
+        </div>
         {showImage && (
           <img
             src="/Khaled_Garbaya_Colour.jpg"
@@ -50,17 +51,18 @@ const {
             width="400"
             height="400"
             loading="lazy"
-            class="aspect-square object-cover rounded-2xl shadow-lg -rotate-3"
+            class="aspect-square object-cover rounded-2xl shadow-lg -rotate-3 px-6 sm:px-0 md:mr-10"
             itemprop="image"
           />
         )}
       </header>
     )}
-    <div class="flex-none h-24"></div>
-    <main>
-      <article class="container max-w-5xl mx-auto prose dark:prose-invert prose-lg">
-        <slot />
-      </article>
+    <main class="mt-20 px-6 sm:px-10">
+      <div class="mx-auto max-w-7xl">
+        <article class="prose dark:prose-invert prose-lg">
+          <slot />
+        </article>
+      </div>
     </main>
   </div>
   <!-- END: Page -->

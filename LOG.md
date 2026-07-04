@@ -63,3 +63,7 @@ Refs: src/content/posts/simplicity-is-invisible/index.mdx (new, PR #23), .claude
 ## 2026-07-04 · Audit + de-slop the last 5 posts (blog-voice) · #content #skill
 What: Ran 5 parallel audits of the recent posts against the blog-voice skill. The two 2026 posts it was extracted from scored 9/10 (left alone); de-slopped the three older ones body-only (ai-coding, mastering-mastra, why-mastra) — SEO title/description/H2s/code preserved. why-mastra gained Mastra/Vercel doc links (attribution pass) with no fabricated experience. PR #24 merged/live.
 Refs: 3 files under src/content/posts/*/index.mdx (PR #24), domains/content-seo/README.md (watch-item).
+
+## 2026-07-04 · Cinematic redesign (Fable 5 prompt) · #design #site
+What: Redesigned the site in the award-site cinematic register from the brain-vault Fable 5 prompt — huge Bricolage Grotesque typography, scroll reveals, Mediterranean-night dark mode, terminal-mono metadata voice. Homepage, archives, post layout, nav/footer.
+Refs: branch redesign/fable-cinematic; vault: 09 Wiki/Claude Fable 5 — One-Prompt Cinematic 3D Websites.
