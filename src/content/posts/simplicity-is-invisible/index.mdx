@@ -1,0 +1,84 @@
+---
+title: "Simplicity Is Invisible by Design. That Makes It a Management Problem."
+description: "Engineering teams reward complexity by accident because simplicity leaves no artifact. Four ways a manager can make avoided complexity visible."
+published: 2026-07-04
+featured: false
+tags: "engineering-leadership, engineering-culture, management, simplicity, promotions"
+keywords: ["unearned complexity", "engineering promotions", "simplicity in software", "engineering incentives", "design reviews"]
+author: "Khaled Garbaya"
+---
+
+*The most valuable decision your team makes leaves no artifact. Here's how to give it one.*
+
+Two engineers, two pull requests, same week.
+
+The first is 50 lines. It solves the problem, ships in two days, and causes zero incidents over the next six months. The second is a pub/sub system with an abstraction layer and a configuration framework. It takes three weeks. It also works.
+
+Six months later I'm writing promotion packets. The 50-line PR gets one line: "Implemented feature X." The pub/sub system gets a paragraph: "Designed and implemented a scalable event-driven architecture, introduced a reusable abstraction layer later adopted by two other teams." One of those reads like a Staff+ case. It is not the better engineering.
+
+I used to think this was a values problem. Some engineers over-build because they never learned restraint. That's part of it. But mostly I was looking in the wrong place.
+
+**We don't reward complexity because we value it. We reward it because we can see it.**
+
+That's not malice. It's measurement. And measurement problems don't get fixed by telling people to try harder.
+
+(The two-engineers framing comes from a sharp post, ["Nobody Gets Promoted for Simplicity"](https://terriblesoftware.org/2026/03/03/nobody-gets-promoted-for-simplicity/), on terriblesoftware.org. I'm borrowing the setup and adding the part I care about: what a manager does about it.)
+
+## Simplicity leaves no artifact
+
+The 50-line fix produces nothing to point at. No design doc, no architecture diagram, no cross-team adoption story. The three-week system produces all three. In every place we actually measure engineers, the elaborate version is legible and the simple version is not:
+
+- **Interviews.** The simple correct answer gets challenged ("what about ten million users?"). The complex diagram gets a nod. Candidates learn fast: elaborate impresses.
+- **Design reviews.** "Shouldn't we future-proof this?" and the engineer adds layers for requirements nobody has yet.
+- **Promotions.** Elaborate systems write their own narrative. Simple ones stay quiet.
+
+Engineers aren't confused here. They're responding rationally to what gets rewarded. If complexity is what shows up in the packet, complexity is what you'll get.
+
+Dijkstra put it better than I can, via that same article: "Complexity sells better." He wasn't being cynical. He was describing the incentive.
+
+## Earned vs. unearned complexity
+
+This is where it stops being a rant against abstraction. Not all complexity is the problem. The distinction that matters is whether it was *earned*.
+
+| Type | Trigger | Example |
+|------|---------|---------|
+| **Earned** | A real, present constraint | "We're hitting database limits. We need to shard." |
+| **Unearned** | A hypothetical future one | "We might hit database limits in three years. Let's shard now." |
+
+Earned complexity is the job. Unearned complexity feels like the job. It looks responsible, professional, scalable. But the user doesn't get their feature any sooner, and the next engineer pays a tax to understand abstractions that were never needed.
+
+**The correct default is simplicity. Complexity has to justify itself against a constraint that exists today.**
+
+## Nobody gets promoted for the incident that never happened
+
+So what do you actually do? You can't exhort your way out of an incentive structure. You can change what the structure measures. Four levers I lean on:
+
+**Credit the rejected approach.** Judgment is invisible unless someone writes it down. "Evaluated an event-driven architecture and a custom abstraction layer; a straightforward implementation met every requirement" is the same engineering as building them, made legible. Put it in the PR description. Put it in the packet.
+
+**Ask one question in every design review**, before anyone says "shouldn't we future-proof this?": what's the simplest version we could ship, and what specific signal would tell us we need more? It puts the burden of proof back on complexity, where it belongs.
+
+**Celebrate deletion out loud.** When someone removes code or says "we don't need this yet," name it in the retro and in the channel. You're telling the whole team what gets rewarded, and they're listening more to that than to your values doc.
+
+**Push on impressive-sounding systems in calibration.** "Did the problem actually require this?" A promotion packet that reads like a technology showcase is a question to ask, not a case to rubber-stamp.
+
+None of this is subtle. That's the point. The fix for an invisible thing is to make it visible.
+
+## The part I can't outsource
+
+Here's the honest limit. An individual engineer cannot flip this default. If the room rewards complexity, the rational move is to build complexity, and no amount of personal taste survives a promotion cycle that says otherwise. The default is set at the team level. That makes it a leader's job, not an engineer's.
+
+It's a budget line too, not just an aesthetic. Viktor Cessan's ["The Economics of Software Teams"](https://www.viktorcessan.com/the-economics-of-software-teams/) makes the number concrete: a team has a real daily cost, and most orgs have no visibility into it. Three weeks of unearned complexity on a feature that serves two percent of users is a real number: salary, the work that didn't happen instead, and the ongoing tax every future change pays to route around it. Framed that way, "keep it simple" stops being a preference and starts being a cost decision.
+
+## The machine version of the same mistake
+
+One reason this matters more now, not less.
+
+Coding agents have read an enormous amount of enterprise architecture, and they'll happily cargo-cult it into a feature that needed 50 lines: abstraction layers, a pub/sub bus, a config framework for a single use case. That's unearned complexity at machine speed. The same question that catches it in a design review — what's the simplest version, and what signal would tell us we need more? — is exactly what you encode into the plan and review gates when you run [agents like a team](/blog/meet-ape). The judgment doesn't change when the author is a model. Only how fast the complexity arrives. If anything, an [uneven team running agents](/blog/ai-engineering-workflows-team-scale) makes the default matter more, because now the over-building compounds across every session.
+
+## Give the invisible decision an artifact
+
+"Nobody gets promoted for the complexity they avoided." True — until you make avoiding it legible.
+
+That's the whole job. Take the most valuable decision your team makes, the one that by design leaves nothing to point at, and give it one thing to point at. Write down the judgment. Reward the restraint out loud. Set the default at the level where defaults actually get set.
+
+Then simplicity stops being invisible. And your best engineers stop having to choose between doing the right thing and getting credit for it.
