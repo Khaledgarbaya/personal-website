@@ -1,6 +1,7 @@
 ---
 import GermanNav from '../components/de/GermanNav.astro';
 import GermanFooter from '../components/de/GermanFooter.astro';
+import PostHog from '../components/posthog.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -62,6 +63,7 @@ const { title, description } = Astro.props;
       }
       initTheme();
     </script>
+    <PostHog />
   </head>
   <body class="h-full zellige-pattern">
     <div class="py-6">

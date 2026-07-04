@@ -51,3 +51,17 @@
     </button>
   </div>
 </form>
+
+<script is:inline>
+  (function () {
+    var form = document.querySelector('form[action*="convertkit"]');
+    if (!form) return;
+    form.addEventListener('submit', function () {
+      var email = form.querySelector('input[name="email_address"]');
+      if (email && email.value) {
+        window.posthog?.identify(email.value);
+      }
+      window.posthog?.capture('newsletter_form_submitted');
+    });
+  })();
+</script>

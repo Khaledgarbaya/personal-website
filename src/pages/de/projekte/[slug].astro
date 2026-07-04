@@ -78,3 +78,16 @@ const { Content } = await project.render();
     </section>
   </main>
 </GermanLayout>
+
+<script is:inline define:vars={{ projectTitle: project.data.title, projectBranche: project.data.branche }}>
+  (function () {
+    document.querySelectorAll('a[href="/de/kontakt"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        window.posthog?.capture('case_study_cta_clicked', {
+          project: projectTitle,
+          branche: projectBranche
+        });
+      });
+    });
+  })();
+</script>

@@ -118,3 +118,11 @@ const keywords = `${tagList.join(', ')}, web development, software engineering`;
   <!-- END: Main Content -->
 </BaseLayout>
 
+<script is:inline define:vars={{ postTitle: title, postType: type, postTags: tags }}>
+  window.posthog?.capture('blog_post_viewed', {
+    title: postTitle,
+    content_type: postType,
+    tags: postTags
+  });
+</script>
+

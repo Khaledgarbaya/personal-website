@@ -140,8 +140,23 @@ const description = 'Kontaktiere mich für ein kostenloses Erstgespräch. Ich me
         document.getElementById('status-success')?.removeAttribute('hidden');
         document.getElementById('kontakt-form')?.setAttribute('hidden', '');
         document.getElementById('status-success')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.posthog?.capture('contact_form_success');
       } else if (status === 'error') {
         document.getElementById('status-error')?.removeAttribute('hidden');
+      }
+
+      const form = document.getElementById('kontakt-form');
+      if (form) {
+        form.addEventListener('submit', function () {
+          const branche = form.querySelector('select[name="branche"]');
+          const email = form.querySelector('input[name="email"]');
+          if (email && email.value) {
+            window.posthog?.identify(email.value);
+          }
+          window.posthog?.capture('contact_form_submitted', {
+            branche: branche ? branche.value : undefined
+          });
+        });
       }
     })();
   </script>

@@ -51,3 +51,18 @@ const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encod
     </svg>
   </a>
 </div>
+
+<script is:inline>
+  (function () {
+    var shareLinks = document.querySelectorAll('[aria-label^="Share on"]');
+    shareLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        var platform = link.getAttribute('aria-label').replace('Share on ', '').toLowerCase();
+        window.posthog?.capture('post_shared', {
+          platform: platform,
+          url: window.location.href
+        });
+      });
+    });
+  })();
+</script>

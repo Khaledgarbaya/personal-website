@@ -84,3 +84,16 @@ const sortedPosts = allPosts.sort((a, b) =>
   </main>
   <!-- END: Homepage -->
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var ytLink = document.querySelector('a[href*="youtube.com"]');
+    if (ytLink) {
+      ytLink.addEventListener('click', function () {
+        window.posthog?.capture('youtube_video_clicked', {
+          url: ytLink.href
+        });
+      });
+    }
+  })();
+</script>

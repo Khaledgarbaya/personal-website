@@ -244,3 +244,39 @@ const description = 'Websites, Buchungssysteme und Apps für kleine und mittlere
     </section>
   </main>
 </GermanLayout>
+
+<script is:inline>
+  (function () {
+    // Hero and bottom CTA buttons (href="/de/kontakt" but NOT inside a tier card)
+    document.querySelectorAll('section:not([aria-label="Pakete"]) a[href="/de/kontakt"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        window.posthog?.capture('leistungen_cta_clicked', {
+          location: btn.closest('section')?.getAttribute('aria-label') || 'unknown'
+        });
+      });
+    });
+
+    // Pricing tier CTA buttons (inside Pakete section)
+    document.querySelectorAll('[aria-label="Pakete"] a[href="/de/kontakt"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('article');
+        var tierName = card?.querySelector('h3')?.textContent?.trim();
+        window.posthog?.capture('pricing_tier_clicked', {
+          tier: tierName || 'unknown'
+        });
+      });
+    });
+
+    // FAQ accordion open events
+    document.querySelectorAll('details').forEach(function (details) {
+      details.addEventListener('toggle', function () {
+        if (details.open) {
+          var question = details.querySelector('summary span')?.textContent?.trim();
+          window.posthog?.capture('faq_item_opened', {
+            question: question || 'unknown'
+          });
+        }
+      });
+    });
+  })();
+</script>
