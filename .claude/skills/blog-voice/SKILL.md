@@ -99,6 +99,33 @@ this is the working checklist.
 - **Straight quotes** in code; verify no `citeturn…` artifacts, unfilled `[placeholders]`,
   or "as of my last knowledge update."
 
+## The attribution pass (trace borrowed claims to their source)
+
+Runs after the anti-slop sweep, before publish. The trap it catches: a paragraph that
+**reads like Khaled's own reasoning but was lifted, paraphrased, from an article he
+ingested.** Uncredited, that's plagiarism-by-paraphrase — the honesty line, not just
+etiquette. Attribution is also part of the voice (see voice #8).
+
+The vault makes this recoverable: ingested articles live in `00 Inbox/` with `source:`
+frontmatter carrying the original URL, and wiki notes list them under `sources:`. So every
+borrowed claim can be traced back to a real link.
+
+Procedure:
+1. **Flag every borrowed claim.** For each non-obvious fact, framing, quote, or number in
+   the draft, ask: *is this mine, or did it come from something I read?* If it came from a
+   source, mark it.
+2. **Trace it to the URL.** Follow the topic's wiki note `sources:` → the `00 Inbox/`
+   article → its `source:` URL (`grep -i '^source:' "00 Inbox/<article>.md"`).
+3. **Link the ones worth it.** Inline-link the *primary* source(s) and any framing/number
+   you're leaning on. Credit the author by name where natural ("Viktor Cessan's *…* makes
+   the number concrete"). A named quote gets its source.
+4. **Skip the rest.** Tangential or secondary links (an article's own back-catalog, a
+   link-farm of "related") are noise. **Only link if it's worth it** — one or two solid
+   external sources beat a footnote pile. Judgment over completeness.
+
+Litmus: if a reader asked "says who?" of any sentence, could you point at a link or a name?
+If not and the claim isn't yours, either attribute it or cut it.
+
 ## Earned vs. mechanical (the reconciliation)
 
 Khaled's own voice *does* use em-dashes, bold, and occasional triples — because they're
@@ -114,7 +141,9 @@ devices that carry his voice. Judge by intent, not by presence.
 3. **Draft in-voice.** Open from experience, deflate hype, land a bold thesis per section,
    table any multi-dimensional contrast.
 4. **Anti-slop sweep.** Run the checklist above. Read aloud.
-5. **Frontmatter + verify.** Match the posts schema (title, description ≤155 chars keyword-
+5. **Attribution pass.** Trace every borrowed claim to its `00 Inbox/` `source:` URL; link
+   the ones worth it, credit authors by name, skip the noise (see the attribution pass above).
+6. **Frontmatter + verify.** Match the posts schema (title, description ≤155 chars keyword-
    front-loaded, published, tags, keywords). Cross-link related posts (the AI cluster / the
    leadership cluster). Then `pnpm verify`.
 
