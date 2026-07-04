@@ -33,3 +33,6 @@ blob-report/
 
 # service-account keys / local secrets
 .secrets/
+
+# weekly loop run logs
+logs/

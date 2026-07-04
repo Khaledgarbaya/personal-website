@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Weekly content-seo loop (local, via launchd).
+  Install:
+    cp scripts/launchd/net.khaledgarbaya.content-seo-weekly.plist ~/Library/LaunchAgents/
+    launchctl load -w ~/Library/LaunchAgents/net.khaledgarbaya.content-seo-weekly.plist
+  Run once now (test):  launchctl start net.khaledgarbaya.content-seo-weekly
+  Disable:              launchctl unload -w ~/Library/LaunchAgents/net.khaledgarbaya.content-seo-weekly.plist
+  Digest-only (no PR drafting): remove the SEO_AUTODRAFT entry below, then reload.
+  NOTE: paths are absolute for this machine — edit if the repo or home path changes.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>net.khaledgarbaya.content-seo-weekly</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/kgarbaya/workspace/personal-website/scripts/content-seo-weekly.sh</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/kgarbaya/workspace/personal-website</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>SEO_AUTODRAFT</key>
+    <string>1</string>
+  </dict>
+
+  <!-- Mondays at 09:00 local. launchd catches up on next wake if asleep at that time. -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key><integer>1</integer>
+    <key>Hour</key><integer>9</integer>
+    <key>Minute</key><integer>0</integer>
+  </dict>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/Users/kgarbaya/workspace/personal-website/logs/content-seo/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/kgarbaya/workspace/personal-website/logs/content-seo/launchd.err.log</string>
+</dict>
+</plist>

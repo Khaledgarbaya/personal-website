@@ -16,8 +16,10 @@ keyword-universe research beyond your own data. Produces post/TIL drafts, SEO-fi
 `/pr`, gated by `pnpm verify`), and topic `signals`. Links artifacts; never holds them.
 
 ## Current focus
-Fix on-page SEO hygiene surfaced by the first audit — meta-description length is the
-first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
+First-pull findings are all shipped (meta descriptions, 3 page-2 pages, mastra CTR).
+The loop now runs **weekly and locally** ([[content-seo-automation]]): collect → digest →
+opt-in PR draft. Next: read each weekly digest for movement vs. baselines and act on fresh
+opportunities it surfaces.
 
 ## Backlog
 - [ ] Trim/rewrite over-long meta descriptions to ≤155 chars — [[meta-descriptions-too-long]]
@@ -39,16 +41,24 @@ first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
 - [x] **"mastra" cluster CTR** — `mastering-mastra-ai-workflows` (6917 impr @ pos 9.86,
       0.16% CTR, the site's #1 opportunity). Rewrote title + description to target the
       head tutorial terms. Baseline recorded in [[mastra-ctr-gap]]; watch next GSC pull.
+- [x] Automate the loop weekly (local `launchd`) — collect + digest + opt-in PR draft
+      (opens PRs, never merges). See [[content-seo-automation]].
+- [ ] New from first digest: `numbered-bookmarks-in-vscode` TIL CTR gap (567 impr @ pos 9.7,
+      0.18% CTR) — snippet fix, same play as mastra.
+- [ ] New from first digest: page-2 candidates `meet-ape` (122 @ 16.9) and
+      `cards-of-same-grid-in-tailwindcss` TIL (209 @ 9.8).
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
       crawl already guards against breakage)
 - [ ] Topic backlog from AI-engineering / agentic-workflows angle (the site's strongest theme)
 
 ## Evidence & analysis
-[[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]] · [[mastra-ctr-gap]]
+[[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]] · [[mastra-ctr-gap]] · [[content-seo-automation]]
 
 ## Metrics
-`metrics/` — TBD. Planned: `traffic.jsonl` from a PostHog collector (pageviews, referrers,
-search terms per post). Collector = code/skill, not the LLM.
+`metrics/gsc.jsonl` — Google Search Console query + page performance, appended weekly by
+`scripts/gsc-collect.mjs`. `scripts/gsc-digest.mjs` turns it into the weekly digest
+(movement vs. baselines, quick wins, CTR gaps). Schema in `metrics/README.md`.
+Still open: a PostHog collector for on-site behavior (`traffic.jsonl`).
 
 ## Timeline
 2026-07-04 | test run — audited SEO frontmatter across 13 posts. Found 11/13 meta
@@ -75,3 +85,7 @@ Infinity/set-early tips. Baselines pos 15 (606 impr) and pos 10.5 (402 impr) —
 2026-07-04 | mastra CTR fix — rewrote title+description of the site's #1 page by impressions
 (mastering-mastra-ai-workflows, 6917 impr @ pos 9.86, 0.16% CTR) to target head tutorial
 terms. Filed [[mastra-ctr-gap]] with baseline. Watch clicks/CTR in next pull.
+2026-07-04 | automated the loop (local launchd, weekly) — collect + `scripts/gsc-digest.mjs`
++ opt-in headless PR draft (opens, never merges). Digest surfaced new targets:
+numbered-bookmarks-in-vscode TIL (567 @ 9.7, CTR gap), meet-ape & cards-of-same-grid (page 2).
+See [[content-seo-automation]].
