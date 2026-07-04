@@ -47,3 +47,7 @@ Refs: scripts/gsc-collect.mjs (new), docs/gsc-setup.md (new), domains/content-se
 ## 2026-07-04 · brain-to-blog loop created + first run · #ops #content
 What: Stood up a monthly loop that mines the second brain vault (`~/workspace/brain`, via `qmd`) for deep evergreen blog topics — sanitized of work specifics/names. First run surfaced a verified "Multi-Agent Coding Orchestration" concept note (subagents → Agent Teams → cloud) as the lead candidate, confirmed distinct from the existing team-scale post.
 Refs: domains/brain-to-blog/README.md (new), signals/multi-agent-orchestration-deep-dive.md (new).
+
+## 2026-07-04 · brain-to-blog: diversify to a 6-theme rotation · #ops #content
+What: Broadened the vault-mining loop beyond AI to a fixed 6-theme rotation (people leadership, decision-making, org initiatives, process/meetings, wildcard). Refreshed the stale index (`qmd update`, +213 notes) and swept fresh: mapped `09-wiki/` as generalized/safe vs. people/1-on-1s/reviews/reports as name-bearing. Filed two non-AI leadership topics (name-stripped).
+Refs: domains/brain-to-blog/README.md (updated), signals/simplicity-not-rewarded.md (new), signals/staff-promotion-case-anatomy.md (new).
