@@ -4,47 +4,28 @@
 <form
   action="https://app.convertkit.com/forms/1036024/subscriptions"
   method="post"
-  class="relative rounded-2xl border border-border p-6 overflow-hidden"
+  class="border-t border-border pt-10"
 >
-  <!-- Gradient top border -->
-  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-cerulean to-gold"></div>
-
-  <h2 class="flex text-sm font-semibold text-foreground">
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true"
-      class="h-6 w-6 flex-none"
-    >
-      <path
-        d="M2.75 7.75a3 3 0 0 1 3-3h12.5a3 3 0 0 1 3 3v8.5a3 3 0 0 1-3 3H5.75a3 3 0 0 1-3-3v-8.5Z"
-        class="fill-muted stroke-muted-foreground"
-      ></path>
-      <path
-        d="m4 6 6.024 5.479a2.915 2.915 0 0 0 3.952 0L20 6"
-        class="stroke-muted-foreground"
-      ></path>
-    </svg>
-    <span class="ml-3">Stay up to date</span>
+  <p class="eyebrow">~ % subscribe</p>
+  <h2 class="display-huge mt-6 text-[clamp(2rem,5vw,4.5rem)]">
+    Get the next post.
   </h2>
-  <p class="mt-2 text-sm text-muted-foreground">
-    Get notified when I publish something new, and unsubscribe at any time.
+  <p class="mt-4 max-w-xl text-muted-foreground">
+    New writing on agentic workflows and engineering leadership, straight to
+    your inbox. Unsubscribe at any time.
   </p>
-  <div class="mt-6 flex">
+  <div class="mt-8 flex max-w-xl">
     <input
       id="email_address"
       name="email_address"
       aria-label="Email Address"
-      placeholder="Email Address"
+      placeholder="Email address"
       required
-      class="min-w-0 flex-auto appearance-none rounded-md border border-border bg-background px-3 py-[calc(theme(spacing.2)-1px)] shadow-md shadow-foreground/5 placeholder:text-muted-foreground focus:border-cerulean focus:outline-none focus:ring-4 focus:ring-cerulean/10 sm:text-sm"
+      class="min-w-0 flex-auto appearance-none border-b border-border bg-transparent px-1 py-3 font-mono-ui text-sm placeholder:text-muted-foreground focus:border-gold focus:outline-none"
       type="email"
     />
     <button
-      class="inline-flex items-center gap-2 justify-center rounded-md py-2 px-3 text-sm outline-offset-2 transition active:transition-none bg-cerulean font-semibold text-white hover:bg-cerulean/90 active:bg-cerulean/80 ml-4 flex-none"
+      class="ml-6 flex-none border border-foreground px-6 py-3 font-mono-ui text-sm tracking-wide transition hover:border-gold hover:bg-gold hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
       type="submit"
     >
       Join

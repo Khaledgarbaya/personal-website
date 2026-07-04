@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import MainHero from '../components/MainHero.astro';
 import RecentPosts from '../components/RecentPosts.astro';
 import NewsletterForm from '../components/NewsletterForm.astro';
-import Button from '../components/ui/Button.astro';
 import WebsiteSchema from '../components/schemas/WebsiteSchema.astro';
 import PersonSchema from '../components/schemas/PersonSchema.astro';
 
@@ -13,6 +12,21 @@ const allPosts = await getCollection('posts');
 const sortedPosts = allPosts.sort((a, b) =>
   b.data.published.getTime() - a.data.published.getTime()
 ).slice(0, 5);
+
+const statements = [
+  {
+    line: 'I lead engineering teams.',
+    caption: 'Senior Engineering Manager at Staffbase — communities, mobile, and a plugin platform built for the agent era.',
+  },
+  {
+    line: 'I ship with agents.',
+    caption: 'Specs, plans, reviews, phase gates — I manage AI agents the way I manage engineers.',
+  },
+  {
+    line: 'I write about what that changes.',
+    caption: 'Agentic workflows, engineering leadership, and the craft in between.',
+  },
+];
 ---
 
 <BaseLayout>
@@ -22,78 +36,47 @@ const sortedPosts = allPosts.sort((a, b) =>
   <!-- START: Homepage -->
   <!-- CONTENT_TYPE: Homepage -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="flex-none h-20"></div>
   <MainHero />
 
-  <!-- Gradient divider -->
-  <div class="h-px bg-gradient-to-r from-transparent via-cerulean/20 to-transparent"></div>
-
-  <div class="flex-none h-16"></div>
   <main>
-    <div class="mx-auto w-full max-w-7xl lg:px-8">
-      <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
-        <div>
-          <section class="container" aria-label="Latest blog posts">
-            <div class="mx-auto max-w-2xl lg:max-w-5xl">
-              <h2 class="text-3xl font-bold flex items-center gap-3">
-                <span class="w-1 h-8 bg-gradient-to-b from-cerulean to-gold rounded-full"></span>
-                Latest posts
-              </h2>
-              <RecentPosts posts={sortedPosts} />
-              <div class="mt-8">
-                <Button href="/blog" variant="outline" size="lg" class="w-full">
-                  More posts
-                </Button>
-              </div>
-            </div>
-          </section>
-        </div>
-        <aside class="space-y-10 lg:pl-16 xl:pl-24" aria-label="Sidebar content">
-          <NewsletterForm />
-          <section class="rounded-2xl border border-border p-6" aria-label="Latest videos">
-            <h2 class="flex text-sm font-semibold text-foreground">
-              <span class="ml-3">Latest Videos</span>
+    <!-- Statement stanzas -->
+    <section class="px-6 sm:px-10" aria-label="What I do">
+      <div class="mx-auto max-w-7xl">
+        {statements.map((statement, i) => (
+          <div class:list={['reveal py-[16vh]', i > 0 && 'border-t border-border']}>
+            <h2 class="display-huge text-[clamp(2.25rem,6vw,5.5rem)]">
+              {statement.line}
             </h2>
-            <p class="mt-2 text-sm text-muted-foreground">
-              Latest videos from my youtube channel
+            <p class="mt-6 max-w-xl text-lg text-muted-foreground" style={`--reveal-delay: 150ms`}>
+              {statement.caption}
             </p>
-            <div class="mt-6 flex items-center justify-center">
-              <div class="flex-none w-16 h-16 bg-muted rounded-md" role="img" aria-label="Video thumbnail placeholder"></div>
-              <div class="flex-auto ml-4 not-prose">
-                <h3 class="text-lg font-semibold text-foreground">
-                  <a
-                    class="inline-flex items-center font-medium text-cerulean hover:underline"
-                    href="https://www.youtube.com/watch?v=TW0Ic0n_PZ8"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Numbered Bookmarks in VS Code
-                  </a>
-                </h3>
-                <p class="text-sm !mt-0 text-muted-foreground">
-                  Numbered bookmarks will allow us to select a block of code,
-                  bookmark it and easily navigate back to it using the
-                  bookmark number.
-                </p>
-              </div>
-            </div>
-          </section>
-        </aside>
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
+
+    <!-- Latest writing -->
+    <section class="px-6 pt-[10vh] sm:px-10" aria-label="Latest blog posts">
+      <div class="mx-auto max-w-7xl">
+        <div class="reveal flex items-baseline justify-between border-b border-border pb-6">
+          <h2 class="display-huge text-[clamp(2.25rem,6vw,5.5rem)]">Latest writing</h2>
+          <a
+            href="/blog"
+            class="font-mono-ui text-sm tracking-wide text-muted-foreground transition hover:text-gold"
+          >
+            All posts →
+          </a>
+        </div>
+        <RecentPosts posts={sortedPosts} />
+      </div>
+    </section>
+
+    <!-- Newsletter band -->
+    <section class="px-6 py-[16vh] sm:px-10" aria-label="Newsletter">
+      <div class="reveal mx-auto max-w-7xl">
+        <NewsletterForm />
+      </div>
+    </section>
   </main>
   <!-- END: Homepage -->
 </BaseLayout>
-
-<script is:inline>
-  (function () {
-    var ytLink = document.querySelector('a[href*="youtube.com"]');
-    if (ytLink) {
-      ytLink.addEventListener('click', function () {
-        window.posthog?.capture('youtube_video_clicked', {
-          url: ytLink.href
-        });
-      });
-    }
-  })();
-</script>

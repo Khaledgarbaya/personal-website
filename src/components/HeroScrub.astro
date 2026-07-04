@@ -1,0 +1,117 @@
+---
+// Scroll-scrubbed video background for the hero: a generated Seedance dolly
+// shot split into frames (public/hero-frames/), drawn to a canvas as you
+// scroll. The poster is the real first frame, so no-JS, reduced-motion, and
+// small screens (which skip the ~MBs of frames) all see the same art.
+const FRAME_COUNT = 64;
+---
+
+<div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+  <img
+    src="/hero-frames/poster.webp"
+    alt=""
+    class="absolute inset-0 h-full w-full object-cover"
+    fetchpriority="high"
+  />
+  <canvas
+    id="hero-scrub-canvas"
+    data-frame-count={FRAME_COUNT}
+    class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500"
+  ></canvas>
+  <!-- Legibility scrim behind the headline -->
+  <div class="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-background/20"></div>
+  <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent"></div>
+</div>
+
+<script>
+  function setupHeroScrub() {
+    const canvas = document.getElementById('hero-scrub-canvas') as HTMLCanvasElement | null;
+    if (!canvas || canvas.dataset.scrubReady) return;
+
+    const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isWide = window.matchMedia('(min-width: 768px)').matches;
+    if (!wantsMotion || !isWide) return; // poster stays
+
+    canvas.dataset.scrubReady = '1';
+    const frameCount = Number(canvas.dataset.frameCount);
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    // Non-null aliases: narrowing doesn't reach hoisted function declarations
+    const el = canvas;
+    const ctx = context;
+
+    const frames: (HTMLImageElement | null)[] = new Array(frameCount).fill(null);
+    const src = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, '0')}.webp`;
+
+    let currentFrame = 0;
+    let revealed = false;
+
+    function drawCover(img: HTMLImageElement) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = el.clientWidth * dpr;
+      const h = el.clientHeight * dpr;
+      if (el.width !== w || el.height !== h) {
+        el.width = w;
+        el.height = h;
+      }
+      const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
+      const dw = img.naturalWidth * scale;
+      const dh = img.naturalHeight * scale;
+      ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    }
+
+    // Nearest loaded frame at or below the target, so scrubbing never blanks
+    function draw(target: number) {
+      let img: HTMLImageElement | null = null;
+      for (let i = target; i >= 0; i--) {
+        if (frames[i]?.complete) { img = frames[i]; break; }
+      }
+      if (!img) return;
+      drawCover(img);
+      if (!revealed) {
+        revealed = true;
+        el.style.opacity = '1';
+      }
+    }
+
+    function load(i: number, onload?: () => void) {
+      if (frames[i]) return;
+      const img = new Image();
+      img.src = src(i);
+      if (onload) img.onload = onload;
+      frames[i] = img;
+    }
+
+    // First frame ASAP, rest trickled in
+    load(0, () => draw(currentFrame));
+    let queued = 1;
+    function trickle() {
+      if (queued >= frameCount) return;
+      load(queued++, () => draw(currentFrame));
+      setTimeout(trickle, 40);
+    }
+    trickle();
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const range = el.parentElement?.parentElement?.offsetHeight || window.innerHeight;
+        const progress = Math.min(Math.max(window.scrollY / range, 0), 1);
+        const frame = Math.min(Math.round(progress * (frameCount - 1)), frameCount - 1);
+        if (frame !== currentFrame) {
+          currentFrame = frame;
+          draw(frame);
+        }
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => draw(currentFrame), { passive: true });
+    onScroll();
+  }
+
+  document.addEventListener('astro:page-load', setupHeroScrub);
+</script>

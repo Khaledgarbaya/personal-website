@@ -39,14 +39,15 @@ const { tag, entries } = Astro.props;
   title={`TIL tagged with "${tag}" - Khaled Garbaya`}
   description={`All TIL entries tagged with ${tag}`}
 >
-  <div class="flex-none h-52"></div>
-  <PageHero
-    title={`TIL tagged with "${tag}"`}
-    description={`${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} found`}
-  />
-  <div class="flex-none h-32"></div>
-  <section class="container">
-    <div class="mx-auto max-w-2xl lg:max-w-5xl">
+  <div class="pt-24 sm:pt-32">
+    <PageHero
+      eyebrow={`~ % grep -r "${tag}" ./til`}
+      title={`#${tag}`}
+      description={`${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} found`}
+    />
+  </div>
+  <section class="mt-20 px-6 sm:px-10">
+    <div class="mx-auto max-w-7xl border-t border-border">
       <RecentPosts posts={entries} type="til" />
     </div>
   </section>

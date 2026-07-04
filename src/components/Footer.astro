@@ -1,42 +1,25 @@
 ---
+const year = new Date().getFullYear();
 ---
 
-<footer class="mt-32 flex-none">
-  <div class="sm:px-8">
-    <div class="mx-auto w-full max-w-7xl lg:px-8">
-      <!-- Gradient stripe -->
-      <div class="h-px bg-gradient-to-r from-cerulean via-gold to-terracotta"></div>
-      <div class="pb-16 pt-10">
-        <div class="relative px-4 sm:px-8 lg:px-12">
-          <div class="mx-auto max-w-2xl lg:max-w-5xl">
-            <div class="flex flex-col items-center justify-between gap-6 sm:flex-row">
-              <div class="flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm font-medium text-foreground">
-                <a
-                  class="transition hover:text-cerulean"
-                  href="/about"
-                >
-                  About
-                </a>
-                <a
-                  class="transition hover:text-cerulean"
-                  href="/til"
-                >
-                  TIL
-                </a>
-                <a
-                  class="transition hover:text-cerulean"
-                  href="/uses"
-                >
-                  Uses
-                </a>
-              </div>
-              <p class="text-sm text-muted-foreground">
-                &copy; Khaled Garbaya. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+<footer class="mt-24 border-t border-border">
+  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-12 sm:flex-row sm:px-10">
+    <div class="flex flex-wrap justify-center gap-x-6 gap-y-1">
+      <a class="font-mono-ui text-xs tracking-wide text-muted-foreground transition hover:text-gold" href="/about">
+        About
+      </a>
+      <a class="font-mono-ui text-xs tracking-wide text-muted-foreground transition hover:text-gold" href="/til">
+        TIL
+      </a>
+      <a class="font-mono-ui text-xs tracking-wide text-muted-foreground transition hover:text-gold" href="/uses">
+        Uses
+      </a>
+      <a class="font-mono-ui text-xs tracking-wide text-muted-foreground transition hover:text-gold" href="/rss.xml">
+        RSS
+      </a>
     </div>
+    <p class="font-mono-ui text-xs tracking-wide text-muted-foreground">
+      © {year} Khaled Garbaya
+    </p>
   </div>
 </footer>

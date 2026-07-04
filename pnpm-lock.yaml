@@ -17,13 +17,16 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.6.0
         version: 3.6.0
-      '@fontsource-variable/outfit':
-        specifier: ^5.2.8
-        version: 5.2.8
+      '@fontsource-variable/bricolage-grotesque':
+        specifier: ^5.2.10
+        version: 5.2.10
       '@fontsource-variable/signika':
         specifier: ^5.2.8
         version: 5.2.8
       '@fontsource/alike':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource/jetbrains-mono':
         specifier: ^5.2.8
         version: 5.2.8
       '@fontsource/source-sans-3':
@@ -345,14 +348,17 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/outfit@5.2.8':
-    resolution: {integrity: sha512-4oUDCZx/Tcz6HZP423w/niqEH31Gks5IsqHV2ZZz1qKHaVIZdj2f0/S1IK2n8jl6Xo0o3N+3RjNHlV9R73ozQA==}
+  '@fontsource-variable/bricolage-grotesque@5.2.10':
+    resolution: {integrity: sha512-5EDsCqgGpKVcJWE4sg9ydli+t5WM97mISYw5lla/Ev4z71FwXh1oN0YUU8xjkRW9+wBCGD9R+ntAvI8G4bUFJg==}
 
   '@fontsource-variable/signika@5.2.8':
     resolution: {integrity: sha512-z08S0guPYmt4/Ov3QVhODI9VB5tv4YYgfsURjsgZcY7ndEHvrOXPAaPgb4jpVjgq5UOkIc9i/fMnz7/DOlMAXQ==}
 
   '@fontsource/alike@5.2.8':
     resolution: {integrity: sha512-Mtg2kK8oajJhjdnRV+CEuuuGLpNNFZS1WCdXF5uJteC/r3hKdzbd1XRVqsiiGmHI90GANEjg3/OSTLa1TcpK6g==}
+
+  '@fontsource/jetbrains-mono@5.2.8':
+    resolution: {integrity: sha512-6w8/SG4kqvIMu7xd7wt6x3idn1Qux3p9N62s6G3rfldOUYHpWcc2FKrqf+Vo44jRvqWj2oAtTHrZXEP23oSKwQ==}
 
   '@fontsource/source-sans-3@5.2.9':
     resolution: {integrity: sha512-u3ymIq4rfmCCyB9MEw/sFR5lPVJ1yTNXmIMbUz+9kVCFIHvNtfzXOEBuvkg3Tk0zhmioPeJ28ZK5smZ7TurezQ==}
@@ -2646,11 +2652,13 @@ snapshots:
   '@esbuild/win32-x64@0.25.12':
     optional: true
 
-  '@fontsource-variable/outfit@5.2.8': {}
+  '@fontsource-variable/bricolage-grotesque@5.2.10': {}
 
   '@fontsource-variable/signika@5.2.8': {}
 
   '@fontsource/alike@5.2.8': {}
+
+  '@fontsource/jetbrains-mono@5.2.8': {}
 
   '@fontsource/source-sans-3@5.2.9': {}
 

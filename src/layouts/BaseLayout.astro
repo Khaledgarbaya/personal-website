@@ -101,6 +101,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     
     <!-- Theme initialization script - must run before content loads -->
     <script is:inline>
+      // Mark JS availability so scroll reveals only hide content when they can run
+      document.documentElement.classList.add('js');
+
       function initTheme() {
         const theme = (() => {
           if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -223,12 +226,35 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <PostHog />
     <ViewTransitions />
   </head>
-  <body class="h-full zellige-pattern">
-    <div class="py-6">
-      <MainNav />
-      <slot />
-      <Footer />
-    </div>
+  <body class="h-full">
+    <MainNav />
+    <slot />
+    <Footer />
+
+    <!-- Scroll reveals: IntersectionObserver adds .is-visible once per element -->
+    <script>
+      function setupReveals() {
+        const elements = document.querySelectorAll('.reveal:not(.is-visible)');
+        if (!('IntersectionObserver' in window)) {
+          elements.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15 }
+        );
+        elements.forEach((el) => observer.observe(el));
+      }
+
+      document.addEventListener('astro:page-load', setupReveals);
+    </script>
   </body>
 </html>
 

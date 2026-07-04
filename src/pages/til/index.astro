@@ -23,15 +23,16 @@ const sortedTil = allTil.sort((a, b) =>
   <!-- START: TIL Archive -->
   <!-- CONTENT_TYPE: Today I Learned Archive -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="flex-none h-52"></div>
-  <PageHero
-    title="Today I Learned"
-    description="Quick tips and tricks I learn along the way"
-  />
-  <div class="flex-none h-32"></div>
+  <div class="pt-24 sm:pt-32">
+    <PageHero
+      eyebrow="~ % ls ./til"
+      title="Today I Learned"
+      description="Quick tips and tricks I learn along the way"
+    />
+  </div>
   <main>
-    <section class="container" aria-label="Today I Learned posts">
-      <div class="mx-auto max-w-2xl lg:max-w-5xl">
+    <section class="mt-20 px-6 sm:px-10" aria-label="Today I Learned posts">
+      <div class="mx-auto max-w-7xl border-t border-border">
         <RecentPosts posts={sortedTil} type="til" />
       </div>
     </section>

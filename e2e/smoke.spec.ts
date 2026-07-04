@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // Key routes that must render, with a string that proves the right page loaded
 // (not just a 200 for a soft-404 shell).
 const KEY_PAGES: Array<{ path: string; expect: RegExp }> = [
-  { path: '/', expect: /Latest posts/i },
+  { path: '/', expect: /Latest writing/i },
   { path: '/blog', expect: /Blog/i },
   { path: '/til', expect: /TIL|Today I Learned/i },
   { path: '/about', expect: /about/i },
