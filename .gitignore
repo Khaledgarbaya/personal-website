@@ -24,3 +24,9 @@ pnpm-debug.log*
 .idea/
 
 .pnpm-store/
+
+# playwright
+test-results/
+playwright-report/
+blob-report/
+.playwright/
