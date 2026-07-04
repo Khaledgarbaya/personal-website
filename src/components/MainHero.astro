@@ -1,4 +1,6 @@
 ---
+import HeroScrub from './HeroScrub.astro';
+
 const socials = [
   {
     label: 'Follow on X',
@@ -24,19 +26,10 @@ const socials = [
 ---
 
 <section class="relative flex min-h-[calc(100svh-6rem)] flex-col justify-center overflow-hidden px-6 sm:px-10">
-  <!-- One oversized zellige star, the only ornament -->
-  <svg
-    class="pointer-events-none absolute -right-40 top-1/2 h-[80vmin] w-[80vmin] -translate-y-1/2 text-gold/10 dark:text-gold/[0.07]"
-    viewBox="0 0 60 60"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path d="M30 1L59 30L30 59L1 30z" stroke="currentColor" stroke-width="0.5" />
-    <path d="M30 9L51 30L30 51L9 30z" stroke="currentColor" stroke-width="0.5" />
-    <path d="M30 17L43 30L30 43L17 30z" stroke="currentColor" stroke-width="0.5" />
-  </svg>
+  <!-- Scroll-scrubbed zellige dolly shot (Seedance 2.0 via Kie) -->
+  <HeroScrub />
 
-  <div class="hero-scrub relative mx-auto w-full max-w-7xl">
+  <div class="hero-scrub relative z-10 mx-auto w-full max-w-7xl">
     <p class="eyebrow animate-fade-in-up">~ % whoami</p>
     <h1
       class="display-huge mt-6 animate-fade-in-up text-[clamp(3.5rem,12vw,11rem)] uppercase"
