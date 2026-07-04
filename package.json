@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "verify": "astro check && astro build",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "gsc:collect": "node scripts/gsc-collect.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.9",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@playwright/test": "^1.61.1",
+    "google-auth-library": "^10.9.0",
     "typescript": "^5.9.3"
   }
 }

@@ -26,14 +26,15 @@ first lever (11/13 posts truncate in SERPs). See [[meta-descriptions-too-long]].
 - [ ] Wire a PostHog collector (`metrics/traffic.jsonl`) — top posts by pageviews, entry pages,
       search referrers. Capture is now live (`src/components/posthog.astro`); the remaining gap
       is a PostHog **personal** API key (read scope) + the collector script to query it
-- [ ] Connect Google Search Console (free) for real query/impression/ranking data — the
-      priority data source for keyword & ranking decisions, ahead of any paid SERP tool
+- [~] Connect Google Search Console (free) for real query/impression/ranking data.
+      Collector built (`pnpm gsc:collect` → `metrics/gsc.jsonl`); site already verified.
+      Blocked on one-time console setup — see [[gsc-setup]]. Then run weekly.
 - [ ] Add an internal-linking pass: link new posts from related older ones (the e2e link
       crawl already guards against breakage)
 - [ ] Topic backlog from AI-engineering / agentic-workflows angle (the site's strongest theme)
 
 ## Evidence & analysis
-[[meta-descriptions-too-long]] · [[analytics-events]]
+[[meta-descriptions-too-long]] · [[analytics-events]] · [[gsc-setup]]
 
 ## Metrics
 `metrics/` — TBD. Planned: `traffic.jsonl` from a PostHog collector (pageviews, referrers,
@@ -49,3 +50,6 @@ capture is instrumented — collector now only needs a read-scope personal API k
 2026-07-04 | first SEO-fix PR — rewrote all 11 over-long meta descriptions to ≤152 chars
 (branch `seo/trim-meta-descriptions`). Retightened charter data sources (PostHog + GSC;
 SERP scrapers optional/later). [[meta-descriptions-too-long]] → actioned.
+2026-07-04 | GSC collector built — `scripts/gsc-collect.mjs` (`pnpm gsc:collect`) +
+[[gsc-setup]]. Site already verified (DNS). Preflight guard tested; awaits the one-time
+service-account console setup to produce `metrics/gsc.jsonl`.

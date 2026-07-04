@@ -39,3 +39,7 @@ Refs: docs/analytics-events.md (new), src/components/posthog.astro, domains/cont
 ## 2026-07-04 · content-seo: trim over-long meta descriptions · #content #seo
 What: First SEO-fix PR from the content-seo loop — rewrote all 11 post meta descriptions >160 chars down to ≤152 (keyword front-loaded) so they stop truncating in search results. Also retightened the loop charter's data sources.
 Refs: 11 files under src/content/posts/*/index.mdx, signals/meta-descriptions-too-long.md (actioned), branch seo/trim-meta-descriptions.
+
+## 2026-07-04 · content-seo: Google Search Console collector · #seo #infra
+What: Built a service-account GSC collector (scripts/gsc-collect.mjs, `pnpm gsc:collect`) that appends query+page search-performance to domains/content-seo/metrics/gsc.jsonl. Site already verified (DNS); awaits one-time console setup. Preflight-guard dry run confirmed.
+Refs: scripts/gsc-collect.mjs (new), docs/gsc-setup.md (new), domains/content-seo/metrics/README.md (new), .env.example (updated), google-auth-library dep.

@@ -30,3 +30,6 @@ test-results/
 playwright-report/
 blob-report/
 .playwright/
+
+# service-account keys / local secrets
+.secrets/
