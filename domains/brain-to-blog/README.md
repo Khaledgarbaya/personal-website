@@ -32,8 +32,9 @@ initiatives, and process/meetings, and the loop should surface across all of the
 Fresh-index sweep done (index refreshed — was 69d stale, +213 notes). The rotation now
 returns across themes. Vault structure learned: **`09-wiki/` holds generalized concept
 notes (safe to mine); `02-people/`, `03-1-on-1s/`, `06-reviews/`, `10-output/reports/` are
-name-bearing (lesson-only).** Next: pick one leadership candidate to outline (the simplicity
-piece is the strongest non-AI lead).
+name-bearing (lesson-only).** Drafting uses the **`blog-voice` skill**
+(`.claude/skills/blog-voice/`) — voice + anti-slop. Next: pick one leadership candidate to
+outline (the simplicity piece is the strongest non-AI lead).
 
 ## Backlog
 - [ ] `qmd update` the vault index before each run (currently ~69d stale) — **required

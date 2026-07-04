@@ -51,3 +51,7 @@ Refs: domains/brain-to-blog/README.md (new), signals/multi-agent-orchestration-d
 ## 2026-07-04 · brain-to-blog: diversify to a 6-theme rotation · #ops #content
 What: Broadened the vault-mining loop beyond AI to a fixed 6-theme rotation (people leadership, decision-making, org initiatives, process/meetings, wildcard). Refreshed the stale index (`qmd update`, +213 notes) and swept fresh: mapped `09-wiki/` as generalized/safe vs. people/1-on-1s/reviews/reports as name-bearing. Filed two non-AI leadership topics (name-stripped).
 Refs: domains/brain-to-blog/README.md (updated), signals/simplicity-not-rewarded.md (new), signals/staff-promotion-case-anatomy.md (new).
+
+## 2026-07-04 · blog-voice skill — write like Khaled, strip AI tells · #skill #content
+What: Authored a `blog-voice` skill combining Khaled's brand voice (extracted from published posts — direct, foil-and-subvert, named concepts, anti-hype, bold thesis, credit sources) with the vault's "Signs of AI Writing" field guide as an anti-slop checklist. The brain-to-blog loop uses it to turn topic signals into prose.
+Refs: .claude/skills/blog-voice/SKILL.md (new), domains/brain-to-blog/README.md (updated), qmd://brain/09 WIKI/Signs of AI Writing — Field Guide.md.
