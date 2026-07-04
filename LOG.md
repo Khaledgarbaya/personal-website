@@ -43,3 +43,7 @@ Refs: 11 files under src/content/posts/*/index.mdx, signals/meta-descriptions-to
 ## 2026-07-04 · content-seo: Google Search Console collector · #seo #infra
 What: Built a service-account GSC collector (scripts/gsc-collect.mjs, `pnpm gsc:collect`) that appends query+page search-performance to domains/content-seo/metrics/gsc.jsonl. Site already verified (DNS); awaits one-time console setup. Preflight-guard dry run confirmed.
 Refs: scripts/gsc-collect.mjs (new), docs/gsc-setup.md (new), domains/content-seo/metrics/README.md (new), .env.example (updated), google-auth-library dep.
+
+## 2026-07-04 · brain-to-blog loop created + first run · #ops #content
+What: Stood up a monthly loop that mines the second brain vault (`~/workspace/brain`, via `qmd`) for deep evergreen blog topics — sanitized of work specifics/names. First run surfaced a verified "Multi-Agent Coding Orchestration" concept note (subagents → Agent Teams → cloud) as the lead candidate, confirmed distinct from the existing team-scale post.
+Refs: domains/brain-to-blog/README.md (new), signals/multi-agent-orchestration-deep-dive.md (new).
