@@ -31,3 +31,7 @@ awk '/^## 20/{p=/^## 2026-06/} p' LOG.md
 ## 2026-07-04 · content-seo loop created + first run · #ops #content #seo
 What: Stood up the weekly content-seo loop (grow blog/TIL reach) and ran a first SEO audit — 11/13 post meta descriptions exceed ~160 chars and truncate in search; also confirmed OG images are auto-generated (Cloudinary), so `image`/`imageAlt` frontmatter is unused.
 Refs: domains/content-seo/README.md (new), signals/meta-descriptions-too-long.md (new), ARCHITECTURE.md (new), LOG.md (new).
+
+## 2026-07-04 · PostHog analytics live + event catalog · #analysis #content
+What: PostHog wired into both layouts capturing 10 events (newsletter, social, blog views, German funnel); cataloged the events as a knowledge-base doc (migrated out of the wizard's root-level report).
+Refs: docs/analytics-events.md (new), src/components/posthog.astro, domains/content-seo/README.md (updated).
