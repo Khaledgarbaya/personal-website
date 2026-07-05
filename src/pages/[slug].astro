@@ -27,6 +27,8 @@ const showImage = page.slug === 'about';
   image={page.data.image}
   keywords={page.data.keywords}
   showImage={showImage}
+  eyebrow={page.slug === 'about' ? '~ % cat ./about' : undefined}
+  scrubBase={page.slug === 'about' ? '/about-frames' : undefined}
 >
   <Content />
 </PageLayout>

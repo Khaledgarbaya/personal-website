@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import HeroScrub from '../components/HeroScrub.astro';
 import PersonSchema from '../components/schemas/PersonSchema.astro';
 import WebsiteSchema from '../components/schemas/WebsiteSchema.astro';
 
@@ -11,15 +12,19 @@ interface Props {
   keywords?: string;
   showHero?: boolean;
   showImage?: boolean;
+  eyebrow?: string;
+  scrubBase?: string;
 }
 
-const { 
-  title, 
-  description, 
+const {
+  title,
+  description,
   image = `https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:0891B2,l_text:Quicksand_55_bold:${encodeURIComponent(description)},g_north_west,x_436,y_200,w_670,c_fit/v1727002971/og-image.png`,
   keywords = 'khaled garbaya, web development, software engineering, leadership',
   showHero = true,
   showImage = false,
+  eyebrow,
+  scrubBase,
 } = Astro.props;
 ---
 
@@ -35,11 +40,18 @@ const {
   <!-- START: Page -->
   <!-- CONTENT_TYPE: Page -->
   <!-- AUTHOR: Khaled Garbaya -->
-  <div class="w-full pt-24 sm:pt-32">
+  <div class:list={['w-full', !scrubBase && 'pt-24 sm:pt-32']}>
     {showHero && (
-      <header class="flex flex-col-reverse items-start gap-10 md:flex-row md:items-center">
-        <div class="flex-auto">
+      <header
+        class:list={[
+          'flex flex-col-reverse items-start gap-10 md:flex-row md:items-center',
+          scrubBase && 'relative min-h-[70svh] overflow-hidden py-24',
+        ]}
+      >
+        {scrubBase && <HeroScrub base={scrubBase} />}
+        <div class="relative z-10 flex-auto">
           <PageHero
+            eyebrow={eyebrow}
             title={title.replace('Khaled Garbaya - ', '')}
             description={description}
           />
@@ -51,7 +63,7 @@ const {
             width="400"
             height="400"
             loading="lazy"
-            class="aspect-square object-cover rounded-2xl shadow-lg -rotate-3 px-6 sm:px-0 md:mr-10"
+            class="relative z-10 aspect-square object-cover rounded-2xl shadow-lg -rotate-3 px-6 sm:px-0 md:mr-10"
             itemprop="image"
           />
         )}

@@ -1,21 +1,27 @@
 ---
-// Scroll-scrubbed video background for the hero: a generated Seedance dolly
-// shot split into frames (public/hero-frames/), drawn to a canvas as you
-// scroll. The poster is the real first frame, so no-JS, reduced-motion, and
-// small screens (which skip the ~MBs of frames) all see the same art.
-const FRAME_COUNT = 64;
+// Scroll-scrubbed video background: a generated Seedance dolly shot split
+// into frames (public/<base>/), drawn to a canvas as the section scrolls.
+// The poster is the real first frame, so no-JS, reduced-motion, and small
+// screens (which skip the ~MBs of frames) all see the same art.
+interface Props {
+  base?: string;
+  count?: number;
+}
+
+const { base = '/hero-frames', count = 64 } = Astro.props;
 ---
 
 <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
   <img
-    src="/hero-frames/poster.webp"
+    src={`${base}/poster.webp`}
     alt=""
     class="absolute inset-0 h-full w-full object-cover"
     fetchpriority="high"
   />
   <canvas
-    id="hero-scrub-canvas"
-    data-frame-count={FRAME_COUNT}
+    data-hero-scrub
+    data-base={base}
+    data-frame-count={count}
     class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500"
   ></canvas>
   <!-- Legibility scrim behind the headline -->
@@ -24,24 +30,17 @@ const FRAME_COUNT = 64;
 </div>
 
 <script>
-  function setupHeroScrub() {
-    const canvas = document.getElementById('hero-scrub-canvas') as HTMLCanvasElement | null;
-    if (!canvas || canvas.dataset.scrubReady) return;
-
-    const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isWide = window.matchMedia('(min-width: 768px)').matches;
-    if (!wantsMotion || !isWide) return; // poster stays
-
-    canvas.dataset.scrubReady = '1';
-    const frameCount = Number(canvas.dataset.frameCount);
-    const context = canvas.getContext('2d');
+  function setupHeroScrub(el: HTMLCanvasElement) {
+    el.dataset.scrubReady = '1';
+    const frameCount = Number(el.dataset.frameCount);
+    const base = el.dataset.base;
+    const wrap = el.parentElement as HTMLElement;
+    const context = el.getContext('2d');
     if (!context) return;
-    // Non-null aliases: narrowing doesn't reach hoisted function declarations
-    const el = canvas;
     const ctx = context;
 
     const frames: (HTMLImageElement | null)[] = new Array(frameCount).fill(null);
-    const src = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, '0')}.webp`;
+    const src = (i: number) => `${base}/frame-${String(i + 1).padStart(3, '0')}.webp`;
 
     let currentFrame = 0;
     let revealed = false;
@@ -98,8 +97,8 @@ const FRAME_COUNT = 64;
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        const range = el.parentElement?.parentElement?.offsetHeight || window.innerHeight;
-        const progress = Math.min(Math.max(window.scrollY / range, 0), 1);
+        const rect = wrap.getBoundingClientRect();
+        const progress = Math.min(Math.max(-rect.top / rect.height, 0), 1);
         const frame = Math.min(Math.round(progress * (frameCount - 1)), frameCount - 1);
         if (frame !== currentFrame) {
           currentFrame = frame;
@@ -113,5 +112,15 @@ const FRAME_COUNT = 64;
     onScroll();
   }
 
-  document.addEventListener('astro:page-load', setupHeroScrub);
+  function setupHeroScrubs() {
+    const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isWide = window.matchMedia('(min-width: 768px)').matches;
+    if (!wantsMotion || !isWide) return; // poster stays
+
+    document
+      .querySelectorAll<HTMLCanvasElement>('canvas[data-hero-scrub]:not([data-scrub-ready])')
+      .forEach(setupHeroScrub);
+  }
+
+  document.addEventListener('astro:page-load', setupHeroScrubs);
 </script>
