@@ -5,85 +5,188 @@ image: "https://res.cloudinary.com/kgarbaya/image/upload/co_rgb:1A39A9,l_text:Qu
 keywords: "khaled garbaya, about, engineering leader, developer, educator, biography, ai engineering, staffbase"
 ---
 
-I'm Khaled Garbaya, born and raised in a small town in the south of
-Tunisia. The first program I ever wrote was `PRINT Khaled`, typed into
-GBasic on an Atari keyboard console with a cartridge slot. My name
-showed up on the screen and that settled it. I went looking for loops
-next and never really stopped.
+import StorySection from '../../components/about/StorySection.astro';
+import CareerTimeline from '../../components/about/CareerTimeline.astro';
+import ProjectShowcase from '../../components/about/ProjectShowcase.astro';
+import TerminalSimulation from '../../components/TerminalSimulation.astro';
 
-Macromedia Flash is what made it serious. It amazed me that a thing I
-built would just work in every browser, back when JavaScript was mostly
-used to show an alert. I studied computer science at a university 20 km
-from home, built Flash sites for businesses and non-profits in my
-hometown, and took that portfolio straight into a Flash developer job
-at an agency in Tunis. Then Flash died — security problems, and Steve
-Jobs's open letter as the final straw. It had paid my bills for years
-and taught me more JavaScript than I noticed at the time.
+<StorySection eyebrow="~ % git log --reverse" title="It started with PRINT Khaled">
+  <div class="grid gap-12 lg:grid-cols-2 lg:items-start">
+    <div class="reveal space-y-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
 
-JavaScript, then Node, then Berlin. Full-stack work, open source
-(Yargs, Gatsby), some videos and writing along the way. After more
-than a decade of coding I moved into management — not because it's
-"the next natural step," but because I like helping people succeed
-and seeing them get there. The move meant relearning about people
-everything I had learned about code.
+      I'm Khaled Garbaya, born and raised in a small town in the south of
+      Tunisia. The first program I ever wrote was typed into GBasic on an
+      Atari keyboard console with a cartridge slot. My name showed up on
+      the screen and that settled it. I went looking for loops next and
+      never really stopped.
 
-## Where I am now
+      Macromedia Flash is what made it serious. It amazed me that a thing
+      I built would just work in every browser, back when JavaScript was
+      mostly used to show an alert. I studied computer science at a
+      university 20 km from home, built Flash sites for businesses and
+      non-profits in my hometown, and took that portfolio straight into a
+      Flash developer job at an agency in Tunis. Then Flash died —
+      security problems, and Steve Jobs's open letter as the final straw.
+      It had paid my bills for years and taught me more JavaScript than I
+      noticed at the time.
 
-I'm a Senior Engineering Manager at [Staffbase](https://staffbase.com)
-in Berlin, leading engineering teams on our employee communications
-platform. I'm also the go-to person for AI across engineering: driving
-agentic development practices, adding AI competencies to our
-engineering career ladder, and a platform initiative rebuilding our
-plugin infrastructure for the AI era.
+      JavaScript, then Node, then Berlin. Full-stack work, open source
+      (Yargs, Gatsby), some videos and writing along the way. After more
+      than a decade of coding I moved into management — not because it's
+      "the next natural step," but because I like helping people succeed
+      and seeing them get there. The move meant relearning about people
+      everything I had learned about code.
 
-I still write code every day. I think that matters.
+    </div>
+    <div class="reveal lg:sticky lg:top-28" style="--reveal-delay: 150ms">
+      <TerminalSimulation
+        title="gbasic — atari"
+        lineDelay={700}
+        lines={[
+          { type: 'numbered', label: '>', content: 'PRINT Khaled' },
+          { type: 'indent', content: 'KHALED' },
+          { type: 'numbered', label: '>', content: 'REM and that settled it' },
+          { type: 'indent', content: 'READY.' },
+        ]}
+      />
+    </div>
+  </div>
+</StorySection>
 
-## Career arc
+<StorySection eyebrow="~ % git log --oneline career/" title="The career arc">
+  <CareerTimeline
+    entries={[
+      {
+        years: '2016 — 2021',
+        place: 'Contentful',
+        role: 'IC, then Engineering Manager',
+        story:
+          'Built the JS SDK ecosystem, shipped Environment Aliases, and led the team that delivered Compose & Launch — enterprise content workflow tools. Mentored three engineers into management.',
+        metrics: [{ value: 95, suffix: '%', label: 'team retention' }],
+      },
+      {
+        years: '2021 — 2023',
+        place: 'Gatsby',
+        role: 'Engineering Manager',
+        story:
+          'Primary technical driver for Gatsby v5, coordinating directly with React engineers at Meta.',
+        metrics: [
+          { value: 90, suffix: '%', label: 'build time reduction' },
+          { value: 30, suffix: '%', label: 'less JavaScript shipped' },
+        ],
+      },
+      {
+        years: '2023 — 2024',
+        place: 'Uniform',
+        role: 'Head of Engineering Management',
+        story:
+          'Led cross-functional squads and architected a multi-data-source visual editor.',
+        metrics: [{ value: 20, suffix: '%', label: 'infrastructure cost reduction' }],
+      },
+      {
+        years: '2024 — 2025',
+        place: 'Independent',
+        role: 'Deliberate break',
+        story:
+          'Went deep on AI. Built skscan (an AI agent security scanner), a visual agent builder, and a burnout detection app. Tested products against real users. Came back sharper.',
+        metrics: [{ value: 3, suffix: '', label: 'AI products built from scratch' }],
+      },
+      {
+        years: '2025 — now',
+        place: 'Staffbase',
+        role: 'Senior Engineering Manager',
+        story:
+          'Engineering teams on the employee communications platform, plus AI leadership across the org: agentic development practices, AI competencies in the career ladder, and rebuilding plugin infrastructure for the AI era.',
+      },
+    ]}
+  />
 
-| When | Where | What |
-|------|-------|------|
-| 2016–2021 | Contentful | IC and then EM. Built the JS SDK ecosystem, shipped Environment Aliases, led the team that delivered Compose & Launch — enterprise content workflow tools. 95% retention on my team. Mentored 3 engineers into management. |
-| 2021–2023 | Gatsby | Engineering Manager. Primary technical driver for Gatsby v5: 90% build time reduction, 30% less JS shipped. Coordinated directly with React engineers at Meta. |
-| 2023–2024 | Uniform | Head of Engineering Management. Led cross-functional squads, architected a multi-data-source visual editor, reduced infrastructure costs by 20%. |
-| 2024–2025 | Independent | Deliberate break to go deep on AI. Built skscan (an AI agent security scanner), a visual agent builder, and a burnout detection app. Tested products against real users. Came back sharper. |
-| 2025–present | Staffbase | Senior EM. Engineering teams plus AI leadership across the org. |
+  <blockquote class="reveal mt-20 border-l-2 border-gold pl-8">
+    <div class="display-huge max-w-3xl text-[clamp(1.5rem,3vw,2.75rem)]">The independent year was the best investment I've made in my career.</div>
+    <div class="mt-4 max-w-xl text-lg text-muted-foreground">I stopped managing and started building again — AI products from scratch, with real constraints and no safety net. It clarified what I want to do next.</div>
+  </blockquote>
+</StorySection>
 
-The independent year was the best investment I've made in my career. I stopped managing and started building again — AI products from scratch, with real constraints and no safety net. It clarified what I want to do next.
+<StorySection eyebrow="~ % ps aux | grep now" title="Where I am now">
+  <div class="reveal display-huge max-w-4xl text-[clamp(1.75rem,3.5vw,3.25rem)]">I manage agents the way I manage engineers: specs, plans, reviews, phase gates.</div>
+  <div class="reveal mt-10 grid max-w-5xl gap-10 lg:grid-cols-2" style="--reveal-delay: 150ms">
+    <div class="text-lg leading-relaxed text-muted-foreground">
 
-## AI
+      I'm a daily practitioner of AI-assisted engineering. I use Claude
+      Code for most of my coding work, run multi-agent systems, and think
+      seriously about harness engineering — the discipline of designing
+      the environment that makes agents reliable over time, not just
+      impressive in a demo.
 
-I'm a daily practitioner of AI-assisted engineering. I use Claude Code
-for most of my coding work, run multi-agent systems, and think
-seriously about harness engineering — the discipline of designing the
-environment that makes agents reliable over time, not just impressive
-in a demo.
+    </div>
+    <div class="text-lg leading-relaxed text-muted-foreground [&_a]:text-cerulean [&_a]:underline [&_a]:underline-offset-2">
 
-**I manage agents the way I manage engineers: specs, plans, reviews,
-phase gates.** Most writing about AI engineering assumes a solo expert.
-My actual interest is the harder problem: what happens when a team at
-different skill levels runs agents against the same codebase at the
-same time? That's what I'm working on and [writing about](/blog).
+      Most writing about AI engineering assumes a solo expert. My actual
+      interest is the harder problem: what happens when a team at
+      different skill levels runs agents against the same codebase at the
+      same time? That's what I'm working on and [writing about](/blog).
 
-## Side projects
+    </div>
+  </div>
+  <p class="reveal mt-10 font-mono-ui text-sm text-muted-foreground" style="--reveal-delay: 250ms">I still write code every day. I think that matters.</p>
+</StorySection>
 
-Building is how I think. I always have something running.
+<StorySection eyebrow="~ % ls ~/side-projects" title="Always building">
+  <p class="reveal max-w-xl text-lg text-muted-foreground">Building is how I think. I always have something running.</p>
+  <div class="mt-10">
+    <ProjectShowcase
+      projects={[
+        {
+          name: 'MoodPulse',
+          status: 'closing in on launch',
+          description:
+            'Slack-integrated burnout detection via communication patterns.',
+          stack: 'TanStack Start · Cloudflare Workers · D1 · Stripe',
+        },
+        {
+          name: 'TileViz',
+          status: 'in progress',
+          description:
+            '3D tile visualizer for home renovation — and the reason this site has opinions about cameras.',
+          stack: 'Three.js · TanStack Start · Cloudflare Workers',
+        },
+        {
+          name: 'Mastra Builder',
+          status: 'experiment',
+          description: 'Visual IDE for composing AI agent workflows.',
+          stack: 'Mastra · TypeScript',
+        },
+      ]}
+    />
+  </div>
+</StorySection>
 
-| Project | What |
-|---------|------|
-| **MoodPulse** | Slack-integrated burnout detection via communication patterns. The most mature — closing in on launch. |
-| **TileViz** | 3D tile visualizer for home renovation. Three.js, and the reason this site has opinions about cameras. |
-| **Mastra Builder** | Visual IDE for composing AI agent workflows |
+<StorySection eyebrow="~ % man khaled" title="Management style">
+  <div class="reveal max-w-2xl space-y-6 text-lg leading-relaxed text-muted-foreground">
 
-## Management style
+    I'm a background operator. I find and create opportunities for my
+    people without making it about me. I care most about giving engineers
+    the space, context, and stretch assignments to grow into their
+    potential. I remove blockers, set direction, then get out of the way.
 
-I'm a background operator. I find and create opportunities for my people without making it about me. I care most about giving engineers the space, context, and stretch assignments to grow into their potential. I remove blockers, set direction, then get out of the way.
+    When I step in, it's hands-on: I prototype, I pair, I ship alongside
+    the team.
 
-When I step in, it's hands-on: I prototype, I pair, I ship alongside the team.
+  </div>
+</StorySection>
 
-## Outside work
+<StorySection eyebrow="~ % logout" title="Outside work">
+  <div class="reveal max-w-2xl space-y-6 text-lg leading-relaxed text-muted-foreground">
 
-Family man first. Raising a child has become my new hobby, and I try hard to protect time with the people I love — work will never end, but that time will.
+    Family man first. Raising a child has become my new hobby, and I try
+    hard to protect time with the people I love — work will never end,
+    but that time will.
 
-Arabic is my native language. I work in English and French, and I'm getting there with German.
+    Arabic is my native language. I work in English and French, and I'm
+    getting there with German.
 
-I lift, play video games to reset, and take a good steak seriously.
+    I lift, play video games to reset, and take a good steak seriously.
+
+  </div>
+  <p class="reveal mt-20 pb-4 font-mono-ui text-xs tracking-wide text-muted-foreground/70" style="--reveal-delay: 200ms">~ % logout · Connection to about closed.</p>
+</StorySection>

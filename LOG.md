@@ -71,3 +71,7 @@ Refs: branch redesign/fable-cinematic; vault: 09 Wiki/Claude Fable 5 — One-Pro
 ## 2026-07-05 · About page overhaul + arch scrub · #design #content #site
 What: Rewrote /about in blog-voice (team names removed, current AI work reflected, side projects updated) and added a second scroll-scrub band — a Seedance dolly through a golden horseshoe arch. HeroScrub generalized to multi-instance with props.
 Refs: branch about-overhaul; kie-ai pipeline per memory note.
+
+## 2026-07-05 · About scroll-story · #design #content #site
+What: Rebuilt /about as a scroll story — GBasic terminal origin, scroll-drawn career timeline with count-up metrics, project showcase rows, display-type statements, mono chapter eyebrows ending in `~ % logout`. New about/ components; PageLayout `plain` mode for full-width MDX.
+Refs: branch about-story.

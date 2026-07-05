@@ -1,0 +1,149 @@
+---
+// Scroll-story career timeline: a gold rail that draws itself as you scroll
+// (CSS scroll-driven animation, static gradient fallback), entries revealing
+// in sequence, and metrics that count up when they enter the viewport.
+interface Metric {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+interface Entry {
+  years: string;
+  place: string;
+  role: string;
+  story: string;
+  metrics?: Metric[];
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="relative">
+  <!-- The rail: draws top-to-bottom as the timeline scrolls through view -->
+  <div class="timeline-rail absolute left-0 top-2 bottom-2 hidden w-px sm:block" aria-hidden="true"></div>
+
+  <ol class="space-y-0">
+    {entries.map((entry) => (
+      <li class="reveal relative border-t border-border py-14 first:border-t-0 sm:pl-14">
+        <!-- Node on the rail -->
+        <span
+          class="absolute -left-[5px] top-16 hidden h-[11px] w-[11px] rounded-full border-2 border-gold bg-background sm:block"
+          aria-hidden="true"
+        ></span>
+
+        <div class="grid gap-x-12 gap-y-6 lg:grid-cols-[1fr_2fr]">
+          <div>
+            <p class="font-mono-ui text-sm tracking-[0.2em] text-gold">{entry.years}</p>
+            <h3 class="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {entry.place}
+            </h3>
+            <p class="mt-2 font-mono-ui text-xs tracking-wide uppercase text-muted-foreground">
+              {entry.role}
+            </p>
+          </div>
+
+          <div>
+            <p class="max-w-xl text-lg leading-relaxed text-muted-foreground">{entry.story}</p>
+
+            {entry.metrics && entry.metrics.length > 0 && (
+              <dl class="mt-8 flex flex-wrap gap-x-14 gap-y-6">
+                {entry.metrics.map((metric) => (
+                  <div>
+                    <dd
+                      class="metric-count font-display text-5xl font-extrabold tracking-tight text-gold sm:text-6xl"
+                      data-value={metric.value}
+                      data-suffix={metric.suffix}
+                    >
+                      0{metric.suffix}
+                    </dd>
+                    <dt class="mt-2 max-w-[12rem] font-mono-ui text-xs tracking-wide text-muted-foreground">
+                      {metric.label}
+                    </dt>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .timeline-rail {
+    background: linear-gradient(
+      to bottom,
+      var(--color-gold) 0%,
+      color-mix(in srgb, var(--color-gold) 35%, transparent) 60%,
+      transparent 100%
+    );
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .timeline-rail {
+        transform-origin: top;
+        animation: rail-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 10% exit 90%;
+      }
+
+      @keyframes rail-draw {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  function animateCount(el: HTMLElement) {
+    const value = Number(el.dataset.value);
+    const suffix = el.dataset.suffix ?? '';
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !Number.isFinite(value)) {
+      el.textContent = `${value}${suffix}`;
+      return;
+    }
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now: number) {
+      const t = Math.min((now - start) / duration, 1);
+      // ease-out cubic: fast start, settles into the final number
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = `${Math.round(value * eased)}${suffix}`;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function setupMetricCounters() {
+    const counters = document.querySelectorAll<HTMLElement>('.metric-count:not([data-counted])');
+    if (!counters.length) return;
+    const observer = new IntersectionObserver(
+      (observed) => {
+        for (const entry of observed) {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute('data-counted', '1');
+            animateCount(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    counters.forEach((el) => observer.observe(el));
+  }
+
+  document.addEventListener('astro:page-load', setupMetricCounters);
+</script>

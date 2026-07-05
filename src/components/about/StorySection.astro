@@ -1,0 +1,20 @@
+---
+// A chapter of the About scroll-story: mono terminal eyebrow, big display
+// title, slot content. Header reveals on scroll via the global .reveal system.
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<section class="pt-[14vh]">
+  <div class="reveal">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 class="display-huge mt-6 text-[clamp(2rem,5vw,4.5rem)]">{title}</h2>
+  </div>
+  <div class="mt-10">
+    <slot />
+  </div>
+</section>
