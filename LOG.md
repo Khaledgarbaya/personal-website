@@ -67,3 +67,7 @@ Refs: 3 files under src/content/posts/*/index.mdx (PR #24), domains/content-seo/
 ## 2026-07-04 · Cinematic redesign (Fable 5 prompt) · #design #site
 What: Redesigned the site in the award-site cinematic register from the brain-vault Fable 5 prompt — huge Bricolage Grotesque typography, scroll reveals, Mediterranean-night dark mode, terminal-mono metadata voice. Homepage, archives, post layout, nav/footer.
 Refs: branch redesign/fable-cinematic; vault: 09 Wiki/Claude Fable 5 — One-Prompt Cinematic 3D Websites.
+
+## 2026-07-05 · About page overhaul + arch scrub · #design #content #site
+What: Rewrote /about in blog-voice (team names removed, current AI work reflected, side projects updated) and added a second scroll-scrub band — a Seedance dolly through a golden horseshoe arch. HeroScrub generalized to multi-instance with props.
+Refs: branch about-overhaul; kie-ai pipeline per memory note.
